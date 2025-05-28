@@ -1,10 +1,12 @@
-import { View, Text } from 'react-native';
+import { Text, ScrollView } from 'react-native';
 import { globalStyles } from '../../../config/app-theme';
+import { BookCard } from '../../components/books/BookCard';
 
 export const MyBooksScreen = () => {
   return (
-    <View>
+    <ScrollView>
         <Text style={ globalStyles.titleText }>Mis libros</Text>
-    </View>
+        <BookCard isbn="12345" />
+    </ScrollView>
   );
 };

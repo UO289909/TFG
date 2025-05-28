@@ -6,7 +6,7 @@ export const MyBooksScreen = () => {
   return (
     <ScrollView>
         <Text style={ globalStyles.titleText }>Mis libros</Text>
-        <BookCard isbn="12345" />
+        <BookCard title="La sombra del viento" isbn="12345" imageUrl="https://i.stack.imgur/l60Hf.png" />
     </ScrollView>
   );
 };

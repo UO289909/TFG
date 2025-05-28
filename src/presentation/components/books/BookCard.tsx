@@ -1,18 +1,21 @@
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 
 interface Props {
+    title: string;
     isbn: string;
+    imageUrl: string;
 }
 
-export const BookCard = ({ isbn }: Props) => {
+export const BookCard = ({ title, isbn }: Props) => {
     return (
         <Pressable style={styles.cardContainer}>
             <Image
                 style={styles.image}
-                source={{ uri: 'https://i.stack.imgur.com/l60Hf.png' }}
+                source={{ uri: 'https://i.stack.imgur/l60Hf.png' }}
             />
             <View style={styles.textContainer}>
-                <Text style={styles.isbnText}>ISBN: {isbn}</Text>
+                <Text style={styles.titleText}>{ title }</Text>
+                <Text style={styles.isbnText}>ISBN: { isbn }</Text>
             </View>
         </Pressable>
     );
@@ -45,6 +48,10 @@ const styles = StyleSheet.create({
     textContainer: {
         flex: 1,
         justifyContent: 'center',
+    },
+    titleText: {
+        fontSize: 22,
+        fontWeight: 'bold',
     },
     isbnText: {
         fontSize: 16,

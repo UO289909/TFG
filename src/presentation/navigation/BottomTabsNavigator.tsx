@@ -13,9 +13,17 @@ export const BottomTabsNavigator = () => {
         <Tab.Navigator
             screenOptions={{
                 headerShown: true,
+                headerStyle: {
+                    elevation: 10,
+                },
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 30,
+                },
+                headerTitleAlign: 'center',
                 tabBarStyle: {
                     borderTopWidth: 0,
-                    elevation: 0,
+                    elevation: 10,
                 },
                 tabBarActiveBackgroundColor: globalColors.background,
                 tabBarActiveTintColor: globalColors.primary,

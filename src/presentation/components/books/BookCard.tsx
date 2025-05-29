@@ -2,20 +2,22 @@ import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 
 interface Props {
     title: string;
-    isbn: string;
+    author: string;
     imageUrl: string;
 }
 
-export const BookCard = ({ title, isbn }: Props) => {
+export const BookCard = ({ title, author, imageUrl }: Props) => {
+
     return (
         <Pressable style={styles.cardContainer}>
             <Image
                 style={styles.image}
-                source={{ uri: 'https://i.stack.imgur/l60Hf.png' }}
+                source={{ uri: imageUrl }}
+                resizeMode="cover"
             />
-            <View style={styles.textContainer}>
+            <View style={styles.dataContainer}>
                 <Text style={styles.titleText}>{ title }</Text>
-                <Text style={styles.isbnText}>ISBN: { isbn }</Text>
+                <Text style={styles.authorText}>{ author }</Text>
             </View>
         </Pressable>
     );
@@ -24,7 +26,7 @@ export const BookCard = ({ title, isbn }: Props) => {
 const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         backgroundColor: '#fff',
         width: '95%',
         height: 130,
@@ -45,17 +47,19 @@ const styles = StyleSheet.create({
         marginRight: 16,
         backgroundColor: '#eee',
     },
-    textContainer: {
+    dataContainer: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     titleText: {
         fontSize: 22,
         fontWeight: 'bold',
+        marginBottom: 8,
     },
-    isbnText: {
+    authorText: {
         fontSize: 16,
         fontWeight: 'bold',
+        fontStyle: 'italic',
         color: '#333',
     },
 });

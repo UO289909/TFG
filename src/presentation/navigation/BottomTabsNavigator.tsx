@@ -17,7 +17,7 @@ export const BottomTabsNavigator = () => {
                     elevation: 10,
                 },
                 headerTitleStyle: {
-                    fontWeight: 'bold',
+                    fontFamily: 'Roboto-Medium',
                     fontSize: 30,
                 },
                 headerTitleAlign: 'center',

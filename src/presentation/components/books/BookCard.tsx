@@ -53,13 +53,12 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontSize: 22,
-        fontWeight: 'bold',
+        fontFamily: 'Roboto-Medium',
         marginBottom: 8,
     },
     authorText: {
         fontSize: 16,
-        fontWeight: 'bold',
-        fontStyle: 'italic',
+        fontFamily: 'Roboto-Light',
         color: '#333',
     },
 });

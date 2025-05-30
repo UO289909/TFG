@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 
-export const LogInScreen = () => {
+export const SignInScreen = () => {
   return (
     <View>
-        <Text>LogInScreen</Text>
+        <Text>SignInScreen</Text>
     </View>
   );
 };

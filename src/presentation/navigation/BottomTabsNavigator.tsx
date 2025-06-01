@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/home';
 import { ProfileScreen } from '../screens/profile';
 import { MyBooksScreen } from '../screens/books';
-import { IonIcon } from '../components/IonIcon';
+import { IonIcon } from '../components/icons/IonIcon';
 import { globalColors } from '../../config/app-theme';
 
 const Tab = createBottomTabNavigator();
@@ -24,6 +24,10 @@ export const BottomTabsNavigator = () => {
                 tabBarStyle: {
                     borderTopWidth: 0,
                     elevation: 10,
+                },
+                tabBarLabelStyle: {
+                    fontFamily: 'Roboto-Regular',
+                    fontSize: 13,
                 },
                 tabBarActiveBackgroundColor: globalColors.background,
                 tabBarActiveTintColor: globalColors.primary,

@@ -4,7 +4,8 @@ type IonIconNames =
     | 'book-outline'
     | 'library-outline'
     | 'person-outline'
-    | 'home-outline';
+    | 'home-outline'
+    | 'add-outline';
 
 interface Props {
     name: IonIconNames;

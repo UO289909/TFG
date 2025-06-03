@@ -2,40 +2,31 @@
 import { ScrollView, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { FloatingAddButton } from '../../components/pressables/FloatingAddButton';
-import { signIn } from '../../../infrastructure/database/auth.repository';
-import { useEffect } from 'react';
-import { getMyBooks } from '../../../core/use-cases/get-my-books.use-case';
-import { OpenLibraryAdapter } from '../../../config/adapters/openLibrary.adapter';
+import { useBooks } from '../../hooks/useBooks';
+import { FullScreenLoader } from '../../components/loaders/FullScreenLoader';
 
 export const MyBooksScreen = () => {
 
-  useEffect(() => {
-
-    signIn( 'dev@test.es', 'test' );
-
-    getMyBooks(OpenLibraryAdapter);
-
-  }, []);
-
   const handleAddBook = () => {
 
-    signIn( 'dev@test.es', 'test' );
-
-    getMyBooks(OpenLibraryAdapter);
-
   };
+
+  const { isLoading, myBooks } = useBooks();
+
+  if( isLoading ) {
+    return <FullScreenLoader />;
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView>
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
-        <BookCard title="La sombra del viento" author="Carlos Ruiz Zafón" imageUrl="https://i.stack.imgur/l60Hf.png" />
+        {myBooks.map((book) => (
+          <BookCard
+            title={ book.title }
+            author={ book.authors[0] }
+            imageUrl={ book.cover }
+          />
+        ))}
       </ScrollView>
       <FloatingAddButton onPress={ handleAddBook }/>
     </View>

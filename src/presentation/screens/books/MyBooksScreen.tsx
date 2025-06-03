@@ -3,8 +3,9 @@ import { ScrollView, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { FloatingAddButton } from '../../components/pressables/FloatingAddButton';
 import { signIn } from '../../../infrastructure/database/auth.repository';
-import { getMyBooks } from '../../../infrastructure/database/books.repository';
 import { useEffect } from 'react';
+import { getMyBooks } from '../../../core/use-cases/get-my-books.use-case';
+import { OpenLibraryAdapter } from '../../../config/adapters/openLibrary.adapter';
 
 export const MyBooksScreen = () => {
 
@@ -12,7 +13,7 @@ export const MyBooksScreen = () => {
 
     signIn( 'dev@test.es', 'test' );
 
-    getMyBooks();
+    getMyBooks(OpenLibraryAdapter);
 
   }, []);
 
@@ -20,7 +21,7 @@ export const MyBooksScreen = () => {
 
     signIn( 'dev@test.es', 'test' );
 
-    getMyBooks();
+    getMyBooks(OpenLibraryAdapter);
 
   };
 

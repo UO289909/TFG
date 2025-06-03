@@ -1,7 +1,5 @@
 
-export interface OpenLibraryResponseByIsbn {
-    'ISBN:9780974872407': BookData;
-}
+export type OpenLibraryResponseByIsbn = Record<string, BookData>;
 
 export interface BookData {
     url:             string;

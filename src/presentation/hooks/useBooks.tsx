@@ -18,9 +18,13 @@ export const useBooks = () => {
 
         setIsLoading(true);
 
-        signIn('dev@test.es', 'test');
+        console.log('Starting sign in...');
+        await signIn('dev@test.es', 'test');
+        console.log('Finished sign in!');
 
+        console.log('Starting fetching...');
         const myBooksFetched = await getMyBooks(openLibraryFetcher);
+        console.log('Finished fetching!');
         setMyBooks(myBooksFetched);
 
         setIsLoading(false);

@@ -2,10 +2,25 @@
 import { ScrollView, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { FloatingAddButton } from '../../components/pressables/FloatingAddButton';
+import { signIn } from '../../../infrastructure/database/auth.repository';
+import { getMyBooks } from '../../../infrastructure/database/books.repository';
+import { useEffect } from 'react';
 
 export const MyBooksScreen = () => {
 
+  useEffect(() => {
+
+    signIn( 'dev@test.es', 'test' );
+
+    getMyBooks();
+
+  }, []);
+
   const handleAddBook = () => {
+
+    signIn( 'dev@test.es', 'test' );
+
+    getMyBooks();
 
   };
 

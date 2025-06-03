@@ -1,14 +1,15 @@
 import { SupabaseClient } from './supabaseClient';
 
-export const getBooksByUser = async (userId: string) => {
+export const getMyBooks = async () => {
 
     const { data, error } = await SupabaseClient
         .from('user_books')
-        .select('*')
-        .eq('user_id', userId);
+        .select('*');
+
     if (error) {
         throw error;
     }
 
     return data;
+
 };

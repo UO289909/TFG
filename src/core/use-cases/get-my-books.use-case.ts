@@ -1,6 +1,7 @@
 import { HttpAdapter } from '../../config/adapters/http.adapter';
 import { databaseGetMyBooks } from '../../infrastructure/database/books.repository';
 import { BookData, OpenLibraryResponseByIsbn } from '../../infrastructure/interfaces/open-library.responses';
+import { UserBook } from '../../infrastructure/interfaces/supabase.responses';
 import { BookMapper } from '../../infrastructure/mappers/book.mapper';
 import { Book } from '../entities/book.entity';
 
@@ -10,19 +11,27 @@ export const getMyBooks = async (
 ): Promise<Book[]> => {
 
     try {
-        const databaseResponse = await databaseGetMyBooks();
+        const databaseResponse: UserBook[] = await databaseGetMyBooks();
         console.log('Database response:', databaseResponse);
 
         const booksWithDetails = await Promise.all(
             databaseResponse.map(async (book) => {
-                const details: OpenLibraryResponseByIsbn = await fetcher.get(`&bibkeys=ISBN%3A${book.isbn}`);
+                const details: OpenLibraryResponseByIsbn = await fetcher.get('', {
+                    params: {
+                        format: 'json',
+                        jscmd: 'data',
+                        bibkeys: `ISBN:${book.isbn13}`,
+                    },
+                });
                 return details;
             })
         );
         console.log('Books with details:', booksWithDetails);
 
-        const myBooks: Book[] = booksWithDetails.map((details) => {
-            const bookData: BookData = Object.values(details)[0];
+        const myBooks: Book[] = booksWithDetails.map( (detail) => {
+            console.log('Detail:', detail);
+            const bookData: BookData = Object.values(detail)[0];
+            console.log('Book data:', bookData);
             return BookMapper.fromOpenLibraryResponseToEntity(bookData);
         });
         console.log('Mapped books:', myBooks);

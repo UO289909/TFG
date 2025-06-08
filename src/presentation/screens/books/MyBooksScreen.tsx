@@ -22,8 +22,10 @@ export const MyBooksScreen = () => {
       <ScrollView>
         {myBooks.map((book) => (
           <BookCard
+            key={ book.isbn }
             title={ book.title }
             author={ book.authors[0] }
+            pages={ book.pages }
             imageUrl={ book.cover }
           />
         ))}

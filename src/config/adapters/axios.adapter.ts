@@ -19,7 +19,7 @@ export class AxiosAdapter implements HttpAdapter {
         });
     }
 
-    async get<T>( url: string, options?: { headers?: Record<string, string> } ): Promise<T> {
+    async get<T>( url: string, options?: { headers?: Record<string, string>, params?: Record<string, string> } ): Promise<T> {
         try {
             const { data } = await this.axiosInstance.get<T>(url, options);
             return data;

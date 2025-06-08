@@ -3,10 +3,11 @@ import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 interface Props {
     title: string;
     author: string;
+    pages: number;
     imageUrl: string;
 }
 
-export const BookCard = ({ title, author, imageUrl }: Props) => {
+export const BookCard = ({ title, author, pages, imageUrl }: Props) => {
 
     return (
         <Pressable style={styles.cardContainer}>
@@ -18,6 +19,7 @@ export const BookCard = ({ title, author, imageUrl }: Props) => {
             <View style={styles.dataContainer}>
                 <Text style={styles.titleText}>{ title }</Text>
                 <Text style={styles.authorText}>{ author }</Text>
+                <Text>{ pages }</Text>
             </View>
         </Pressable>
     );

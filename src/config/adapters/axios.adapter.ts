@@ -3,7 +3,7 @@ import { HttpAdapter } from './http.adapter';
 
 interface Options {
     baseUrl: string;
-    params: Record<string, unknown>;
+    apikey: string;
 }
 
 export class AxiosAdapter implements HttpAdapter {
@@ -13,20 +13,18 @@ export class AxiosAdapter implements HttpAdapter {
     constructor( options: Options ) {
         this.axiosInstance = axios.create({
             baseURL: options.baseUrl,
-            params: options.params,
+            headers: {
+                apikey: options.apikey,
+            },
         });
     }
 
-    async get<T>( url: string, options?: Record<string, unknown> ): Promise<T> {
-
+    async get<T>( url: string, options?: { headers?: Record<string, string> } ): Promise<T> {
         try {
-
             const { data } = await this.axiosInstance.get<T>(url, options);
             return data;
-
         } catch (error) {
             throw new Error(`Error fetching get: ${ url }`);
         }
     }
-
 }

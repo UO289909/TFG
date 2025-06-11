@@ -5,12 +5,13 @@ interface Props {
     author: string;
     pages: number;
     imageUrl: string;
+    onPress: () => void;
 }
 
-export const BookCard = ({ title, author, pages, imageUrl }: Props) => {
+export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => {
 
     return (
-        <Pressable style={styles.cardContainer}>
+        <Pressable style={styles.cardContainer} onPress={onPress}>
             <Image
                 style={styles.image}
                 source={{ uri: imageUrl }}

@@ -2,9 +2,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/home';
 import { ProfileScreen } from '../screens/profile';
-import { MyBooksScreen } from '../screens/books';
 import { IonIcon } from '../components/icons/IonIcon';
 import { globalColors } from '../../config/app-theme';
+import { MyBooksStackNavigator } from './MyBooksStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +34,7 @@ export const BottomTabsNavigator = () => {
             }}
         >
             <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: ({ color }) => (<IonIcon name="home-outline" color={ color } size={25} />) }} component={HomeScreen} />
-            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: ({ color }) => (<IonIcon name="library-outline" color={ color } size={25} />) }} component={MyBooksScreen} />
+            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: ({ color }) => (<IonIcon name="library-outline" color={ color } size={25} />) }} component={MyBooksStackNavigator} />
             <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => (<IonIcon name="person-outline" color={ color } size={25} />) }} component={ProfileScreen} />
         </Tab.Navigator>
     );

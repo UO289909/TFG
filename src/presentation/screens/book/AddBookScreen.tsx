@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, ScrollView } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
+import { CustomButton } from '../../components/pressables/CustomButton';
 // import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
 
 export const AddBookScreen = () => {
@@ -12,26 +13,26 @@ export const AddBookScreen = () => {
   const [genre, setGenre] = useState('');
   const [cover, setCover] = useState('');
 
-//   const handleFetchFromOpenLibrary = async () => {
-//     try {
-//       const details = await openLibraryFetcher.get('', {
-//         params: {
-//           format: 'json',
-//           jscmd: 'data',
-//           bibkeys: `ISBN:${isbn}`,
-//         },
-//       });
-//       const bookData = Object.values(details)[0];
-//       if (bookData) {
-//         setTitle(bookData.title || '');
-//         setAuthors(bookData.authors?.map(a => a.name).join(', ') || '');
-//         setPages(bookData.number_of_pages?.toString() || '');
-//         setCover(bookData.cover?.medium || '');
-//       }
-//     } catch (e) {
-//       // Maneja el error
-//     }
-//   };
+  const handleFetchFromOpenLibrary = async () => {
+    // try {
+    //   const details = await openLibraryFetcher.get('', {
+    //     params: {
+    //       format: 'json',
+    //       jscmd: 'data',
+    //       bibkeys: `ISBN:${isbn}`,
+    //     },
+    //   });
+    //   const bookData = Object.values(details)[0];
+    //   if (bookData) {
+    //     setTitle(bookData.title || '');
+    //     setAuthors(bookData.authors?.map(a => a.name).join(', ') || '');
+    //     setPages(bookData.number_of_pages?.toString() || '');
+    //     setCover(bookData.cover?.medium || '');
+    //   }
+    // } catch (e) {
+    //   // Maneja el error
+    // }
+  };
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
@@ -42,9 +43,13 @@ export const AddBookScreen = () => {
           value={isbn}
           onChangeText={setIsbn}
           placeholder="Introduce ISBN"
-          style={{ flex: 1, width: '100%' }}
+          style={{ flex: 1 }}
         />
-        {/* <Button title="Buscar" onPress={handleFetchFromOpenLibrary} /> */}
+        <CustomButton
+          title="Buscar"
+          onPress={handleFetchFromOpenLibrary}
+          style={{ marginLeft: 10}}
+        />
       </View>
       <Text>Título:</Text>
       <TextInput value={title} onChangeText={setTitle} style={{ borderBottomWidth: 1 }} />

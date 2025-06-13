@@ -16,14 +16,13 @@ export const CustomTextInput = ({ label, error, style, ...props }: Props) => {
   else if (focused) { borderColor = globalColors.primary; }
 
   return (
-    <View style={{ marginBottom: 18 }}>
+    <View style={[{ marginBottom: 18 }, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         {...props}
         style={[
           styles.input,
           { borderColor },
-          style,
         ]}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -35,15 +34,25 @@ export const CustomTextInput = ({ label, error, style, ...props }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  label: { fontWeight: 'bold', marginBottom: 4, color: '#333' },
+  label: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 18,
+    marginBottom: 4,
+    color: '#333',
+  },
   input: {
     borderWidth: 2,
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    fontFamily: 'Roboto-Regular',
     fontSize: 16,
     backgroundColor: '#faf9fd',
     color: '#222',
   },
-  error: { color: '#d32f2f', marginTop: 2, fontSize: 12 },
+  error: {
+    color: '#d32f2f',
+    marginTop: 2,
+    fontSize: 12,
+  },
 });

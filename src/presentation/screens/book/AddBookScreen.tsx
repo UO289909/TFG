@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, TextInput, Text, ScrollView } from 'react-native';
+import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 // import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
 
 export const AddBookScreen = () => {
@@ -36,11 +37,12 @@ export const AddBookScreen = () => {
     <ScrollView contentContainerStyle={{ padding: 20 }}>
       <Text>ISBN:</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TextInput
+        <CustomTextInput
+          label="ISBN:"
           value={isbn}
           onChangeText={setIsbn}
           placeholder="Introduce ISBN"
-          style={{ flex: 1, borderBottomWidth: 1, marginRight: 10 }}
+          style={{ flex: 1, width: '100%' }}
         />
         {/* <Button title="Buscar" onPress={handleFetchFromOpenLibrary} /> */}
       </View>

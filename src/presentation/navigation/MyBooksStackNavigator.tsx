@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { MyBooksScreen } from '../screens/books/MyBooksScreen';
-import { AddBookScreen } from '../screens/book/AddBookScreen';
-import { BookDetailsScreen } from '../screens/book/BookDetailsScreen';
+import { AddBookScreen, BookDetailsScreen } from '../screens/book';
 import { Book } from '../../core/entities/book.entity';
 
 export type RootStackParams = {

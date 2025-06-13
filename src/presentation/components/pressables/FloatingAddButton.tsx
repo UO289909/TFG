@@ -7,7 +7,16 @@ interface Props {
 }
 
 export const FloatingAddButton = ({ onPress }: Props) => (
-  <Pressable style={styles.button} onPress={onPress}>
+  <Pressable
+    style={({ pressed }) => [
+      styles.button,
+      {
+        backgroundColor: pressed ? globalColors.primaryDark : globalColors.primary,
+        elevation: pressed ? 4 : 8,
+      },
+    ]}
+    onPress={onPress}
+  >
     <IonIcon name="add-outline" size={ 36 } color="#fff" />
   </Pressable>
 );
@@ -17,13 +26,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 30,
     right: 30,
-    backgroundColor: globalColors.primary,
     borderRadius: 15,
     width: 60,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,

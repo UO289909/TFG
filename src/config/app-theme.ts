@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const globalColors = {
     primary: '#7037eb',
+    primaryDark: '#5d2fc2',
     secondary: '#f72585',
     tertiary: '#3a0ca3',
     success: '#4cc9f0',

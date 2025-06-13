@@ -1,12 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import { ScrollView, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
-import { FloatingAddButton } from '../../components/pressables/FloatingAddButton';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/loaders/FullScreenLoader';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
+import { FloatingButton } from '../../components/pressables/FloatingButton';
+import { globalColors } from '../../../config/app-theme';
 
 export const MyBooksScreen = () => {
 
@@ -40,7 +41,13 @@ export const MyBooksScreen = () => {
           />
         ))}
       </ScrollView>
-      <FloatingAddButton onPress={ handleAddBook }/>
+      <FloatingButton
+        onPress={ handleAddBook }
+        icon="add-outline"
+        position="bottom-right"
+        color={ globalColors.primary }
+        colorPressed={ globalColors.primaryDark }
+      />
     </View>
   );
 };

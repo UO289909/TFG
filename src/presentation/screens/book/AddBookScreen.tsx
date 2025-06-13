@@ -4,8 +4,9 @@ import { View, ScrollView } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { CustomButton } from '../../components/pressables/CustomButton';
 // import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
-import { FloatingBackButton } from '../../components/pressables/FloatingBackButton';
 import { useNavigation } from '@react-navigation/native';
+import { FloatingButton } from '../../components/pressables/FloatingButton';
+import { globalColors } from '../../../config/app-theme';
 
 export const AddBookScreen = () => {
   const [isbn, setIsbn] = useState('');
@@ -87,7 +88,13 @@ export const AddBookScreen = () => {
           onChangeText={setCover}
         />
       </ScrollView>
-      <FloatingBackButton onPress={ handleGoBack } />
+      <FloatingButton
+              onPress={ handleGoBack }
+              icon="close-outline"
+              position="bottom-left"
+              color={ globalColors.primary }
+              colorPressed={ globalColors.primaryDark }
+            />
     </View>
   );
 };

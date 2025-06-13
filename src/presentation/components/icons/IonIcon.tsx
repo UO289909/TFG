@@ -1,6 +1,6 @@
 import Icon from '@react-native-vector-icons/ionicons';
 
-type IonIconNames =
+export type IonIconNames =
     | 'book-outline'
     | 'library-outline'
     | 'person-outline'

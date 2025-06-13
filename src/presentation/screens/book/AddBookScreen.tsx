@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { View, TextInput, Text, ScrollView } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { CustomButton } from '../../components/pressables/CustomButton';
 // import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
@@ -10,7 +10,7 @@ export const AddBookScreen = () => {
   const [title, setTitle] = useState('');
   const [authors, setAuthors] = useState('');
   const [pages, setPages] = useState('');
-  const [genre, setGenre] = useState('');
+  const [year, setYear] = useState('');
   const [cover, setCover] = useState('');
 
   const handleFetchFromOpenLibrary = async () => {
@@ -36,14 +36,14 @@ export const AddBookScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <Text>ISBN:</Text>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <CustomTextInput
           label="ISBN:"
           value={isbn}
           onChangeText={setIsbn}
-          placeholder="Introduce ISBN"
+          placeholder="Introduce ISBN de 13 dígitos"
           style={{ flex: 1 }}
+          keyboardType="numeric"
         />
         <CustomButton
           title="Buscar"
@@ -51,17 +51,32 @@ export const AddBookScreen = () => {
           style={{ marginLeft: 10}}
         />
       </View>
-      <Text>Título:</Text>
-      <TextInput value={title} onChangeText={setTitle} style={{ borderBottomWidth: 1 }} />
-      <Text>Autor(es):</Text>
-      <TextInput value={authors} onChangeText={setAuthors} style={{ borderBottomWidth: 1 }} />
-      <Text>Páginas:</Text>
-      <TextInput value={pages} onChangeText={setPages} keyboardType="numeric" style={{ borderBottomWidth: 1 }} />
-      <Text>Género:</Text>
-      <TextInput value={genre} onChangeText={setGenre} style={{ borderBottomWidth: 1 }} />
-      <Text>Portada (URL):</Text>
-      <TextInput value={cover} onChangeText={setCover} style={{ borderBottomWidth: 1 }} />
-      {/* Aquí puedes añadir el botón para guardar el libro */}
+      <CustomTextInput
+        label="Título:"
+        value={title}
+        onChangeText={setTitle}
+      />
+      <CustomTextInput
+        label="Autor:"
+        value={authors}
+        onChangeText={setAuthors}
+      />
+      <CustomTextInput
+        label="Número de páginas:"
+        value={pages}
+        onChangeText={setPages}
+        keyboardType="numeric"
+      />
+      <CustomTextInput
+        label="Año de publicación:"
+        value={year}
+        onChangeText={setYear}
+      />
+      <CustomTextInput
+        label="Portada (URL):"
+        value={cover}
+        onChangeText={setCover}
+      />
     </ScrollView>
   );
 };

@@ -4,6 +4,8 @@ import { View, ScrollView } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { CustomButton } from '../../components/pressables/CustomButton';
 // import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
+import { FloatingBackButton } from '../../components/pressables/FloatingBackButton';
+import { useNavigation } from '@react-navigation/native';
 
 export const AddBookScreen = () => {
   const [isbn, setIsbn] = useState('');
@@ -12,6 +14,12 @@ export const AddBookScreen = () => {
   const [pages, setPages] = useState('');
   const [year, setYear] = useState('');
   const [cover, setCover] = useState('');
+
+  const navigation = useNavigation();
+
+    const handleGoBack = () => {
+      navigation.goBack();
+    };
 
   const handleFetchFromOpenLibrary = async () => {
     // try {
@@ -35,48 +43,51 @@ export const AddBookScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 20 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <CustomTextInput
+            label="ISBN:"
+            value={isbn}
+            onChangeText={setIsbn}
+            placeholder="Introduce ISBN de 13 dígitos"
+            style={{ flex: 1 }}
+            keyboardType="numeric"
+          />
+          <CustomButton
+            title="Buscar"
+            onPress={handleFetchFromOpenLibrary}
+            style={{ marginLeft: 10 }}
+          />
+        </View>
         <CustomTextInput
-          label="ISBN:"
-          value={isbn}
-          onChangeText={setIsbn}
-          placeholder="Introduce ISBN de 13 dígitos"
-          style={{ flex: 1 }}
+          label="Título:"
+          value={title}
+          onChangeText={setTitle}
+        />
+        <CustomTextInput
+          label="Autor:"
+          value={authors}
+          onChangeText={setAuthors}
+        />
+        <CustomTextInput
+          label="Número de páginas:"
+          value={pages}
+          onChangeText={setPages}
           keyboardType="numeric"
         />
-        <CustomButton
-          title="Buscar"
-          onPress={handleFetchFromOpenLibrary}
-          style={{ marginLeft: 10}}
+        <CustomTextInput
+          label="Año de publicación:"
+          value={year}
+          onChangeText={setYear}
         />
-      </View>
-      <CustomTextInput
-        label="Título:"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <CustomTextInput
-        label="Autor:"
-        value={authors}
-        onChangeText={setAuthors}
-      />
-      <CustomTextInput
-        label="Número de páginas:"
-        value={pages}
-        onChangeText={setPages}
-        keyboardType="numeric"
-      />
-      <CustomTextInput
-        label="Año de publicación:"
-        value={year}
-        onChangeText={setYear}
-      />
-      <CustomTextInput
-        label="Portada (URL):"
-        value={cover}
-        onChangeText={setCover}
-      />
-    </ScrollView>
+        <CustomTextInput
+          label="Portada (URL):"
+          value={cover}
+          onChangeText={setCover}
+        />
+      </ScrollView>
+      <FloatingBackButton onPress={ handleGoBack } />
+    </View>
   );
 };

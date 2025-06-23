@@ -2,9 +2,19 @@
 export interface UserBook {
     user_id: string;
     isbn13: string;
-    current_page: number;
     rating: [1, 2, 3, 4, 5, null];
-    finished: boolean;
-    updated_at: string;
-    genre: string;
+    pages: number | null;
+    cover_url: string | null;
+    release_year: number | null;
+    created_at: string;
+    start_date: string;
+    finish_date: string | null;
+}
+
+export interface DatabaseBook {
+    isbn13: string;
+    title: string;
+    pages: number | null;
+    cover_url: string | null;
+    release_year: number | null;
 }

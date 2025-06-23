@@ -1,5 +1,5 @@
 import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
-import { UserBook } from '../interfaces/supabase.responses';
+import { DatabaseBook, UserBook } from '../interfaces/supabase.responses';
 import { getAccessToken, getUserId } from './auth.repository';
 
 /**
@@ -25,4 +25,54 @@ export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
         throw new Error(`Error fetching user books from database: ${error}`);
     }
 
+};
+
+/**
+ * Checks if a book exists in the user's collection.
+ *
+ * @param isbn The ISBN of the book to check.
+ * @returns {Promise<boolean>} A promise that resolves to true if the book exists, false otherwise.
+ * @throws {Error} If there is an error checking the book's existence in the database.
+ */
+export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        const data: UserBook[] = await supabaseFetcher.get(`/user_books?user_id=eq.${userId}&isbn13=eq.${isbn}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return data.length > 0;
+
+    } catch (error) {
+        throw new Error(`Error checking user book existence in database: ${error}`);
+    }
+};
+
+/**
+ * Searches for a book by its ISBN in the database.
+ *
+ * @param isbn The ISBN of the book to search for.
+ * @returns {Promise<DatabaseBook>} A promise that resolves to the book data if found, or an empty object if not found.
+ * @throws {Error} If there is an error searching for the book in the database.
+ */
+export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBook> => {
+
+    const accessToken = getAccessToken();
+
+    try {
+        const data: DatabaseBook = await supabaseFetcher.get(`/books?isbn13=eq.${isbn}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error searching book by ISBN on database: ${error}`);
+    }
 };

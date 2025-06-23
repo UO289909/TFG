@@ -15,6 +15,7 @@ export const AddBookScreen = () => {
   const [pages, setPages] = useState('');
   const [year, setYear] = useState('');
   const [cover, setCover] = useState('');
+  const [fieldsEnabled, setFieldsEnabled] = useState<string[]>(['isbn']);
 
   const navigation = useNavigation();
 
@@ -54,6 +55,7 @@ export const AddBookScreen = () => {
             placeholder="Introduce ISBN de 13 dígitos"
             style={{ flex: 1 }}
             keyboardType="numeric"
+            editable={fieldsEnabled.includes('isbn')}
           />
           <CustomButton
             title="Buscar"
@@ -65,27 +67,32 @@ export const AddBookScreen = () => {
           label="Título:"
           value={title}
           onChangeText={setTitle}
+          editable={fieldsEnabled.includes('title')}
         />
         <CustomTextInput
           label="Autor:"
           value={authors}
           onChangeText={setAuthors}
+          editable={fieldsEnabled.includes('authors')}
         />
         <CustomTextInput
           label="Número de páginas:"
           value={pages}
           onChangeText={setPages}
           keyboardType="numeric"
+          editable={fieldsEnabled.includes('pages')}
         />
         <CustomTextInput
           label="Año de publicación:"
           value={year}
           onChangeText={setYear}
+          editable={fieldsEnabled.includes('year')}
         />
         <CustomTextInput
           label="Portada (URL):"
           value={cover}
           onChangeText={setCover}
+          editable={fieldsEnabled.includes('cover')}
         />
       </ScrollView>
       <FloatingButton

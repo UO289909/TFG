@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { IonIcon, IonIconNames } from '../icons/IonIcon';
+import { globalColors } from '../../../config/app-theme';
 
 interface Props {
   onPress: () => void;
@@ -7,21 +8,24 @@ interface Props {
   position: 'bottom-right' | 'bottom-left';
   color: string;
   colorPressed?: string;
+  colorDisabled?: string;
+  disabled?: boolean;
 }
 
-export const FloatingButton = ({ onPress, icon, position, color, colorPressed = color }: Props) => (
+export const FloatingButton = ({ onPress, icon, position, color, colorPressed = color, colorDisabled = globalColors.grey, disabled = false }: Props) => (
   <Pressable
     style={({ pressed }) => [
       styles.button,
       {
-        backgroundColor: pressed ? colorPressed : color,
+        backgroundColor: disabled ? colorDisabled : pressed ? colorPressed : color,
         elevation: pressed ? 4 : 8,
         ...(position === 'bottom-right' ? { right: 30 } : { left: 30 }),
       },
     ]}
     onPress={onPress}
+    disabled={disabled}
   >
-    <IonIcon name={ icon } size={ 36 } color="#fff" />
+    <IonIcon name={icon} size={36} color="#fff" />
   </Pressable>
 );
 

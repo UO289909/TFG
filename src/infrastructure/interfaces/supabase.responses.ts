@@ -9,6 +9,7 @@ export interface UserBook {
     created_at: string;
     start_date: string;
     finish_date: string | null;
+    author: string | null;
 }
 
 export interface DatabaseBook {
@@ -17,4 +18,5 @@ export interface DatabaseBook {
     pages: number | null;
     cover_url: string | null;
     release_year: number | null;
+    author: string | null;
 }

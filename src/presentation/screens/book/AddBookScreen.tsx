@@ -19,9 +19,9 @@ export const AddBookScreen = () => {
 
   const navigation = useNavigation();
 
-    const handleGoBack = () => {
-      navigation.goBack();
-    };
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   const handleFetchFromOpenLibrary = async () => {
     // try {
@@ -96,12 +96,20 @@ export const AddBookScreen = () => {
         />
       </ScrollView>
       <FloatingButton
-              onPress={ handleGoBack }
-              icon="close-outline"
-              position="bottom-left"
-              color={ globalColors.primary }
-              colorPressed={ globalColors.primaryDark }
-            />
+        onPress={handleGoBack}
+        icon="close-outline"
+        position="bottom-left"
+        color={globalColors.primary}
+        colorPressed={globalColors.primaryDark}
+      />
+      <FloatingButton
+        onPress={handleGoBack}
+        icon="add-outline"
+        position="bottom-right"
+        color={globalColors.primary}
+        colorPressed={globalColors.primaryDark}
+        disabled={!isbn || !title || !authors || !pages || !year || !cover}
+      />
     </View>
   );
 };

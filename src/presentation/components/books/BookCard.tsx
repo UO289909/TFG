@@ -2,9 +2,9 @@ import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 
 interface Props {
     title: string;
-    author: string;
-    pages: number;
-    imageUrl: string;
+    author: string | null;
+    pages: string | null;
+    imageUrl: string | null;
     onPress: () => void;
 }
 
@@ -14,7 +14,7 @@ export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => 
         <Pressable style={styles.cardContainer} onPress={onPress}>
             <Image
                 style={styles.image}
-                source={{ uri: imageUrl }}
+                source={{ uri: imageUrl || 'https://placehold.co/80x110?text=No+Cover' }}
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>

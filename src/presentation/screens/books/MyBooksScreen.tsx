@@ -35,9 +35,9 @@ export const MyBooksScreen = () => {
             key={ book.isbn }
             onPress={ () => handleBookDetails(book) }
             title={ book.title }
-            author={ book.authors[0] }
+            author={ book.author }
             pages={ book.pages }
-            imageUrl={ book.cover }
+            imageUrl={ book.cover_url }
           />
         ))}
       </ScrollView>

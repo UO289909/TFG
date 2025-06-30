@@ -9,31 +9,38 @@ import { Book } from '../entities/book.entity';
 export const getBookByIsbn = async (
     fetcher: HttpAdapter,
     isbn: string,
-): Promise<Book> => {
+): Promise<{book: Book | null, fromOpenLibrary: boolean | null, alreadyInUser: boolean}> => {
 
     try {
-        const userAlreadyHasBook = await databaseCheckUserBookExists(isbn);
-        if (userAlreadyHasBook) {
-            throw new Error('User already has this book in their collection');
+        const alreadyInUser = await databaseCheckUserBookExists(isbn);
+        if (alreadyInUser) {
+            return {book: null, fromOpenLibrary: null, alreadyInUser};
         }
 
         const bookInfo: DatabaseBook = await databaseSearchBookByIsbn(isbn);
         console.log('Database response:', bookInfo);
-        if (bookInfo === null) {
+
+        if (!bookInfo || (Array.isArray(bookInfo) && bookInfo.length === 0) || bookInfo.isbn === null) {
+            console.log('No book found in database, fetching from OpenLibrary');
             const details: OpenLibraryResponseByIsbn = await fetcher.get('', {
-                params: {
-                    format: 'json',
-                    jscmd: 'data',
-                    bibkeys: `ISBN:${isbn}`,
-                },
+            params: {
+                format: 'json',
+                jscmd: 'data',
+                bibkeys: `ISBN:${isbn}`,
+            },
             });
 
             const bookData: BookData = Object.values(details)[0];
             console.log('Book data:', bookData);
-            BookMapper.fromOpenLibraryResponseToEntity(bookData);
+            const book: Book = BookMapper.fromOpenLibraryResponseToEntity(bookData);
+            console.log('libro mapeado', book);
+            return {book, fromOpenLibrary: true, alreadyInUser: false};
+        } else {
+            const book: Book = BookMapper.fromDatabaseBookToEntity(bookInfo);
+            return {book, fromOpenLibrary: false, alreadyInUser: false};
         }
 
     } catch (error) {
-        throw new Error(`Error fetching book by ISBN: ${ error }`);
+        throw new Error(`Error fetching book by ISBN: ${error}`);
     }
 };

@@ -20,7 +20,7 @@ export const getMyBooks = async (
                     params: {
                         format: 'json',
                         jscmd: 'data',
-                        bibkeys: `ISBN:${book.isbn13}`,
+                        bibkeys: `ISBN:${book.isbn}`,
                     },
                 });
                 return details;

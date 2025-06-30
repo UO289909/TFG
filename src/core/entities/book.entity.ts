@@ -2,8 +2,8 @@
 export interface Book {
     isbn: string;
     title: string;
-    authors: string[];
-    pages: number;
-    publishDate: string;
-    cover: string;
+    pages: string | null;
+    cover_url: string | null;
+    release_year: string | null;
+    author: string | null;
 }

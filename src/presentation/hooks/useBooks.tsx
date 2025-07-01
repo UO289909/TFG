@@ -11,10 +11,10 @@ export const useBooks = () => {
     const [ myBooks, setMyBooks ] = useState<Book[]>([]);
 
     useEffect(() => {
-        loadMyMovies();
+        loadMyBooks();
     }, []);
 
-    const loadMyMovies = async () => {
+    const loadMyBooks = async () => {
 
         setIsLoading(true);
 
@@ -30,8 +30,13 @@ export const useBooks = () => {
         setIsLoading(false);
     };
 
+    const refetch = async () => {
+        await loadMyBooks();
+    };
+
     return {
         isLoading,
         myBooks,
+        refetch,
     };
 };

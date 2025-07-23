@@ -10,6 +10,14 @@ export const BookDetailsScreen = () => {
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
   const { book } = params;
 
+  const handleDeleteBook = () => {
+
+  };
+
+  const handleEditBook = () => {
+
+  };
+
   return (
     <View style={{ flex: 1, alignItems: 'center', padding: 20 }}>
       <Image source={{ uri: book.cover_url || 'https://placehold.co/200x320.png?text=No+Cover' }} style={{ width: 200, height: 320, borderRadius: 12, marginBottom: 20 }} />
@@ -21,7 +29,7 @@ export const BookDetailsScreen = () => {
       <FiveStarsInput onPress={() => {}} />
 
       <FloatingButton
-        onPress={() => {}}
+        onPress={handleDeleteBook}
         position="bottom-left"
         icon="trash-outline"
         color={ globalColors.danger }
@@ -29,7 +37,7 @@ export const BookDetailsScreen = () => {
       />
 
       <FloatingButton
-        onPress={() => {}}
+        onPress={handleEditBook}
         position="bottom-right"
         icon="pencil-outline"
         color={ globalColors.primary }

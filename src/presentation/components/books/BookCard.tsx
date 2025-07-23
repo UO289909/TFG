@@ -14,7 +14,7 @@ export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => 
         <Pressable style={styles.cardContainer} onPress={onPress}>
             <Image
                 style={styles.image}
-                source={{ uri: imageUrl || 'https://placehold.co/80x110.png?text=No+Cover' }}
+                source={{ uri: imageUrl || 'https://placehold.co/80x128.png?text=No+Cover' }}
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         backgroundColor: '#fff',
         width: '95%',
-        height: 130,
+        height: 148,
         borderRadius: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 80,
-        height: 110,
+        height: 128,
         borderRadius: 10,
         marginRight: 16,
         backgroundColor: '#eee',

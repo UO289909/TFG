@@ -8,6 +8,7 @@ export const globalColors = {
     success: '#4cc9f0',
     warning: '#fca311',
     danger: '#e71d36',
+    dangerDark: '#b00020',
     dark: '#22223b',
     grey: '#ccc',
 

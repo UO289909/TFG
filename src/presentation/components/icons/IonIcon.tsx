@@ -8,7 +8,9 @@ export type IonIconNames =
     | 'add-outline'
     | 'close-outline'
     | 'star'
-    | 'star-outline';
+    | 'star-outline'
+    | 'trash-outline'
+    | 'pencil-outline';
 
 interface Props {
     name: IonIconNames;

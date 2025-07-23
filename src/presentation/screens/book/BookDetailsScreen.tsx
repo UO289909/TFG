@@ -2,6 +2,7 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Image, Text, View } from 'react-native';
+import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 
 export const BookDetailsScreen = () => {
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
@@ -14,6 +15,9 @@ export const BookDetailsScreen = () => {
       <Text style={{ fontSize: 20, marginBottom: 10 }}>{book.author}</Text>
       <Text style={{ fontSize: 16, marginBottom: 10 }}>Nº de páginas: {book.pages}</Text>
       <Text style={{ fontSize: 16, marginBottom: 10 }}>Publicado en {book.release_year}</Text>
-    </View>
+
+      <FiveStarsInput onPress={() => {}} />
+
+   </View>
   );
 };

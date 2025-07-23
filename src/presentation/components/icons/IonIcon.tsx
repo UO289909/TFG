@@ -6,7 +6,9 @@ export type IonIconNames =
     | 'person-outline'
     | 'home-outline'
     | 'add-outline'
-    | 'close-outline';
+    | 'close-outline'
+    | 'star'
+    | 'star-outline';
 
 interface Props {
     name: IonIconNames;

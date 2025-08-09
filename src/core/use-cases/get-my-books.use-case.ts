@@ -1,7 +1,7 @@
 import { HttpAdapter } from '../../config/adapters/http.adapter';
-import { databaseGetMyBooks } from '../../infrastructure/database/books.repository';
-import { BookData, OpenLibraryResponseByIsbn } from '../../infrastructure/interfaces/open-library.responses';
-import { UserBook } from '../../infrastructure/interfaces/supabase.responses';
+import { databaseGetMyBooks, databaseSearchBookByIsbn } from '../../infrastructure/database/books.repository';
+import { BookData } from '../../infrastructure/interfaces/open-library.responses';
+import { DatabaseBook, UserBook } from '../../infrastructure/interfaces/supabase.responses';
 import { BookMapper } from '../../infrastructure/mappers/book.mapper';
 import { Book } from '../entities/book.entity';
 
@@ -11,28 +11,28 @@ export const getMyBooks = async (
 ): Promise<Book[]> => {
 
     try {
-        const databaseResponse: UserBook[] = await databaseGetMyBooks();
-        console.log('Database response:', databaseResponse);
+        const userBooks: UserBook[] = await databaseGetMyBooks();
+        console.log('User books response:', userBooks);
 
-        const booksWithDetails = await Promise.all(
-            databaseResponse.map(async (book) => {
-                const details: OpenLibraryResponseByIsbn = await fetcher.get('', {
-                    params: {
-                        format: 'json',
-                        jscmd: 'data',
-                        bibkeys: `ISBN:${book.isbn}`,
-                    },
-                });
+        const databaseBooks: DatabaseBook[] = await Promise.all(
+            userBooks.map(async (userBook) => {
+                const details: DatabaseBook = await databaseSearchBookByIsbn(userBook.isbn);
                 return details;
             })
         );
-        console.log('Books with details:', booksWithDetails);
+        console.log('Database books response:', databaseBooks);
 
-        const myBooks: Book[] = booksWithDetails.map( (detail) => {
-            console.log('Detail:', detail);
-            const bookData: BookData = Object.values(detail)[0];
-            console.log('Book data:', bookData);
-            return BookMapper.fromOpenLibraryResponseToEntity(bookData);
+        const myBooks: Book[] = userBooks.map((userBook, idx) => {
+            const dbBook = databaseBooks[idx];
+
+            return {
+                isbn: userBook.isbn,
+                title: dbBook.title,
+                pages: userBook.pages !== null && userBook.pages !== '0' && userBook.pages !== 0 ? userBook.pages.toString() : dbBook.pages,
+                cover_url: userBook.cover_url !== null ? userBook.cover_url : dbBook.cover_url,
+                release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
+                author: userBook.author !== null ? userBook.author : dbBook.author,
+            };
         });
         console.log('Mapped books:', myBooks);
 

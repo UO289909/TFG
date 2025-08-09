@@ -66,12 +66,12 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
     const accessToken = getAccessToken();
 
     try {
-        const data: DatabaseBook = await supabaseFetcher.get(`/books?isbn=eq.${isbn}`, {
+        const data: DatabaseBook[] = await supabaseFetcher.get(`/books?isbn=eq.${isbn}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        return data;
+        return data[0]
 
     } catch (error) {
         throw new Error(`Error searching book by ISBN on database: ${error}`);

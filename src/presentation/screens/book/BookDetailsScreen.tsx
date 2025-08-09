@@ -10,6 +10,10 @@ export const BookDetailsScreen = () => {
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
   const { book } = params;
 
+  const handleRateBook = () => {
+
+  }
+
   const handleDeleteBook = () => {
 
   };
@@ -26,7 +30,7 @@ export const BookDetailsScreen = () => {
       <Text style={{ fontSize: 16, marginBottom: 10 }}>Nº de páginas: {book.pages}</Text>
       <Text style={{ fontSize: 16, marginBottom: 10 }}>Publicado en {book.release_year}</Text>
 
-      <FiveStarsInput onPress={() => {}} />
+      <FiveStarsInput onPress={handleRateBook} />
 
       <FloatingButton
         onPress={handleDeleteBook}

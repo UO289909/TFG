@@ -19,7 +19,7 @@ export const FloatingButton = ({ onPress, icon, position, color, colorPressed = 
       {
         backgroundColor: disabled ? colorDisabled : pressed ? colorPressed : color,
         elevation: pressed ? 4 : 8,
-        ...(position === 'bottom-right' ? { right: 30 } : { left: 30 }),
+        ...(position === 'bottom-right' ? { right: 16 } : { left: 16 }),
       },
     ]}
     onPress={onPress}
@@ -32,10 +32,10 @@ export const FloatingButton = ({ onPress, icon, position, color, colorPressed = 
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 16,
     borderRadius: 15,
-    width: 60,
-    height: 60,
+    width: 56,
+    height: 56,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',

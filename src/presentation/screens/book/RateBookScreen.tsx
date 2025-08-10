@@ -1,23 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Platform, TouchableOpacity } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { useDefaultStyles } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
+import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 
-type RateBookScreenRouteProp = RouteProp<
-    {
-        params: {
-            book: any; // Ajusta el tipo según tu modelo de libro
-            rating: number;
-        };
-    },
-    'params'
->;
 
-const RateBookScreen: React.FC = () => {
+export const RateBookScreen = () => {
     const navigation = useNavigation();
-    const route = useRoute<RateBookScreenRouteProp>();
-    const { book, rating } = route.params;
+    const { params } = useRoute<RouteProp<RootStackParams, 'RateBook'>>();
+    const { book, rating } = params;
 
     const today = new Date();
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -25,15 +17,20 @@ const RateBookScreen: React.FC = () => {
     const [showStartPicker, setShowStartPicker] = useState(false);
     const [showEndPicker, setShowEndPicker] = useState(false);
     const [currentRating, setCurrentRating] = useState<number>(rating);
+    const defaultStyles = useDefaultStyles();
 
     const onChangeStart = (_: any, selectedDate?: Date) => {
         setShowStartPicker(Platform.OS === 'ios');
-        if (selectedDate) setStartDate(selectedDate);
+        if (selectedDate) {
+            setStartDate(selectedDate);
+        }
     };
 
     const onChangeEnd = (_: any, selectedDate?: Date) => {
         setShowEndPicker(Platform.OS === 'ios');
-        if (selectedDate) setEndDate(selectedDate);
+        if (selectedDate) {
+            setEndDate(selectedDate);
+        }
     };
 
     const handleSubmit = () => {
@@ -56,11 +53,11 @@ const RateBookScreen: React.FC = () => {
             </TouchableOpacity>
             {showStartPicker && (
                 <DateTimePicker
-                    value={startDate || today}
-                    mode="date"
-                    display="default"
+                    date={startDate || today}
+                    mode="single"
                     onChange={onChangeStart}
-                    maximumDate={endDate}
+                    maxDate={endDate}
+                    styles={defaultStyles}
                 />
             )}
 
@@ -72,17 +69,16 @@ const RateBookScreen: React.FC = () => {
             </TouchableOpacity>
             {showEndPicker && (
                 <DateTimePicker
-                    value={endDate}
-                    mode="date"
-                    display="default"
+                    date={endDate}
+                    mode="single"
                     onChange={onChangeEnd}
-                    minimumDate={startDate}
-                    maximumDate={today}
+                    minDate={startDate}
+                    maxDate={today}
                 />
             )}
 
             <Text style={styles.label}>Valoración</Text>
-            <FiveStarsInput value={currentRating} onChange={setCurrentRating} />
+            <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
 
             <Button title="Guardar valoración" onPress={handleSubmit} />
         </View>
@@ -113,5 +109,3 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
 });
-
-export default RateBookScreen;

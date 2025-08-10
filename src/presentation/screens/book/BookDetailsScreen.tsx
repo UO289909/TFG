@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Image, Text, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
@@ -7,12 +7,13 @@ import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 
 export const BookDetailsScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
   const { book } = params;
 
-  const handleRateBook = () => {
-
-  }
+  const handleRateBook = (rating: number) => {
+    navigation.navigate('RateBook', { book, rating });
+  };
 
   const handleDeleteBook = () => {
 

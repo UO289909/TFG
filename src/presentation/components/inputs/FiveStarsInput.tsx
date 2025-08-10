@@ -4,11 +4,12 @@ import { TouchableOpacity, View } from 'react-native';
 import { IonIcon } from '../icons/IonIcon';
 
 interface Props {
-    onPress: () => void;
+    onPress: (rating: number) => void;
+    value?: number;
 }
 
-export const FiveStarsInput = ({ onPress }: Props) => {
-    const [rating, setRating] = useState(0);
+export const FiveStarsInput = ({ onPress, value = 0 }: Props) => {
+    const [rating, setRating] = useState(value > 5 ? 5 : value < 0 ? 0 : value);
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -17,7 +18,7 @@ export const FiveStarsInput = ({ onPress }: Props) => {
                     key={star}
                     onPress={() => {
                         rating === star ? setRating(0) : setRating(star);
-                        onPress();
+                        onPress(rating === star ? 0 : star);
                     }}
                     style={{ marginRight: idx !== 4 ? 8 : 0 }}
                 >

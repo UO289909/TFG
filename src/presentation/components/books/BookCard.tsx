@@ -9,12 +9,13 @@ interface Props {
 }
 
 export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => {
+    const default_cover = 'https://placehold.co/80x128.png?text=No+Cover';
 
     return (
         <Pressable style={styles.cardContainer} onPress={onPress}>
             <Image
                 style={styles.image}
-                source={{ uri: imageUrl || 'https://placehold.co/80x128.png?text=No+Cover' }}
+                source={{ uri: imageUrl || default_cover }}
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>

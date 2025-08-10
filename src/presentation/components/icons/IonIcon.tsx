@@ -10,7 +10,8 @@ export type IonIconNames =
     | 'star'
     | 'star-outline'
     | 'trash-outline'
-    | 'pencil-outline';
+    | 'pencil-outline'
+    | 'checkmark-outline';
 
 interface Props {
     name: IonIconNames;

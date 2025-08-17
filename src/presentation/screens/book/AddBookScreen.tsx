@@ -155,8 +155,8 @@ export const AddBookScreen = () => {
         onPress={handleGoBack}
         icon="close-outline"
         position="bottom-left"
-        color={globalColors.primary}
-        colorPressed={globalColors.primaryDark}
+        color={globalColors.danger}
+        colorPressed={globalColors.dangerDark}
       />
       <FloatingButton
         onPress={handleAddBook}

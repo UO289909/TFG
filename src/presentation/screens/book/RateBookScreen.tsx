@@ -54,7 +54,7 @@ export const RateBookScreen = () => {
 
             <Text style={styles.label}>Fecha de inicio de lectura</Text>
             <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
-                <Text>
+                <Text style={styles.dateLabel}>
                     {startDate
                         ? startDate.toLocaleDateString()
                         : 'Selecciona la fecha de inicio'}
@@ -72,7 +72,7 @@ export const RateBookScreen = () => {
 
             <Text style={styles.label}>Fecha de fin de lectura</Text>
             <TouchableOpacity onPress={() => setShowEndPicker(true)} style={styles.dateInput}>
-                <Text>
+                <Text style={styles.dateLabel}>
                     {endDate ? endDate.toLocaleDateString() : today.toLocaleDateString()}
                 </Text>
             </TouchableOpacity>
@@ -128,11 +128,17 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     dateInput: {
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: globalColors.primary,
-        borderRadius: 8,
-        padding: 12,
+        borderRadius: 10,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
         marginBottom: 8,
+    },
+    dateLabel: {
+        fontFamily: 'Roboto-Regular',
+        fontSize: 16,
+        color: '#222',
     },
     pickerOverlay: {
         position: 'absolute',

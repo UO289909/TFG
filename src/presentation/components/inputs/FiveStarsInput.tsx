@@ -6,9 +6,10 @@ import { IonIcon } from '../icons/IonIcon';
 interface Props {
     onPress: (rating: number) => void;
     value?: number;
+    editable?: boolean;
 }
 
-export const FiveStarsInput = ({ onPress, value = 0 }: Props) => {
+export const FiveStarsInput = ({ onPress, value = 0, editable = true }: Props) => {
     const [rating, setRating] = useState(value > 5 ? 5 : value < 0 ? 0 : value);
 
     return (
@@ -16,16 +17,28 @@ export const FiveStarsInput = ({ onPress, value = 0 }: Props) => {
             {[1, 2, 3, 4, 5].map((star, idx) => (
                 <TouchableOpacity
                     key={star}
-                    onPress={() => {
-                        rating === star ? setRating(0) : setRating(star);
-                        onPress(rating === star ? 0 : star);
-                    }}
+                    onPress={
+                        editable
+                            ? () => {
+                                  rating === star ? setRating(0) : setRating(star);
+                                  onPress(rating === star ? 0 : star);
+                              }
+                            : undefined
+                    }
+                    activeOpacity={editable ? 0.2 : 1}
                     style={{ marginRight: idx !== 4 ? 8 : 0 }}
+                    disabled={!editable}
                 >
                     <IonIcon
                         name={rating >= star ? 'star' : 'star-outline'}
                         size={36}
-                        color={rating >= star ? '#FFD700' : '#AAA'}
+                        color={
+                            editable
+                                ? '#AAA'
+                                : rating >= star
+                                    ? '#FFD700'
+                                    : '#AAA'
+                        }
                     />
                 </TouchableOpacity>
             ))}

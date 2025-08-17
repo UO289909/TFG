@@ -36,4 +36,13 @@ export class AxiosAdapter implements HttpAdapter {
             throw new Error(`Error posting to: ${ url }`);
         }
     }
+
+    async patch<T>( url: string, body: unknown, options?: { headers?: Record<string, string> } ): Promise<T> {
+        try {
+            const { data } = await this.axiosInstance.patch<T>(url, body, options);
+            return data;
+        } catch (error) {
+            throw new Error(`Error patching to: ${ url }`);
+        }
+    }
 }

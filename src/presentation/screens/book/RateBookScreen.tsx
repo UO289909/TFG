@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { DateType } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
+import { rateBook } from '../../../core/use-cases/rate-book.use-case';
 
 
 export const RateBookScreen = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'RateBook'>>();
     const { book, rating } = params;
 
@@ -35,10 +36,18 @@ export const RateBookScreen = () => {
         setShowEndPicker(false);
     };
 
-    const handleSubmit = () => {
-        // Aquí puedes manejar el envío de los datos
-        // Por ejemplo, llamar a una función para guardar la valoración
-        navigation.goBack();
+    const handleSubmit = async () => {
+        if (!startDate || !endDate || currentRating === 0) {
+            return;
+        }
+
+        await rateBook(
+            book.isbn,
+            currentRating,
+            startDate,
+            endDate
+        );
+        navigation.navigate('MyBooksList');
     };
 
     const handleCancel = () => {

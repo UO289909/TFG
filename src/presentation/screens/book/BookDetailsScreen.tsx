@@ -30,10 +30,10 @@ export const BookDetailsScreen = () => {
       <Image source={{ uri: book.cover_url || default_cover }} style={{ width: 200, height: 320, borderRadius: 12, marginBottom: 20 }} />
       <Text style={{ fontSize: 30, fontFamily: 'Roboto-Bold', textAlign: 'center' }}>{book.title}</Text>
       <Text style={{ fontSize: 20, marginBottom: 20 }}>{book.author}</Text>
-      <Text style={{ fontSize: 16, marginBottom: 10 }}>Nº de páginas: {book.pages}</Text>
+      <Text style={{ fontSize: 16, marginBottom: 10 }}>{book.pages} páginas</Text>
       <Text style={{ fontSize: 16, marginBottom: 10 }}>Publicado en {book.release_year}</Text>
 
-      <FiveStarsInput onPress={handleRateBook} />
+      <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
 
       <FloatingButton
         onPress={handleDeleteBook}

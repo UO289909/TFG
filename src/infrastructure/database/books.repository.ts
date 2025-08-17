@@ -114,7 +114,13 @@ export const databaseAddBook = async (book: Book): Promise<void> => {
     }
 };
 
-
+/**
+ * Adds a book to the user's collection.
+ *
+ * @param book The book to add.
+ * @returns {Promise<void>} Nothing.
+ * @throws {Error} If there is an error adding the book to the database.
+ */
 export const databaseAddUserBook = async (book: Book): Promise<void> => {
 
     const accessToken = getAccessToken();
@@ -144,4 +150,32 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
     } catch (error) {
         throw new Error(`Error adding user book to database: ${error}`);
     }
+};
+
+
+export const rateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        await supabaseFetcher.patch(
+            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            {
+                rating,
+                start_date: startDate.toISOString().slice(0, 10),
+                finish_date: finishDate.toISOString().slice(0, 10),
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'return=minimal',
+                },
+            }
+        );
+    } catch (error) {
+        throw new Error(`Error rating user book: ${error}`);
+    }
+
 };

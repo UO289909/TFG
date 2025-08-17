@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Book } from '../../core/entities/book.entity';
 import { getMyBooks } from '../../core/use-cases';
-import { openLibraryFetcher } from '../../config/adapters/openLibrary.adapter';
 import { signIn } from '../../infrastructure/database/auth.repository';
 
 
@@ -23,7 +22,7 @@ export const useBooks = () => {
         console.log('Finished sign in!');
 
         console.log('Starting fetching...');
-        const myBooksFetched = await getMyBooks(openLibraryFetcher);
+        const myBooksFetched = await getMyBooks();
         console.log('Finished fetching!');
         setMyBooks(myBooksFetched);
 

@@ -1,14 +1,9 @@
-import { HttpAdapter } from '../../config/adapters/http.adapter';
 import { databaseGetMyBooks, databaseSearchBookByIsbn } from '../../infrastructure/database/books.repository';
-import { BookData } from '../../infrastructure/interfaces/open-library.responses';
 import { DatabaseBook, UserBook } from '../../infrastructure/interfaces/supabase.responses';
-import { BookMapper } from '../../infrastructure/mappers/book.mapper';
 import { Book } from '../entities/book.entity';
 
 
-export const getMyBooks = async (
-    fetcher: HttpAdapter,
-): Promise<Book[]> => {
+export const getMyBooks = async (): Promise<Book[]> => {
 
     try {
         const userBooks: UserBook[] = await databaseGetMyBooks();
@@ -32,6 +27,9 @@ export const getMyBooks = async (
                 cover_url: userBook.cover_url !== null ? userBook.cover_url : dbBook.cover_url,
                 release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
                 author: userBook.author !== null ? userBook.author : dbBook.author,
+                rating: userBook.rating,
+                start_date: userBook.start_date,
+                finish_date: userBook.finish_date,
             };
         });
         console.log('Mapped books:', myBooks);

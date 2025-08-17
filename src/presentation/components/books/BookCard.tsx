@@ -1,14 +1,16 @@
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import { FiveStarsInput } from '../inputs/FiveStarsInput';
 
 interface Props {
     title: string;
     author: string | null;
     pages: string | null;
+    rating: 1 | 2 | 3 | 4 | 5 | null;
     imageUrl: string | null;
     onPress: () => void;
 }
 
-export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => {
+export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Props) => {
     const default_cover = 'https://placehold.co/80x128.png?text=No+Cover';
 
     return (
@@ -19,9 +21,17 @@ export const BookCard = ({ title, author, pages, imageUrl, onPress }: Props) => 
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>
-                <Text style={styles.titleText}>{ title }</Text>
-                <Text style={styles.authorText}>{ author }</Text>
-                <Text>{ pages }</Text>
+                <Text style={styles.titleText}>{title}</Text>
+                <Text style={styles.authorText}>{author}</Text>
+                <Text style={styles.pagesText}>{pages} páginas</Text>
+                <View style={styles.ratingContainer}>
+                    {rating &&
+                        <FiveStarsInput value={rating} editable={false} small onPress={() => { }} />
+                    }
+                    {!rating &&
+                        <Text style={styles.ratingText}>Lectura en curso</Text>
+                    }
+                </View>
             </View>
         </Pressable>
     );
@@ -33,7 +43,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         backgroundColor: '#fff',
         width: '95%',
-        height: 148,
+        minHeight: 148,
         borderRadius: 16,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -62,7 +72,22 @@ const styles = StyleSheet.create({
     },
     authorText: {
         fontSize: 16,
+        fontFamily: 'Roboto-Regular',
+        color: '#333',
+    },
+    pagesText: {
+        fontSize: 14,
         fontFamily: 'Roboto-Light',
         color: '#333',
+        marginBottom: 10,
+    },
+    ratingText: {
+        fontSize: 14,
+        fontFamily: 'Roboto-Italic',
+        color: '#333',
+    },
+    ratingContainer: {
+        marginBottom: 10,
+        alignItems: 'flex-end',
     },
 });

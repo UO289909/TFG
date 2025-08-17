@@ -5,12 +5,13 @@ import { IonIcon } from '../icons/IonIcon';
 
 interface Props {
     onPress: (rating: number) => void;
-    value?: number;
+    value?: number | null;
     editable?: boolean;
+    small?: boolean;
 }
 
-export const FiveStarsInput = ({ onPress, value = 0, editable = true }: Props) => {
-    const [rating, setRating] = useState(value > 5 ? 5 : value < 0 ? 0 : value);
+export const FiveStarsInput = ({ onPress, value = 0, editable = true, small = false }: Props) => {
+    const [rating, setRating] = useState(value === null ? 0 : value > 5 ? 5 : value < 0 ? 0 : value);
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -31,7 +32,7 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true }: Props) =
                 >
                     <IonIcon
                         name={rating >= star ? 'star' : 'star-outline'}
-                        size={36}
+                        size={small ? 24 : 36}
                         color={
                             editable
                                 ? '#AAA'

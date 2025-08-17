@@ -45,6 +45,7 @@ export const MyBooksScreen = () => {
             title={ book.title }
             author={ book.author }
             pages={ book.pages }
+            rating={ book.rating }
             imageUrl={ book.cover_url }
           />
         ))}

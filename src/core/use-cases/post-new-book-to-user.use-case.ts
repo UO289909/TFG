@@ -32,9 +32,9 @@ export const postNewBook = async (
             cover_url: userFields.includes('cover_url') ? book.cover_url : null,
             release_year: userFields.includes('release_year') ? book.release_year : null,
             pages: userFields.includes('pages') ? book.pages : null,
-            rating: userFields.includes('rating') ? book.rating : null,
-            start_date: userFields.includes('start_date') ? book.start_date : null,
-            finish_date: userFields.includes('finish_date') ? book.finish_date : null,
+            rating: null,
+            start_date: null,
+            finish_date: null,
         };
         await databaseAddUserBook(bookUserInfo);
         console.log('Libro añadido a user_books', bookUserInfo);

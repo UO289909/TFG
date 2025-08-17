@@ -45,4 +45,13 @@ export class AxiosAdapter implements HttpAdapter {
             throw new Error(`Error patching to: ${ url }`);
         }
     }
+
+    async delete<T>( url: string, options?: { headers?: Record<string, string> } ): Promise<T> {
+        try {
+            const { data } = await this.axiosInstance.delete<T>(url, options);
+            return data;
+        } catch (error) {
+            throw new Error(`Error deleting from: ${ url }`);
+        }
+    }
 }

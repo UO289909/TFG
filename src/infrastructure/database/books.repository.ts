@@ -152,7 +152,14 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
     }
 };
 
-
+/**
+ * Rates a book for a user.
+ *
+ * @param isbn The ISBN of the book to rate.
+ * @param rating The rating to give to the book.
+ * @param startDate The start date of the reading period.
+ * @param finishDate The finish date of the reading period.
+ */
 export const rateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
 
     const accessToken = getAccessToken();
@@ -176,6 +183,33 @@ export const rateUserBook = async (isbn: string, rating: number, startDate: Date
         );
     } catch (error) {
         throw new Error(`Error rating user book: ${error}`);
+    }
+
+};
+
+/**
+ * Deletes a book from the user's collection.
+ *
+ * @param isbn The ISBN of the book to delete.
+ */
+export const deleteUserBook = async (isbn: string): Promise<void> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        await supabaseFetcher.delete(
+            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'return=minimal',
+                },
+            }
+        );
+    } catch (error) {
+        throw new Error(`Error deleting user book: ${error}`);
     }
 
 };

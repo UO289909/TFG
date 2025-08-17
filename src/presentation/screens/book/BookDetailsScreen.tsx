@@ -5,6 +5,7 @@ import { Image, Text, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
+import { deleteBookFromLibrary } from '../../../core/use-cases/delete-book.use-case';
 
 export const BookDetailsScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
@@ -17,8 +18,9 @@ export const BookDetailsScreen = () => {
     navigation.navigate('RateBook', { book, rating });
   };
 
-  const handleDeleteBook = () => {
-
+  const handleDeleteBook = async () => {
+    await deleteBookFromLibrary(book.isbn);
+    navigation.navigate('MyBooksList');
   };
 
   const handleEditBook = () => {

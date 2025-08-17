@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
+import { DateType } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors, globalDatePickerStyles } from '../../../config/app-theme';
+import { globalColors } from '../../../config/app-theme';
+import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 
 
 export const RateBookScreen = () => {
@@ -14,24 +15,24 @@ export const RateBookScreen = () => {
     const { book, rating } = params;
 
     const today = new Date();
-    const [startDate, setStartDate] = useState<DateType | undefined>(undefined);
-    const [endDate, setEndDate] = useState<DateType | undefined>(today);
+    const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+    const [endDate, setEndDate] = useState<Date | undefined>(today);
     const [showStartPicker, setShowStartPicker] = useState(false);
     const [showEndPicker, setShowEndPicker] = useState(false);
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
-    const onChangeStart = (_: any, selectedDate?: Date) => {
-        setShowStartPicker(Platform.OS === 'ios');
+    const onChangeStart = (selectedDate?: DateType) => {
         if (selectedDate) {
-            setStartDate(selectedDate);
+            setStartDate(new Date(selectedDate.toString()));
         }
+        setShowStartPicker(false);
     };
 
-    const onChangeEnd = (_: any, selectedDate?: Date) => {
-        setShowEndPicker(Platform.OS === 'ios');
+    const onChangeEnd = (selectedDate?: DateType) => {
         if (selectedDate) {
-            setEndDate(selectedDate);
+            setEndDate(new Date(selectedDate.toString()));
         }
+        setShowEndPicker(false);
     };
 
     const handleSubmit = () => {
@@ -55,47 +56,34 @@ export const RateBookScreen = () => {
             <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
                 <Text>
                     {startDate
-                        ? startDate.toLocaleString()
+                        ? startDate.toLocaleDateString()
                         : 'Selecciona la fecha de inicio'}
                 </Text>
             </TouchableOpacity>
             {showStartPicker && (
-                <View style={styles.pickerOverlay}>
-                    <TouchableOpacity style={styles.overlayBg} onPress={() => setShowStartPicker(false)} />
-                    <DateTimePicker
-                        date={startDate || today}
-                        mode="single"
-                        onChange={onChangeStart}
-                        maxDate={endDate}
-                        locale="es"
-                        firstDayOfWeek={1}
-                        style={styles.pickerContainer}
-                        styles={globalDatePickerStyles}
-                    />
-                </View>
+                <CustomDatePicker
+                    minDate={undefined}
+                    maxDate={endDate}
+                    defaultDate={startDate || today}
+                    onChange={onChangeStart}
+                    onTouchOutside={() => setShowStartPicker(false)}
+                />
             )}
 
             <Text style={styles.label}>Fecha de fin de lectura</Text>
             <TouchableOpacity onPress={() => setShowEndPicker(true)} style={styles.dateInput}>
                 <Text>
-                    {endDate ? endDate.toLocaleString() : today.toLocaleDateString()}
+                    {endDate ? endDate.toLocaleDateString() : today.toLocaleDateString()}
                 </Text>
             </TouchableOpacity>
             {showEndPicker && (
-                <View style={styles.pickerOverlay}>
-                    <TouchableOpacity style={styles.overlayBg} onPress={() => setShowEndPicker(false)} />
-                    <DateTimePicker
-                        date={endDate}
-                        mode="single"
-                        onChange={onChangeEnd}
-                        minDate={startDate}
-                        maxDate={today}
-                        locale="es"
-                        firstDayOfWeek={1}
-                        style={styles.pickerContainer}
-                        styles={globalDatePickerStyles}
-                    />
-                </View>
+                <CustomDatePicker
+                    minDate={startDate}
+                    maxDate={today}
+                    defaultDate={endDate}
+                    onChange={onChangeEnd}
+                    onTouchOutside={() => setShowEndPicker(false)}
+                />
             )}
 
             <Text style={styles.label}>Valoración</Text>

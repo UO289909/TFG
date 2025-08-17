@@ -1,12 +1,12 @@
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import DateTimePicker from 'react-native-ui-datepicker';
-import { globalDatePickerStyles } from '../../../config/app-theme';
+import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
+import { globalColors } from '../../../config/app-theme';
 
 interface Props {
-    minDate: Date;
-    maxDate: Date;
-    defaultDate: Date;
-    onChange: () => void;
+    minDate: Date | undefined;
+    maxDate: Date | undefined;
+    defaultDate: Date | undefined;
+    onChange: (selectedDate?: DateType) => void;
     onTouchOutside: () => void;
 }
 
@@ -18,13 +18,13 @@ export const CustomDatePicker = ({ minDate, maxDate, defaultDate, onChange, onTo
             <DateTimePicker
                 date={defaultDate}
                 mode="single"
-                onChange={onChange}
+                onChange={({date}) => onChange(date)}
                 minDate={minDate}
                 maxDate={maxDate}
                 locale="es"
                 firstDayOfWeek={1}
                 style={styles.pickerContainer}
-                styles={globalDatePickerStyles}
+                styles={datePickerStyles}
             />
         </View>
     );
@@ -50,4 +50,15 @@ const styles = StyleSheet.create({
         elevation: 10,
         margin: 12,
     },
+});
+
+export const datePickerStyles = StyleSheet.create({
+    selected: { backgroundColor: globalColors.primary, borderRadius: 20 },
+    selected_label: { color: globalColors.white, fontFamily: 'Roboto-Bold', fontSize: 16 },
+    disabled_label: { color: globalColors.grey },
+    day_label: { color: globalColors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
+    month_selector_label: { color: globalColors.primary, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    weekday_label: { color: globalColors.primary, fontFamily: 'Roboto-Light', fontSize: 18 },
+    year_selector_label: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    year_selector: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
 });

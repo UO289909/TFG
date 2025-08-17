@@ -32,14 +32,3 @@ export const globalStyles = StyleSheet.create({
     },
 
 });
-
-export const globalDatePickerStyles = StyleSheet.create({
-    selected: { backgroundColor: globalColors.primary, borderRadius: 20 },
-    selected_label: { color: globalColors.white, fontFamily: 'Roboto-Bold', fontSize: 16 },
-    disabled_label: { color: globalColors.grey },
-    day_label: { color: globalColors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
-    month_selector_label: { color: globalColors.primary, fontFamily: 'Roboto-Bold', fontSize: 20 },
-    weekday_label: { color: globalColors.primary, fontFamily: 'Roboto-Light', fontSize: 18 },
-    year_selector_label: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
-    year_selector: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
-});

@@ -77,6 +77,9 @@ export const AddBookScreen = () => {
       pages: pages,
       release_year: year,
       cover_url: cover,
+      rating: null,
+      start_date: null,
+      finish_date: null,
     };
 
     await postNewBook(book, fieldsEnabled, isNewBook);

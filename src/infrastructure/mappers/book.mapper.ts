@@ -15,6 +15,9 @@ export class BookMapper {
                 : null,
             release_year: response.publish_date,
             cover_url: response.cover?.medium || null,
+            rating: null,
+            start_date: null,
+            finish_date: null,
         };
     }
 
@@ -26,6 +29,9 @@ export class BookMapper {
             pages: databaseBook.pages,
             release_year: databaseBook.release_year,
             cover_url: databaseBook.cover_url || null,
+            rating: null,
+            start_date: null,
+            finish_date: null,
         };
     }
 }

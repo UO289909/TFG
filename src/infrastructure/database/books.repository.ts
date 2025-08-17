@@ -71,7 +71,7 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
                 Authorization: `Bearer ${accessToken}`,
             },
         });
-        return data[0]
+        return data[0];
 
     } catch (error) {
         throw new Error(`Error searching book by ISBN on database: ${error}`);

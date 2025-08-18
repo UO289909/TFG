@@ -15,8 +15,6 @@ export const rateUserBook = async (
             finishDate
         );
 
-        console.log('Libro valorado.');
-
         return;
 
     } catch (error) {

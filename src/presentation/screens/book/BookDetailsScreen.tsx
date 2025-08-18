@@ -5,7 +5,7 @@ import { Image, Text, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
-import { deleteUserBook } from '../../../core/use-cases/delete-book.use-case';
+import { deleteUserBook } from '../../../core/use-cases/delete-user-book.use-case';
 
 export const BookDetailsScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();

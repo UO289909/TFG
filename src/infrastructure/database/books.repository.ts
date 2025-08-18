@@ -127,12 +127,12 @@ export const databaseAddBook = async (book: Book): Promise<void> => {
                 'release_year': Number(book.release_year),
             },
             {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                Prefer: 'return=minimal',
-            },
-        });
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'return=minimal',
+                },
+            });
         console.log('sale del post del addbook');
         return;
     } catch (error) {
@@ -236,6 +236,56 @@ export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
         );
     } catch (error) {
         throw new Error(`Error deleting user book: ${error}`);
+    }
+
+};
+
+/**
+ * Edits a user's book information in the database.
+ *
+ * @param userBook The user's book information to edit.
+ */
+export const databaseEditUserBook = async (
+    isbn: string,
+    author: string | null,
+    pages: number | null,
+    cover_url: string | null,
+    release_year: number | null,
+    start_date: string | null,
+    finish_date: string | null,
+    rating: number | null
+): Promise<void> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    const updatedFields: Record<string, any> = {};
+    if (author !== null) { updatedFields.author = author; }
+    if (pages !== null) { updatedFields.pages = pages; }
+    if (cover_url !== null) { updatedFields.cover_url = cover_url; }
+    if (release_year !== null) { updatedFields.release_year = release_year; }
+    if (start_date !== null) { updatedFields.start_date = start_date; }
+    if (finish_date !== null) { updatedFields.finish_date = finish_date; }
+    if (rating !== null) { updatedFields.rating = rating; }
+
+    try {
+        console.log('Updating user book with fields:', updatedFields);
+        await supabaseFetcher.patch(
+            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            {
+                updatedFields,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'return=minimal',
+                },
+            }
+        );
+        console.log('User book updated successfully');
+    } catch (error) {
+        throw new Error(`Error editing user book: ${error}`);
     }
 
 };

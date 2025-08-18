@@ -17,9 +17,9 @@ export const RateBookScreen = () => {
 
     const today = new Date();
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-    const [endDate, setEndDate] = useState<Date | undefined>(today);
+    const [finishDate, setFinishDate] = useState<Date | undefined>(today);
     const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showEndPicker, setShowEndPicker] = useState(false);
+    const [showFinishPicker, setShowFinishPicker] = useState(false);
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
     const onChangeStart = (selectedDate?: DateType) => {
@@ -29,15 +29,15 @@ export const RateBookScreen = () => {
         setShowStartPicker(false);
     };
 
-    const onChangeEnd = (selectedDate?: DateType) => {
+    const onChangeFinish = (selectedDate?: DateType) => {
         if (selectedDate) {
-            setEndDate(new Date(selectedDate.toString()));
+            setFinishDate(new Date(selectedDate.toString()));
         }
-        setShowEndPicker(false);
+        setShowFinishPicker(false);
     };
 
     const handleSubmit = async () => {
-        if (!startDate || !endDate || currentRating === 0) {
+        if (!startDate || !finishDate || currentRating === 0) {
             return;
         }
 
@@ -45,14 +45,14 @@ export const RateBookScreen = () => {
             book.isbn,
             currentRating,
             startDate,
-            endDate
+            finishDate
         );
         navigation.navigate('MyBooksList');
     };
 
     const handleCancel = () => {
         setStartDate(undefined);
-        setEndDate(undefined);
+        setFinishDate(undefined);
         setCurrentRating(0);
         navigation.goBack();
     };
@@ -61,7 +61,7 @@ export const RateBookScreen = () => {
         <View style={styles.container}>
             <Text style={styles.title}>Valorar "{book.title}"</Text>
 
-            <Text style={styles.label}>Fecha de inicio de lectura</Text>
+            <Text style={styles.label}>Fecha de inicio de lectura:</Text>
             <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
                 <Text style={styles.dateLabel}>
                     {startDate
@@ -72,30 +72,30 @@ export const RateBookScreen = () => {
             {showStartPicker && (
                 <CustomDatePicker
                     minDate={undefined}
-                    maxDate={endDate}
+                    maxDate={finishDate}
                     defaultDate={startDate || today}
                     onChange={onChangeStart}
                     onTouchOutside={() => setShowStartPicker(false)}
                 />
             )}
 
-            <Text style={styles.label}>Fecha de fin de lectura</Text>
-            <TouchableOpacity onPress={() => setShowEndPicker(true)} style={styles.dateInput}>
+            <Text style={styles.label}>Fecha de fin de lectura:</Text>
+            <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
                 <Text style={styles.dateLabel}>
-                    {endDate ? endDate.toLocaleDateString() : today.toLocaleDateString()}
+                    {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
                 </Text>
             </TouchableOpacity>
-            {showEndPicker && (
+            {showFinishPicker && (
                 <CustomDatePicker
                     minDate={startDate}
                     maxDate={today}
-                    defaultDate={endDate}
-                    onChange={onChangeEnd}
-                    onTouchOutside={() => setShowEndPicker(false)}
+                    defaultDate={finishDate}
+                    onChange={onChangeFinish}
+                    onTouchOutside={() => setShowFinishPicker(false)}
                 />
             )}
 
-            <Text style={styles.label}>Valoración</Text>
+            <Text style={styles.label}>Valoración:</Text>
             <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
 
             <FloatingButton
@@ -104,7 +104,7 @@ export const RateBookScreen = () => {
                 position="bottom-right"
                 color={globalColors.primary}
                 colorPressed={globalColors.primaryDark}
-                disabled={!startDate || !endDate || currentRating === 0}
+                disabled={!startDate || !finishDate || currentRating === 0}
             />
 
             <FloatingButton
@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
     },
     dateInput: {
         borderWidth: 2,
-        borderColor: globalColors.primary,
+        borderColor: '#ccc',
+        backgroundColor: '#faf9fd',
         borderRadius: 10,
         paddingVertical: 8,
         paddingHorizontal: 12,

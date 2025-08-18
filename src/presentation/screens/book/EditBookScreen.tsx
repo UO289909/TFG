@@ -1,157 +1,156 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import { useState } from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
-import { CustomButton } from '../../components/pressables/CustomButton';
-import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
-import { getBookByIsbn } from '../../../core/use-cases/get-book-by-isbn.use-case';
-import { Book } from '../../../core/entities/book.entity';
-import { postNewBook } from '../../../core/use-cases/post-new-book-to-user.use-case';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
+import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
+import { getUserBookByIsbn } from '../../../core/use-cases/get-user-book-by-isbn.use-case';
+import { FullScreenLoader } from '../../components/loaders/FullScreenLoader';
+import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
+import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 
 export const EditBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'EditBook'>>();
     const { book } = params;
 
+    const [userBook, setUserBook] = useState<UserBook>();
+    const [isLoading, setIsLoading] = useState(true);
+
     const [author, setAuthor] = useState('');
     const [pages, setPages] = useState('');
     const [year, setYear] = useState('');
     const [cover, setCover] = useState('');
-    const [infoText, setInfoText] = useState('Introduce el ISBN del libro para buscarlo');
-    const [isNewBook, setIsNewBook] = useState(false);
-    const [canSearch, setCanSearch] = useState(true);
-    const [fieldsEnabled, setFieldsEnabled] = useState<string[]>(['isbn']);
+    const [rating, setRating] = useState(0);
+    const [startDate, setStartDate] = useState(userBook?.start_date);
+    const [finishDate, setFinishDate] = useState(userBook?.finish_date);
+
+    const fetchUserBook = async () => {
+        setIsLoading(true);
+
+        const fetchedBook = await getUserBookByIsbn(book.isbn);
+        setUserBook(fetchedBook);
+
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        fetchUserBook();
+    }, []);
+
+    useEffect(() => {
+        if (userBook) {
+            setAuthor(userBook.author ?? '');
+            setPages(userBook.pages?.toString() ?? '');
+            setYear(userBook.release_year?.toString() ?? '');
+            setCover(userBook.cover_url ?? '');
+            setRating(Number(userBook.rating) || 0);
+        }
+    }, [userBook]);
+
 
 
     const handleGoBack = () => {
         navigation.goBack();
     };
 
-    const handleSearchISBN = async () => {
-        try {
-            const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryFetcher, isbn);
-
-            if (alreadyInUser) {
-                setInfoText('Este libro ya está en tu colección');
-                return;
-            }
-
-            if (book !== null) {
-
-                if (fromOpenLibrary) {
-                    setIsNewBook(true);
-                }
-
-                setFieldsEnabled([]);
-                setTitle(book.title);
-
-                if (book.author) { setAuthor(book.author); }
-                else { setFieldsEnabled(prev => [...prev, 'author']); }
-
-                if (book.pages) { setPages(book.pages.toString()); }
-                else { setFieldsEnabled(prev => [...prev, 'pages']); }
-
-                if (book.release_year) { setYear(book.release_year); }
-                else { setFieldsEnabled(prev => [...prev, 'year']); }
-
-                if (book.cover_url) { setCover(book.cover_url); }
-                else { setFieldsEnabled(prev => [...prev, 'cover']); }
-
-                setCanSearch(false);
-                setInfoText('Libro encontrado, añade los campos restantes si los hay');
-            } else {
-                setInfoText('No se encontró ningún libro con ese ISBN\nPrueba otro');
-            }
-        } catch (error) {
-            throw new Error(`Error searching book by ISBN: ${error}`);
-        }
-    };
-
-    const handleAddBook = async () => {
-        const book: Book = {
-            title,
-            isbn: isbn,
-            author: author,
-            pages: pages,
-            release_year: year,
-            cover_url: cover,
-            rating: null,
-            start_date: null,
-            finish_date: null,
-        };
-
-        await postNewBook(book, fieldsEnabled, isNewBook);
-
-        handleGoBack();
+    const handleEditBook = () => {
 
     };
+
+    if (isLoading) {
+        return <FullScreenLoader />;
+    }
 
     return (
         <View style={{ flex: 1 }}>
             <ScrollView contentContainerStyle={{ padding: 20 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                <Text style={styles.titleText}>{book.title}</Text>
+
+                {author !== '' &&
                     <CustomTextInput
-                        label="ISBN:"
-                        value={isbn}
-                        onChangeText={setIsbn}
-                        placeholder="Introduce ISBN de 13 dígitos"
-                        style={{ flex: 1 }}
+                        label="Autor:"
+                        value={author}
+                        onChangeText={setAuthor}
+                    />
+                }
+
+                {pages !== '0' &&
+                    <CustomTextInput
+                        label="Número de páginas:"
+                        value={pages}
+                        onChangeText={setPages}
                         keyboardType="numeric"
-                        editable={fieldsEnabled.includes('isbn')}
                     />
-                    <CustomButton
-                        title="Buscar"
-                        onPress={handleSearchISBN}
-                        style={{ marginLeft: 10 }}
-                        disabled={!canSearch || !(isbn.length === 13)}
+                }
+
+                {year !== '0' &&
+                    <CustomTextInput
+                        label="Año de publicación:"
+                        value={year}
+                        onChangeText={setYear}
+                        keyboardType="numeric"
                     />
+                }
+
+                {cover !== '' &&
+                    <CustomTextInput
+                        label="URL de la portada (opcional):"
+                        value={cover}
+                        onChangeText={setCover}
+                    />
+                }
+
+                {startDate !== '' &&
+                    <View>
+                    <Text style={styles.label}>Fecha de inicio de lectura</Text>
+                                <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
+                                    <Text style={styles.dateLabel}>
+                                        {startDate
+                                            ? startDate.toLocaleDateString()
+                                            : 'Selecciona la fecha de inicio'}
+                                    </Text>
+                                </TouchableOpacity>
+                                {showStartPicker && (
+                    <CustomDatePicker
+                        minDate={undefined}
+                        maxDate={endDate}
+                        defaultDate={startDate || today}
+                        onChange={onChangeStart}
+                        onTouchOutside={() => setShowStartPicker(false)}
+                    />
+                )}
+
+                <Text style={styles.label}>Fecha de fin de lectura</Text>
+                <TouchableOpacity onPress={() => setShowEndPicker(true)} style={styles.dateInput}>
+                    <Text style={styles.dateLabel}>
+                        {endDate ? endDate.toLocaleDateString() : today.toLocaleDateString()}
+                    </Text>
+                </TouchableOpacity>
+                {showEndPicker && (
+                    <CustomDatePicker
+                        minDate={startDate}
+                        maxDate={today}
+                        defaultDate={endDate}
+                        onChange={onChangeEnd}
+                        onTouchOutside={() => setShowEndPicker(false)}
+                        />
+                    )}
                 </View>
-                <CustomTextInput
-                    label="Título:"
-                    value={title}
-                    onChangeText={setTitle}
-                    editable={fieldsEnabled.includes('title')}
-                />
-                <CustomTextInput
-                    label="Autor:"
-                    value={author}
-                    onChangeText={setAuthor}
-                    editable={fieldsEnabled.includes('author')}
-                />
-                <CustomTextInput
-                    label="Número de páginas:"
-                    value={pages}
-                    onChangeText={setPages}
-                    keyboardType="numeric"
-                    editable={fieldsEnabled.includes('pages')}
-                />
-                <CustomTextInput
-                    label="Año de publicación:"
-                    value={year}
-                    onChangeText={setYear}
-                    editable={fieldsEnabled.includes('year')}
-                />
-                <CustomTextInput
-                    label="URL de la portada (opcional):"
-                    value={cover}
-                    onChangeText={setCover}
-                    editable={fieldsEnabled.includes('cover')}
-                />
-                <Text
-                    style={{
-                        marginTop: 10,
-                        color: globalColors.primary,
-                        fontFamily: 'Roboto-Medium',
-                        fontSize: 16,
-                        textAlign: 'center',
-                    }}
-                >
-                    {infoText}
-                </Text>
+                }
+
+                {rating !== 0 &&
+                    <FiveStarsInput
+                        value={rating}
+                        onPress={setRating}
+                    />
+                }
+
             </ScrollView>
             <FloatingButton
                 onPress={handleGoBack}
@@ -161,13 +160,22 @@ export const EditBookScreen = () => {
                 colorPressed={globalColors.dangerDark}
             />
             <FloatingButton
-                onPress={handleAddBook}
-                icon="add-outline"
+                onPress={handleEditBook}
+                icon="checkmark-outline"
                 position="bottom-right"
                 color={globalColors.primary}
                 colorPressed={globalColors.primaryDark}
-                disabled={!isbn || !title || !author || !pages || !year}
+                disabled={false}
             />
         </View>
     );
 };
+
+
+const styles = StyleSheet.create({
+    titleText: {
+        fontSize: 24,
+        fontFamily: 'Roboto-Bold',
+        marginBottom: 20,
+    },
+});

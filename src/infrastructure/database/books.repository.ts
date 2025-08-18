@@ -6,7 +6,7 @@ import { getAccessToken, getUserId } from './auth.repository';
 /**
  * Fetches the books associated with the current user from the database.
  *
- * @returns {Promise<any>} A promise that resolves to the user's books data.
+ * @returns {Promise<UserBook[]>} A promise that resolves to the user's books data.
  * @throws {Error} If there is an error fetching the data from the database.
  */
 export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
@@ -76,6 +76,32 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
     } catch (error) {
         throw new Error(`Error searching book by ISBN on database: ${error}`);
     }
+};
+
+/**
+ * Searches for a user book by its ISBN in the database.
+ *
+ * @param isbn The ISBN of the book to search for.
+ * @returns {Promise<UserBook>} A promise that resolves to the user book data if found, or an empty object if not found.
+ * @throws {Error} If there is an error searching for the book in the database.
+ */
+export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBook> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        const data: UserBook[] = await supabaseFetcher.get(`/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data[0];
+
+    } catch (error) {
+        throw new Error(`Error searching user book by ISBN in database: ${error}`);
+    }
+
 };
 
 /**
@@ -160,7 +186,7 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
  * @param startDate The start date of the reading period.
  * @param finishDate The finish date of the reading period.
  */
-export const rateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
+export const databaseRateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
 
     const accessToken = getAccessToken();
     const userId = getUserId();
@@ -192,7 +218,7 @@ export const rateUserBook = async (isbn: string, rating: number, startDate: Date
  *
  * @param isbn The ISBN of the book to delete.
  */
-export const deleteUserBook = async (isbn: string): Promise<void> => {
+export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
 
     const accessToken = getAccessToken();
     const userId = getUserId();

@@ -31,7 +31,7 @@ export const MyBooksScreen = () => {
     }, [])
   );
 
-  if( isLoading ) {
+  if (isLoading) {
     return <FullScreenLoader />;
   }
 
@@ -40,22 +40,22 @@ export const MyBooksScreen = () => {
       <ScrollView>
         {myBooks.map((book) => (
           <BookCard
-            key={ book.isbn }
-            onPress={ () => handleBookDetails(book) }
-            title={ book.title }
-            author={ book.author }
-            pages={ book.pages }
-            rating={ book.rating }
-            imageUrl={ book.cover_url }
+            key={book.isbn}
+            onPress={() => handleBookDetails(book)}
+            title={book.title}
+            author={book.author}
+            pages={book.pages}
+            rating={book.rating}
+            imageUrl={book.cover_url}
           />
         ))}
       </ScrollView>
       <FloatingButton
-        onPress={ handleAddBook }
+        onPress={handleAddBook}
         icon="add-outline"
         position="bottom-right"
-        color={ globalColors.primary }
-        colorPressed={ globalColors.primaryDark }
+        color={globalColors.primary}
+        colorPressed={globalColors.primaryDark}
       />
     </View>
   );

@@ -1,6 +1,6 @@
-import { rateUserBook } from '../../infrastructure/database/books.repository';
+import { databaseRateUserBook } from '../../infrastructure/database/books.repository';
 
-export const rateBook = async (
+export const rateUserBook = async (
     isbn: string,
     rating: number,
     startDate: Date,
@@ -8,7 +8,7 @@ export const rateBook = async (
 ): Promise<void> => {
 
     try {
-        await rateUserBook(
+        await databaseRateUserBook(
             isbn,
             rating,
             startDate,

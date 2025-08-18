@@ -1,11 +1,11 @@
-import { deleteUserBook } from '../../infrastructure/database/books.repository';
+import { databaseDeleteUserBook } from '../../infrastructure/database/books.repository';
 
-export const deleteBookFromLibrary = async (
+export const deleteUserBook = async (
     isbn: string
 ): Promise<void> => {
 
     try {
-        await deleteUserBook(
+        await databaseDeleteUserBook(
             isbn
         );
 

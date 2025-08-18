@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { DateType } from 'react-native-ui-datepicker';
@@ -7,7 +7,7 @@ import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
-import { rateBook } from '../../../core/use-cases/rate-book.use-case';
+import { rateUserBook } from '../../../core/use-cases/rate-book.use-case';
 
 
 export const RateBookScreen = () => {
@@ -41,7 +41,7 @@ export const RateBookScreen = () => {
             return;
         }
 
-        await rateBook(
+        await rateUserBook(
             book.isbn,
             currentRating,
             startDate,

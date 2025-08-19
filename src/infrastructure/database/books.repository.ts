@@ -272,9 +272,7 @@ export const databaseEditUserBook = async (
         console.log('Updating user book with fields:', updatedFields);
         await supabaseFetcher.patch(
             `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
-            {
-                updatedFields,
-            },
+            updatedFields,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

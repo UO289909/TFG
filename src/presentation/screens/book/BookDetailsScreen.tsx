@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
-import { Image, ScrollView, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
@@ -29,14 +29,19 @@ export const BookDetailsScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ alignItems: 'center', padding: 20 }}>
-        <Image source={{ uri: book.cover_url || default_cover }} style={{ width: 200, height: 320, borderRadius: 12, marginBottom: 20 }} />
-        <Text style={{ fontSize: 30, fontFamily: 'Roboto-Bold', textAlign: 'center' }}>{book.title}</Text>
-        <Text style={{ fontSize: 20, marginBottom: 20 }}>{book.author}</Text>
-        <Text style={{ fontSize: 16, marginBottom: 10 }}>{book.pages} páginas</Text>
-        <Text style={{ fontSize: 16, marginBottom: 10 }}>Publicado en {book.release_year}</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+        <Text style={styles.titleText}>{book.title}</Text>
+        <Text style={styles.authorText}>{book.author}</Text>
+        <Text style={styles.pagesText}>{book.pages} páginas</Text>
+        <Text style={styles.releaseYearText}>Publicado en {book.release_year}</Text>
 
         <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
+        <Text style={styles.datesText}>
+          {book.rating !== null && book.start_date && book.finish_date
+            ? `Leido entre el ${new Date(book.start_date).toLocaleDateString()} y ${new Date(book.finish_date).toLocaleDateString()}`
+            : 'No has terminado este libro aún'}
+        </Text>
 
       </ScrollView>
 
@@ -59,3 +64,42 @@ export const BookDetailsScreen = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  scrollContainer: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  cover: {
+    width: 200,
+    height: 320,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 30,
+    fontFamily: 'Roboto-Bold',
+    textAlign: 'center',
+  },
+  authorText: {
+    fontSize: 20,
+    fontFamily: 'Roboto-Medium',
+    marginBottom: 20,
+  },
+  pagesText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginBottom: 10,
+  },
+  releaseYearText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginBottom: 10,
+  },
+  datesText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginTop: 5,
+  },
+});

@@ -109,8 +109,8 @@ export const EditBookScreen = () => {
                 fieldsEnabled.includes('pages') ? Number(pages) : null,
                 fieldsEnabled.includes('cover_url') ? cover : null,
                 fieldsEnabled.includes('release_year') ? Number(year) : null,
-                fieldsEnabled.includes('dates') ? startDate : null,
-                fieldsEnabled.includes('dates') ? finishDate : null,
+                fieldsEnabled.includes('dates') ? new Date(startDate).toISOString() : null,
+                fieldsEnabled.includes('dates') ? new Date(finishDate).toISOString() : null,
                 fieldsEnabled.includes('rating') ? rating : null,
             );
 
@@ -220,7 +220,7 @@ export const EditBookScreen = () => {
 
                 {fieldsEnabled.includes('rating') &&
                     <View>
-                        <Text style={styles.label}>Valoración:</Text>
+                        <Text style={{...styles.label, alignSelf: 'center'}}>Valoración:</Text>
                         <FiveStarsInput
                             value={rating}
                             onPress={setRating}

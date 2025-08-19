@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { CustomButton } from '../../components/pressables/CustomButton';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
@@ -9,18 +9,23 @@ import { globalColors } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/post-new-book-to-user.use-case';
+import { TopNotification } from '../../components/feedback/CustomNotification';
 
 export const AddBookScreen = () => {
+
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [pages, setPages] = useState('');
   const [year, setYear] = useState('');
   const [cover, setCover] = useState('');
-  const [infoText, setInfoText] = useState('Introduce el ISBN del libro para buscarlo');
+  const [fieldsEnabled, setFieldsEnabled] = useState<string[]>(['isbn']);
+
+  const [showNotif, setShowNotif] = useState(true);
+  const [notifMsg, setNotifMsg] = useState('Introduce el ISBN del libro para buscarlo');
+
   const [isNewBook, setIsNewBook] = useState(false);
   const [canSearch, setCanSearch] = useState(true);
-  const [fieldsEnabled, setFieldsEnabled] = useState<string[]>(['isbn']);
 
   const navigation = useNavigation();
 
@@ -33,12 +38,12 @@ export const AddBookScreen = () => {
       const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryFetcher, isbn);
 
       if (alreadyInUser) {
-        setInfoText('Este libro ya está en tu colección');
+        setNotifMsg('Este libro ya está en tu colección');
+        setShowNotif(true);
         return;
       }
 
       if (book !== null) {
-
         if (fromOpenLibrary) {
           setIsNewBook(true);
         }
@@ -59,9 +64,12 @@ export const AddBookScreen = () => {
         else { setFieldsEnabled(prev => [...prev, 'cover']); }
 
         setCanSearch(false);
-        setInfoText('Libro encontrado, añade los campos restantes si los hay');
+
+        setNotifMsg('Rellena los campos que quieras editar y guarda tu libro');
+        setShowNotif(true);
       } else {
-        setInfoText('No se encontró ningún libro con ese ISBN\nPrueba otro');
+        setNotifMsg('No se encontró ningún libro con ese ISBN, prueba otro');
+        setShowNotif(true);
       }
     } catch (error) {
       throw new Error(`Error searching book by ISBN: ${error}`);
@@ -89,6 +97,15 @@ export const AddBookScreen = () => {
 
   return (
     <View style={styles.container}>
+
+      {showNotif &&
+        <TopNotification
+          message={notifMsg}
+          position="bottom"
+          onClose={() => setShowNotif(false)}
+        />
+      }
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.searchContainer}>
           <CustomTextInput
@@ -138,7 +155,6 @@ export const AddBookScreen = () => {
           onChangeText={setCover}
           editable={fieldsEnabled.includes('cover')}
         />
-        <Text style={styles.infoText}>{infoText}</Text>
       </ScrollView>
       <FloatingButton
         onPress={handleGoBack}
@@ -173,12 +189,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginLeft: 10,
-  },
-  infoText: {
-    marginTop: 10,
-    color: globalColors.primary,
-    fontFamily: 'Roboto-Medium',
-    fontSize: 16,
-    textAlign: 'center',
   },
 });

@@ -2,7 +2,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
-import { FullScreenLoader } from '../../components/loaders/FullScreenLoader';
+import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { NavigationProp, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';

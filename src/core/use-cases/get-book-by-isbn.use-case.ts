@@ -32,6 +32,10 @@ export const getBookByIsbn = async (
 
             const bookData: BookData = Object.values(details)[0];
             console.log('Book data:', bookData);
+            if (!bookData) {
+                console.log('No book found in OpenLibrary');
+                return {book: null, fromOpenLibrary: true, alreadyInUser: false};
+            }
             const book: Book = BookMapper.fromOpenLibraryResponseToEntity(bookData);
             console.log('libro mapeado', book);
             return {book, fromOpenLibrary: true, alreadyInUser: false};

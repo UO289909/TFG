@@ -124,6 +124,9 @@ export const AddBookScreen = () => {
             disabled={!canSearch || !(isbn.length === 13)}
           />
         </View>
+
+        <View style={styles.separator} />
+
         <CustomTextInput
           label="Título:"
           value={title}
@@ -189,5 +192,12 @@ const styles = StyleSheet.create({
   },
   button: {
     marginLeft: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginTop: 10,
+    marginBottom: 30,
+    borderRadius: 1,
   },
 });

@@ -1,30 +1,29 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { globalColors } from '../../../config/app-theme';
 
 interface TopNotificationProps {
     message: string;
-    duration?: number; // en milisegundos, por defecto 3000
+    duration?: number;
     onClose?: () => void;
-    position?: 'top' | 'bottom'; // NUEVO
+    position?: 'top' | 'bottom';
 }
 
 export const TopNotification: React.FC<TopNotificationProps> = ({
     message,
     duration = 3000,
     onClose,
-    position = 'top', // por defecto arriba
+    position = 'top',
 }) => {
     const slideAnim = useRef(new Animated.Value(position === 'top' ? -80 : 80)).current;
 
     useEffect(() => {
-        // Animar la entrada
         Animated.timing(slideAnim, {
             toValue: 0,
             duration: 300,
             useNativeDriver: true,
         }).start();
 
-        // Ocultar tras duración si se indica
         if (duration > 0) {
             const timer = setTimeout(() => {
                 Animated.timing(slideAnim, {
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     container: {
         left: 0,
         right: 0,
-        backgroundColor: '#7037eb',
+        backgroundColor: globalColors.primary,
         paddingVertical: 16,
         paddingHorizontal: 24,
         flexDirection: 'row',
@@ -87,6 +86,6 @@ const styles = StyleSheet.create({
     closeText: {
         color: '#fff',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: 'Roboto-Light',
     },
 });

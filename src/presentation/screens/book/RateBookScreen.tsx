@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -59,8 +58,8 @@ export const RateBookScreen = () => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Valorar "{book.title}"</Text>
 
                 <Text style={styles.label}>Fecha de inicio de lectura:</Text>
@@ -122,6 +121,12 @@ export const RateBookScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        padding: 20,
+    },
     title: {
         fontSize: 22,
         fontFamily: 'Roboto-Bold',

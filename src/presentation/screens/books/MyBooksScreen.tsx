@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/loaders/FullScreenLoader';
@@ -36,7 +35,7 @@ export const MyBooksScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView>
         {myBooks.map((book) => (
           <BookCard
@@ -60,3 +59,10 @@ export const MyBooksScreen = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -28,7 +27,7 @@ export const BookDetailsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
         <Text style={styles.titleText}>{book.title}</Text>
@@ -67,6 +66,9 @@ export const BookDetailsScreen = () => {
 
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   scrollContainer: {
     alignItems: 'center',
     padding: 20,

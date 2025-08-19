@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
 import { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
@@ -131,7 +130,7 @@ export const EditBookScreen = () => {
         (fieldsEnabled.includes('rating') && (rating === 0 || rating === null));
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
 
             {showStartPicker && (
                 <CustomDatePicker
@@ -152,7 +151,7 @@ export const EditBookScreen = () => {
                 />
             )}
 
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
 
                 <Text style={styles.titleText}>{book.title}</Text>
 
@@ -220,7 +219,7 @@ export const EditBookScreen = () => {
 
                 {fieldsEnabled.includes('rating') &&
                     <View>
-                        <Text style={{...styles.label, alignSelf: 'center'}}>Valoración:</Text>
+                        <Text style={{ ...styles.label, ...styles.ratingLabel }}>Valoración:</Text>
                         <FiveStarsInput
                             value={rating}
                             onPress={setRating}
@@ -253,6 +252,12 @@ export const EditBookScreen = () => {
 
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        padding: 20,
+    },
     titleText: {
         fontSize: 24,
         fontFamily: 'Roboto-Bold',
@@ -282,5 +287,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         color: '#222',
+    },
+    ratingLabel: {
+        alignSelf: 'center',
     },
 });

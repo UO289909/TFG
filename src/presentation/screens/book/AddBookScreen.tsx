@@ -1,6 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
 import { useState } from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { CustomButton } from '../../components/pressables/CustomButton';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
@@ -89,22 +88,22 @@ export const AddBookScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ padding: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.searchContainer}>
           <CustomTextInput
             label="ISBN:"
             value={isbn}
             onChangeText={setIsbn}
             placeholder="Introduce ISBN de 13 dígitos"
-            style={{ flex: 1 }}
+            style={styles.container}
             keyboardType="numeric"
             editable={fieldsEnabled.includes('isbn')}
           />
           <CustomButton
             title="Buscar"
             onPress={handleSearchISBN}
-            style={{ marginLeft: 10 }}
+            style={styles.button}
             disabled={!canSearch || !(isbn.length === 13)}
           />
         </View>
@@ -139,17 +138,7 @@ export const AddBookScreen = () => {
           onChangeText={setCover}
           editable={fieldsEnabled.includes('cover')}
         />
-        <Text
-          style={{
-            marginTop: 10,
-            color: globalColors.primary,
-            fontFamily: 'Roboto-Medium',
-            fontSize: 16,
-            textAlign: 'center',
-          }}
-        >
-          {infoText}
-        </Text>
+        <Text style={styles.infoText}>{infoText}</Text>
       </ScrollView>
       <FloatingButton
         onPress={handleGoBack}
@@ -169,3 +158,27 @@ export const AddBookScreen = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    padding: 20,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  button: {
+    marginLeft: 10,
+  },
+  infoText: {
+    marginTop: 10,
+    color: globalColors.primary,
+    fontFamily: 'Roboto-Medium',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+});

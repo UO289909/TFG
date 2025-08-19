@@ -21,15 +21,15 @@ export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Pr
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>
-                <Text style={styles.titleText}>{title}</Text>
-                <Text style={styles.authorText}>{author}</Text>
-                <Text style={styles.pagesText}>{pages} páginas</Text>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.titleText}>{title}</Text>
+                    <Text style={styles.authorText}>{author}</Text>
+                    <Text style={styles.pagesText}>{pages} páginas</Text>
+                </View>
                 <View style={styles.ratingContainer}>
-                    {rating &&
-                        <FiveStarsInput value={rating} editable={false} small onPress={() => { }} />
-                    }
-                    {!rating &&
-                        <Text style={styles.ratingText}>Lectura en curso</Text>
+                    {rating
+                        ? <FiveStarsInput value={rating} editable={false} small onPress={() => { }} />
+                        : <Text style={styles.ratingText}>Lectura en curso</Text>
                     }
                 </View>
             </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     dataContainer: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
     },
     titleText: {
         fontSize: 22,
@@ -86,8 +86,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Italic',
         color: '#333',
     },
+    infoContainer: {
+        flex: 1,
+    },
     ratingContainer: {
-        marginBottom: 10,
+        marginBottom: 0,
         alignItems: 'flex-end',
     },
 });

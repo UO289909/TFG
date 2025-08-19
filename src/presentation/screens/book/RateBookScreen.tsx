@@ -59,6 +59,26 @@ export const RateBookScreen = () => {
 
     return (
         <View style={styles.container}>
+
+            {showStartPicker && (
+                <CustomDatePicker
+                    minDate={undefined}
+                    maxDate={finishDate}
+                    defaultDate={startDate || today}
+                    onChange={onChangeStart}
+                    onTouchOutside={() => setShowStartPicker(false)}
+                />
+            )}
+            {showFinishPicker && (
+                <CustomDatePicker
+                    minDate={startDate}
+                    maxDate={today}
+                    defaultDate={finishDate}
+                    onChange={onChangeFinish}
+                    onTouchOutside={() => setShowFinishPicker(false)}
+                />
+            )}
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Valorar "{book.title}"</Text>
 
@@ -70,15 +90,6 @@ export const RateBookScreen = () => {
                             : 'Selecciona la fecha de inicio'}
                     </Text>
                 </TouchableOpacity>
-                {showStartPicker && (
-                    <CustomDatePicker
-                        minDate={undefined}
-                        maxDate={finishDate}
-                        defaultDate={startDate || today}
-                        onChange={onChangeStart}
-                        onTouchOutside={() => setShowStartPicker(false)}
-                    />
-                )}
 
                 <Text style={styles.label}>Fecha de fin de lectura:</Text>
                 <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
@@ -86,15 +97,6 @@ export const RateBookScreen = () => {
                         {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
                     </Text>
                 </TouchableOpacity>
-                {showFinishPicker && (
-                    <CustomDatePicker
-                        minDate={startDate}
-                        maxDate={today}
-                        defaultDate={finishDate}
-                        onChange={onChangeFinish}
-                        onTouchOutside={() => setShowFinishPicker(false)}
-                    />
-                )}
 
                 <Text style={styles.label}>Valoración:</Text>
                 <FiveStarsInput value={currentRating} onPress={setCurrentRating} />

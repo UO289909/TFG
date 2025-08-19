@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     subtitleText: {
         fontSize: 16,
         fontFamily: 'Roboto-Italic',
-        marginBottom: 20,
+        marginBottom: 24,
     },
     label: {
         fontFamily: 'Roboto-Medium',

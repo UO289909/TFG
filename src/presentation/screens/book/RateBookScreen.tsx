@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { DateType } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
@@ -58,45 +59,47 @@ export const RateBookScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Valorar "{book.title}"</Text>
+        <View style={{ flex: 1 }}>
+            <ScrollView contentContainerStyle={{ padding: 20 }}>
+                <Text style={styles.title}>Valorar "{book.title}"</Text>
 
-            <Text style={styles.label}>Fecha de inicio de lectura:</Text>
-            <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
-                <Text style={styles.dateLabel}>
-                    {startDate
-                        ? startDate.toLocaleDateString()
-                        : 'Selecciona la fecha de inicio'}
-                </Text>
-            </TouchableOpacity>
-            {showStartPicker && (
-                <CustomDatePicker
-                    minDate={undefined}
-                    maxDate={finishDate}
-                    defaultDate={startDate || today}
-                    onChange={onChangeStart}
-                    onTouchOutside={() => setShowStartPicker(false)}
-                />
-            )}
+                <Text style={styles.label}>Fecha de inicio de lectura:</Text>
+                <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
+                    <Text style={styles.dateLabel}>
+                        {startDate
+                            ? startDate.toLocaleDateString()
+                            : 'Selecciona la fecha de inicio'}
+                    </Text>
+                </TouchableOpacity>
+                {showStartPicker && (
+                    <CustomDatePicker
+                        minDate={undefined}
+                        maxDate={finishDate}
+                        defaultDate={startDate || today}
+                        onChange={onChangeStart}
+                        onTouchOutside={() => setShowStartPicker(false)}
+                    />
+                )}
 
-            <Text style={styles.label}>Fecha de fin de lectura:</Text>
-            <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
-                <Text style={styles.dateLabel}>
-                    {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
-                </Text>
-            </TouchableOpacity>
-            {showFinishPicker && (
-                <CustomDatePicker
-                    minDate={startDate}
-                    maxDate={today}
-                    defaultDate={finishDate}
-                    onChange={onChangeFinish}
-                    onTouchOutside={() => setShowFinishPicker(false)}
-                />
-            )}
+                <Text style={styles.label}>Fecha de fin de lectura:</Text>
+                <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
+                    <Text style={styles.dateLabel}>
+                        {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
+                    </Text>
+                </TouchableOpacity>
+                {showFinishPicker && (
+                    <CustomDatePicker
+                        minDate={startDate}
+                        maxDate={today}
+                        defaultDate={finishDate}
+                        onChange={onChangeFinish}
+                        onTouchOutside={() => setShowFinishPicker(false)}
+                    />
+                )}
 
-            <Text style={styles.label}>Valoración:</Text>
-            <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
+                <Text style={styles.label}>Valoración:</Text>
+                <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
+            </ScrollView>
 
             <FloatingButton
                 onPress={handleSubmit}
@@ -119,11 +122,6 @@ export const RateBookScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 24,
-        backgroundColor: '#fff',
-    },
     title: {
         fontSize: 22,
         fontFamily: 'Roboto-Bold',

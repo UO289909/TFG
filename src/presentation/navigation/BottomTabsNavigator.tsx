@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unstable-nested-components */
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/home';
 import { ProfileScreen } from '../screens/profile';
@@ -7,6 +6,18 @@ import { globalColors } from '../../config/app-theme';
 import { MyBooksStackNavigator } from './MyBooksStackNavigator';
 
 const Tab = createBottomTabNavigator();
+
+const HomeTabBarIcon = ({ color }: { color: string }) => (
+    <IonIcon name="home-outline" color={color} size={25} />
+);
+
+const MyBooksTabBarIcon = ({ color }: { color: string }) => (
+    <IonIcon name="library-outline" color={color} size={25} />
+);
+
+const ProfileTabBarIcon = ({ color }: { color: string }) => (
+    <IonIcon name="person-outline" color={color} size={25} />
+);
 
 export const BottomTabsNavigator = () => {
     return (
@@ -33,9 +44,9 @@ export const BottomTabsNavigator = () => {
                 tabBarActiveTintColor: globalColors.primary,
             }}
         >
-            <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: ({ color }) => (<IonIcon name="home-outline" color={ color } size={25} />) }} component={HomeScreen} />
-            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: ({ color }) => (<IonIcon name="library-outline" color={ color } size={25} />) }} component={MyBooksStackNavigator} />
-            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ({ color }) => (<IonIcon name="person-outline" color={ color } size={25} />) }} component={ProfileScreen} />
+            <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon }} component={HomeScreen} />
+            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true }} component={MyBooksStackNavigator} />
+            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon }} component={ProfileScreen} />
         </Tab.Navigator>
     );
 };

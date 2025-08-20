@@ -13,11 +13,15 @@ import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { DateType } from 'react-native-ui-datepicker';
 import { editUserBook } from '../../../core/use-cases/edit-user-book.use-case';
+import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const EditBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'EditBook'>>();
     const { book } = params;
+
+    const [showNotif, setShowNotif] = useState(false);
+    const [notifMsg, setNotifMsg] = useState('');
 
     const [userBook, setUserBook] = useState<UserBook>();
     const [isLoading, setIsLoading] = useState(true);
@@ -81,6 +85,15 @@ export const EditBookScreen = () => {
 
     }, [userBook]);
 
+    useEffect(() => {
+        if (fieldsEnabled.length > 0) {
+            setNotifMsg('Esta es toda la información que puedes modificar');
+        } else {
+            setNotifMsg('No puedes modificar ninguna información de este libro :( ');
+        }
+        setShowNotif(true);
+    }, [fieldsEnabled]);
+
     const onChangeStart = (selectedDate?: DateType) => {
         if (selectedDate) {
             setStartDate(selectedDate.toString());
@@ -132,6 +145,14 @@ export const EditBookScreen = () => {
     return (
         <View style={styles.container}>
 
+            {showNotif &&
+                <CustomNotification
+                    message={notifMsg}
+                    position="bottom"
+                    onClose={() => setShowNotif(false)}
+                />
+            }
+
             {showStartPicker && (
                 <CustomDatePicker
                     minDate={undefined}
@@ -154,14 +175,6 @@ export const EditBookScreen = () => {
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
                 <Text style={styles.titleText}>{book.title}</Text>
-
-                {fieldsEnabled.length > 0 &&
-                    <Text style={styles.subtitleText}>Esta es la información que puedes modificar:</Text>
-                }
-
-                {fieldsEnabled.length === 0 &&
-                    <Text style={styles.subtitleText}>No puedes modificar ninguna información de este libro :(</Text>
-                }
 
                 {fieldsEnabled.includes('author') &&
                     <CustomTextInput

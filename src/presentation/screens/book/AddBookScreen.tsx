@@ -9,7 +9,7 @@ import { globalColors } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/post-new-book-to-user.use-case';
-import { TopNotification } from '../../components/feedback/CustomNotification';
+import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const AddBookScreen = () => {
 
@@ -99,7 +99,7 @@ export const AddBookScreen = () => {
     <View style={styles.container}>
 
       {showNotif &&
-        <TopNotification
+        <CustomNotification
           message={notifMsg}
           position="bottom"
           onClose={() => setShowNotif(false)}

@@ -2,19 +2,19 @@ import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
 
-interface TopNotificationProps {
+interface CustomNotificationProps {
     message: string;
     duration?: number;
     onClose?: () => void;
     position?: 'top' | 'bottom';
 }
 
-export const TopNotification: React.FC<TopNotificationProps> = ({
+export const CustomNotification = ({
     message,
     duration = 3000,
     onClose,
     position = 'top',
-}) => {
+}: CustomNotificationProps) => {
     const slideAnim = useRef(new Animated.Value(position === 'top' ? -80 : 80)).current;
 
     useEffect(() => {

@@ -15,7 +15,7 @@ export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
     const userId = getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/user_books?user_id=eq.${userId}`, {
+        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -41,7 +41,7 @@ export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean
     const userId = getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
+        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -66,7 +66,7 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
     const accessToken = getAccessToken();
 
     try {
-        const data: DatabaseBook[] = await supabaseFetcher.get(`/books?isbn=eq.${isbn}`, {
+        const data: DatabaseBook[] = await supabaseFetcher.get(`/rest/v1/books?isbn=eq.${isbn}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -91,7 +91,7 @@ export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBo
     const userId = getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
+        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -117,7 +117,7 @@ export const databaseAddBook = async (book: Book): Promise<void> => {
 
     try {
         await supabaseFetcher.post(
-            '/books',
+            '/rest/v1/books',
             {
                 'title': book.title,
                 'isbn': book.isbn,
@@ -154,7 +154,7 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
 
     try {
         await supabaseFetcher.post(
-            '/user_books',
+            '/rest/v1/user_books',
             {
                 'user_id': userId,
                 'isbn': book.isbn,
@@ -193,7 +193,7 @@ export const databaseRateUserBook = async (isbn: string, rating: number, startDa
 
     try {
         await supabaseFetcher.patch(
-            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
             {
                 rating,
                 start_date: startDate.toISOString().slice(0, 10),
@@ -225,7 +225,7 @@ export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
 
     try {
         await supabaseFetcher.delete(
-            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -271,7 +271,7 @@ export const databaseEditUserBook = async (
     try {
         console.log('Updating user book with fields:', updatedFields);
         await supabaseFetcher.patch(
-            `/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
+            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
             updatedFields,
             {
                 headers: {

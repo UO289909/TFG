@@ -1,5 +1,5 @@
-import { databaseAddBook, databaseAddUserBook } from '../../infrastructure/database/books.repository';
-import { Book } from '../entities/book.entity';
+import { databaseAddBook, databaseAddUserBook } from '../../../infrastructure/database/books.repository';
+import { Book } from '../../entities/book.entity';
 
 
 export const postNewBook = async (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Book } from '../../core/entities/book.entity';
-import { getMyBooks } from '../../core/use-cases';
+import { getMyBooks } from '../../core/use-cases/books';
 import { signIn } from '../../infrastructure/database/auth.repository';
 
 

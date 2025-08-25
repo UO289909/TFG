@@ -1,5 +1,5 @@
-import { databaseSearchUserBookByIsbn } from '../../infrastructure/database/books.repository';
-import { UserBook } from '../../infrastructure/interfaces/supabase.responses';
+import { databaseSearchUserBookByIsbn } from '../../../infrastructure/database/books.repository';
+import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
 
 
 export const getUserBookByIsbn = async (

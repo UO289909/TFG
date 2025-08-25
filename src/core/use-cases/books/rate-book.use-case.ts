@@ -1,4 +1,4 @@
-import { databaseRateUserBook } from '../../infrastructure/database/books.repository';
+import { databaseRateUserBook } from '../../../infrastructure/database/books.repository';
 
 export const rateUserBook = async (
     isbn: string,

@@ -20,3 +20,10 @@ export interface DatabaseBook {
     release_year: string | null;
     author: string | null;
 }
+
+export interface DatabaseUser {
+    id: string;
+    full_name: string;
+    created_at: string;
+    has_avatar: boolean;
+}

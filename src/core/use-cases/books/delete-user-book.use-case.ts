@@ -1,4 +1,4 @@
-import { databaseDeleteUserBook } from '../../infrastructure/database/books.repository';
+import { databaseDeleteUserBook } from '../../../infrastructure/database/books.repository';
 
 export const deleteUserBook = async (
     isbn: string

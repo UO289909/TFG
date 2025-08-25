@@ -1,6 +1,6 @@
-import { databaseGetMyBooks, databaseSearchBookByIsbn } from '../../infrastructure/database/books.repository';
-import { DatabaseBook, UserBook } from '../../infrastructure/interfaces/supabase.responses';
-import { Book } from '../entities/book.entity';
+import { databaseGetMyBooks, databaseSearchBookByIsbn } from '../../../infrastructure/database/books.repository';
+import { DatabaseBook, UserBook } from '../../../infrastructure/interfaces/supabase.responses';
+import { Book } from '../../entities/book.entity';
 
 
 export const getMyBooks = async (): Promise<Book[]> => {

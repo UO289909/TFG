@@ -7,12 +7,12 @@ import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
-import { getUserBookByIsbn } from '../../../core/use-cases/get-user-book-by-isbn.use-case';
+import { getUserBookByIsbn } from '../../../core/use-cases/books/get-user-book-by-isbn.use-case';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { DateType } from 'react-native-ui-datepicker';
-import { editUserBook } from '../../../core/use-cases/edit-user-book.use-case';
+import { editUserBook } from '../../../core/use-cases/books/edit-user-book.use-case';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const EditBookScreen = () => {

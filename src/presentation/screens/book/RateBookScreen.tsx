@@ -7,7 +7,7 @@ import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
-import { rateUserBook } from '../../../core/use-cases/rate-book.use-case';
+import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
 
 
 export const RateBookScreen = () => {

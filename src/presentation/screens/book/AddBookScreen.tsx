@@ -6,9 +6,9 @@ import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter
 import { useNavigation } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
-import { getBookByIsbn } from '../../../core/use-cases/get-book-by-isbn.use-case';
+import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
-import { postNewBook } from '../../../core/use-cases/post-new-book-to-user.use-case';
+import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user.use-case';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const AddBookScreen = () => {

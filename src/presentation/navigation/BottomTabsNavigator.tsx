@@ -7,16 +7,16 @@ import { ProfileStackNavigator } from './ProfileStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
-const HomeTabBarIcon = ({ color }: { color: string }) => (
-    <IonIcon name="home-outline" color={color} size={25} />
+const HomeTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
+    <IonIcon name={focused ? 'home' : 'home-outline'} color={color} size={25} />
 );
 
-const MyBooksTabBarIcon = ({ color }: { color: string }) => (
-    <IonIcon name="library-outline" color={color} size={25} />
+const MyBooksTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
+    <IonIcon name={focused ? 'library' : 'library-outline'} color={color} size={25} />
 );
 
-const ProfileTabBarIcon = ({ color }: { color: string }) => (
-    <IonIcon name="person-outline" color={color} size={25} />
+const ProfileTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
+    <IonIcon name={focused ? 'person' : 'person-outline'} color={color} size={25} />
 );
 
 export const BottomTabsNavigator = () => {
@@ -41,7 +41,7 @@ export const BottomTabsNavigator = () => {
                 tabBarActiveTintColor: globalColors.primary,
             }}
         >
-            <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon }} component={HomeScreen} />
+            <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon}} component={HomeScreen} />
             <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={MyBooksStackNavigator} />
             <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon , headerShown: false }} component={ProfileStackNavigator} />
         </Tab.Navigator>

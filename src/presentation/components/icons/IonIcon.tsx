@@ -2,8 +2,11 @@ import Icon from '@react-native-vector-icons/ionicons';
 
 export type IonIconNames =
     | 'book-outline'
+    | 'library'
     | 'library-outline'
+    | 'person'
     | 'person-outline'
+    | 'home'
     | 'home-outline'
     | 'add-outline'
     | 'close-outline'

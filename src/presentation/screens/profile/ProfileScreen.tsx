@@ -1,22 +1,27 @@
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import { globalColors, globalStyles } from '../../../config/app-theme';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { globalColors } from '../../../config/app-theme';
 import { FloatingButton } from '../../components/pressables';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useEffect, useState } from 'react';
 import { getUserAvatarUrl } from '../../../core/use-cases/user/get-user-avatar-url.use-case';
 import { changeUserAvatar } from '../../../core/use-cases/user/change-user-avatar.use-case';
+import { ProfileInfoHeader } from '../../components/profile';
+import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 
 export const ProfileScreen = () => {
 
-  const [avatarUrl, setAvatarUrl] = useState<string>('https://placehold.co/80x80.png?text=NoAvatar');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     loadUserAvatar();
   }, []);
 
   const loadUserAvatar = async () => {
+    setIsLoading(true);
     const url = await getUserAvatarUrl();
     setAvatarUrl(url);
+    setIsLoading(false);
   };
 
   const handleChangeAvatar = async () => {
@@ -38,13 +43,17 @@ export const ProfileScreen = () => {
   };
 
 
+  if (isLoading) {
+    return <FullScreenLoader />;
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={globalStyles.titleText}>Perfil</Text>
-        <Image
-          style={styles.avatar}
-          source={{ uri: avatarUrl }}
+        <ProfileInfoHeader
+          username="inakitotuya"
+          name="Iñaki Tuya Rodríguez"
+          avatarUrl={avatarUrl}
         />
       </ScrollView>
 
@@ -69,10 +78,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  profileHeader: {
+    marginBottom: 32,
+  },
   avatar: {
     width: 100,
     height: 100,
     borderRadius: 15,
     marginBottom: 16,
+    left: 0,
   },
 });

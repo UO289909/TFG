@@ -5,8 +5,8 @@ export const changeUserAvatar = async (imageUri: string): Promise<void> => {
 
     const treatedImage = await ImageResizer.createResizedImage(
         imageUri,
-        100,
-        100,
+        512,
+        512,
         'WEBP',
         80,
         0

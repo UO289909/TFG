@@ -24,9 +24,6 @@ export const BottomTabsNavigator = () => {
         <Tab.Navigator
             screenOptions={{
                 headerShown: true,
-                headerStyle: {
-                    elevation: 10,
-                },
                 headerTitleStyle: {
                     fontFamily: 'Roboto-Medium',
                     fontSize: 30,
@@ -45,7 +42,7 @@ export const BottomTabsNavigator = () => {
             }}
         >
             <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon }} component={HomeScreen} />
-            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true }} component={MyBooksStackNavigator} />
+            <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={MyBooksStackNavigator} />
             <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon }} component={ProfileScreen} />
         </Tab.Navigator>
     );

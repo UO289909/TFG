@@ -4,11 +4,11 @@ import { AddBookScreen, BookDetailsScreen, RateBookScreen, EditBookScreen } from
 import { Book } from '../../core/entities/book.entity';
 
 export type RootStackParams = {
-    MyBooksList: undefined;
-    AddBook: undefined;
-    BookDetails: { book: Book };
-    RateBook: { book: Book; rating: number };
-    EditBook: { book: Book };
+  MyBooksList: undefined;
+  AddBook: undefined;
+  BookDetails: { book: Book };
+  RateBook: { book: Book; rating: number };
+  EditBook: { book: Book };
 };
 
 const Stack = createNativeStackNavigator();
@@ -16,7 +16,12 @@ const Stack = createNativeStackNavigator();
 export const MyBooksStackNavigator = () => (
   <Stack.Navigator
     screenOptions={{
-        headerShown: false,
+      headerShown: true,
+      headerTitleStyle: {
+        fontFamily: 'Roboto-Medium',
+        fontSize: 30,
+      },
+      headerTitleAlign: 'center',
     }}
   >
     <Stack.Screen name="MyBooksList" component={MyBooksScreen} options={{ title: 'Mis libros' }} />

@@ -1,7 +1,31 @@
-import { getUserId } from './auth.repository';
+import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
+import { DatabaseUser } from '../interfaces/supabase.responses';
+import { getUserId, getAccessToken } from './auth.repository';
 import { SupabaseClient } from './supabaseClient';
 
 const AVATARS_BUCKET = 'avatars';
+
+/**
+ * Fetches the current user's information from the database.
+ * @returns The user's information.
+ */
+export const databaseGetUserInfo = async (): Promise<DatabaseUser> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        const data: DatabaseUser[] = await supabaseFetcher.get(`/rest/v1/users?id=eq.${userId}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data[0];
+
+    } catch (error) {
+        throw new Error(`Error fetching user info from database: ${error}`);
+    }
+};
 
 /**
  * Uploads a user's avatar to the database.

@@ -23,7 +23,7 @@ export interface DatabaseBook {
 
 export interface DatabaseUser {
     id: string;
+    nickname: string;
     full_name: string;
     created_at: string;
-    has_avatar: boolean;
 }

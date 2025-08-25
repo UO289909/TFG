@@ -2,27 +2,13 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
 import { FloatingButton } from '../../components/pressables';
 import { launchImageLibrary } from 'react-native-image-picker';
-import { useEffect, useState } from 'react';
-import { getUserAvatarUrl } from '../../../core/use-cases/user/get-user-avatar-url.use-case';
-import { changeUserAvatar } from '../../../core/use-cases/user/change-user-avatar.use-case';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
+import { useProfile } from '../../hooks/useProfile';
 
 export const ProfileScreen = () => {
 
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    loadUserAvatar();
-  }, []);
-
-  const loadUserAvatar = async () => {
-    setIsLoading(true);
-    const url = await getUserAvatarUrl();
-    setAvatarUrl(url);
-    setIsLoading(false);
-  };
+  const { isLoading, myProfile, changeAvatar } = useProfile();
 
   const handleChangeAvatar = async () => {
 
@@ -36,9 +22,7 @@ export const ProfileScreen = () => {
       return;
     }
 
-    await changeUserAvatar(asset.uri!);
-
-    await loadUserAvatar();
+    await changeAvatar(asset.uri!);
 
   };
 
@@ -51,9 +35,9 @@ export const ProfileScreen = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <ProfileInfoHeader
-          username="inakitotuya"
-          name="Iñaki Tuya Rodríguez"
-          avatarUrl={avatarUrl}
+          nickname={myProfile!.nickname}
+          name={myProfile!.full_name}
+          avatarUrl={myProfile!.avatarUrl}
         />
       </ScrollView>
 

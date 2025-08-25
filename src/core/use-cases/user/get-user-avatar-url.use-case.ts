@@ -6,5 +6,4 @@ export const getUserAvatarUrl = async (
 
     const url = await databaseCreateSignedAvatarUrl(expiresInSeconds);
     return url;
-
 };

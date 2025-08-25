@@ -56,8 +56,8 @@ export const CustomNotification = ({
 
 const styles = StyleSheet.create({
     container: {
-        left: 0,
-        right: 0,
+        left: 5,
+        right: 5,
         backgroundColor: globalColors.primary,
         paddingVertical: 16,
         paddingHorizontal: 24,
@@ -66,12 +66,13 @@ const styles = StyleSheet.create({
         zIndex: 1000,
         elevation: 10,
         position: 'absolute',
+        borderRadius: 10,
     },
     top: {
-        top: 0,
+        top: 5,
     },
     bottom: {
-        bottom: 0,
+        bottom: 5,
     },
     text: {
         color: '#fff',

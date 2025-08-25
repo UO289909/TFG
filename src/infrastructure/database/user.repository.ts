@@ -5,7 +5,7 @@ const AVATARS_BUCKET = 'avatars';
 
 /**
  * Uploads a user's avatar to the database.
- * @param file The avatar file to upload.
+ * @param file The avatar file route to upload.
  * @returns The file name of the uploaded avatar.
  */
 export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> => {

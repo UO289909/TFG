@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../screens/home';
-import { ProfileScreen } from '../screens/profile';
 import { IonIcon } from '../components/icons/IonIcon';
 import { globalColors } from '../../config/app-theme';
 import { MyBooksStackNavigator } from './MyBooksStackNavigator';
+import { ProfileStackNavigator } from './ProfileStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +43,7 @@ export const BottomTabsNavigator = () => {
         >
             <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon }} component={HomeScreen} />
             <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={MyBooksStackNavigator} />
-            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon }} component={ProfileScreen} />
+            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon , headerShown: false }} component={ProfileStackNavigator} />
         </Tab.Navigator>
     );
 };

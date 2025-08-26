@@ -2,10 +2,11 @@ import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
 
-interface CustomNotificationProps {
+interface Props {
     message: string;
     duration?: number;
     onClose?: () => void;
+    onAccept?: () => void;
     position?: 'top' | 'bottom';
 }
 
@@ -13,8 +14,9 @@ export const CustomNotification = ({
     message,
     duration = 3000,
     onClose,
+    onAccept,
     position = 'top',
-}: CustomNotificationProps) => {
+}: Props) => {
     const slideAnim = useRef(new Animated.Value(position === 'top' ? -80 : 80)).current;
 
     useEffect(() => {
@@ -24,7 +26,7 @@ export const CustomNotification = ({
             useNativeDriver: true,
         }).start();
 
-        if (duration > 0) {
+        if (duration > 0 && !onAccept) {
             const timer = setTimeout(() => {
                 Animated.timing(slideAnim, {
                     toValue: position === 'top' ? -80 : 80,
@@ -36,7 +38,7 @@ export const CustomNotification = ({
             }, duration);
             return () => clearTimeout(timer);
         }
-    }, [duration, onClose, slideAnim, position]);
+    }, [duration, onClose, onAccept, slideAnim, position]);
 
     return (
         <Animated.View
@@ -47,9 +49,17 @@ export const CustomNotification = ({
             ]}
         >
             <Text style={styles.text}>{message}</Text>
+
+            {onAccept && (
+                <TouchableOpacity onPress={onAccept} style={styles.acceptButton}>
+                    <Text style={styles.buttonText}>✓</Text>
+                </TouchableOpacity>
+            )}
+
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Text style={styles.closeText}>✕</Text>
+                <Text style={styles.buttonText}>✕</Text>
             </TouchableOpacity>
+
         </Animated.View>
     );
 };
@@ -81,10 +91,14 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Medium',
     },
     closeButton: {
-        marginLeft: 16,
+        marginLeft: 20,
         padding: 4,
     },
-    closeText: {
+    acceptButton: {
+        marginLeft: 8,
+        padding: 4,
+    },
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontFamily: 'Roboto-Light',

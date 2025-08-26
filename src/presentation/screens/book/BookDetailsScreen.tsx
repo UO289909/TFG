@@ -5,11 +5,15 @@ import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
 import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.use-case';
+import { useState } from 'react';
+import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const BookDetailsScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
   const { book } = params;
+
+  const [showNotif, setShowNotif] = useState(false);
 
   const default_cover = 'https://placehold.co/200x320.png?text=No+Cover';
 
@@ -28,6 +32,16 @@ export const BookDetailsScreen = () => {
 
   return (
     <View style={styles.container}>
+
+    {showNotif &&
+      <CustomNotification
+      message="Seguro que quieres eliminar este libro?"
+      position="bottom"
+      onClose={() => setShowNotif(false)}
+      onAccept={handleDeleteBook}
+      />
+    }
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
         <Text style={styles.titleText}>{book.title}</Text>
@@ -45,7 +59,7 @@ export const BookDetailsScreen = () => {
       </ScrollView>
 
       <FloatingButton
-        onPress={handleDeleteBook}
+        onPress={() => setShowNotif(true)}
         position="bottom-left"
         icon="trash-outline"
         color={globalColors.danger}

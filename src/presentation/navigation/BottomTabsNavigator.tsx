@@ -8,15 +8,15 @@ import { ProfileStackNavigator } from './ProfileStackNavigator';
 const Tab = createBottomTabNavigator();
 
 const HomeTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
-    <IonIcon name={focused ? 'home' : 'home-outline'} color={color} size={25} />
+    <IonIcon name={focused ? 'home' : 'home-outline'} color={color} size={30} />
 );
 
 const MyBooksTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
-    <IonIcon name={focused ? 'library' : 'library-outline'} color={color} size={25} />
+    <IonIcon name={focused ? 'library' : 'library-outline'} color={color} size={30} />
 );
 
 const ProfileTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (
-    <IonIcon name={focused ? 'person' : 'person-outline'} color={color} size={25} />
+    <IonIcon name={focused ? 'person' : 'person-outline'} color={color} size={30} />
 );
 
 export const BottomTabsNavigator = () => {
@@ -34,8 +34,8 @@ export const BottomTabsNavigator = () => {
                     elevation: 10,
                 },
                 tabBarLabelStyle: {
-                    fontFamily: 'Roboto-Regular',
-                    fontSize: 13,
+                    fontFamily: 'Roboto-Bold',
+                    fontSize: 14,
                 },
                 tabBarActiveBackgroundColor: globalColors.background,
                 tabBarActiveTintColor: globalColors.primary,

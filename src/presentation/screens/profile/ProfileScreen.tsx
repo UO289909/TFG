@@ -5,6 +5,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
+import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 
 export const ProfileScreen = () => {
 
@@ -34,21 +35,21 @@ export const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+
         <ProfileInfoHeader
           nickname={myProfile!.nickname}
           name={myProfile!.full_name}
           avatarUrl={myProfile!.avatarUrl}
         />
+
+        <CustomMenuButton
+          onPress={handleChangeAvatar}
+          label="Cambiar foto de avatar"
+          icon="images"
+          style={styles.button}
+        />
+
       </ScrollView>
-
-      <FloatingButton
-        onPress={handleChangeAvatar}
-        position="bottom-right"
-        icon="pencil-outline"
-        color={globalColors.primary}
-        colorPressed={globalColors.primaryDark}
-      />
-
     </View>
   );
 };
@@ -71,5 +72,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginBottom: 16,
     left: 0,
+  },
+  button: {
+    width: '100%',
   },
 });

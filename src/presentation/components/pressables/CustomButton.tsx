@@ -17,7 +17,7 @@ export const CustomButton = ({ title, onPress, style, disabled }: Props) => (
       styles.button,
       {
         backgroundColor: disabled
-          ? '#ccc'
+          ? globalColors.grey
           : pressed
             ? globalColors.primaryDark
             : globalColors.primary,

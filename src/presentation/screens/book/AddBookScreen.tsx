@@ -119,6 +119,13 @@ export const AddBookScreen = () => {
             returnKeyType="search"
             editable={fieldsEnabled.includes('isbn')}
           />
+          {isbn !== '' && canSearch &&
+            <CustomButton
+              title="X"
+              onPress={() => setIsbn('')}
+              style={styles.button}
+            />
+          }
           <CustomButton
             title="Buscar"
             onPress={handleSearchISBN}

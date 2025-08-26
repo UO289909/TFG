@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
@@ -19,7 +18,7 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
   const textColor = editable ? '#000' : globalColors.greyDark;
 
   return (
-    <View style={[{ marginBottom: 18 }, style]}>
+    <View style={[styles.container, style]}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         {...props}
@@ -38,6 +37,9 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 18,
+  },
   label: {
     fontFamily: 'Roboto-Medium',
     fontSize: 18,

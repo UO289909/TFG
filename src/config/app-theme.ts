@@ -11,6 +11,8 @@ export const globalColors = {
     dangerDark: '#b00020',
     dark: '#22223b',
     grey: '#ccc',
+    greyLight: '#eee',
+    greyDark: '#999',
     white: '#fff',
 
     background: '#fff',

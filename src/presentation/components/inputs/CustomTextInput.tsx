@@ -11,13 +11,12 @@ interface Props extends TextInputProps {
 export const CustomTextInput = ({ label, error, style, editable = true, ...props }: Props) => {
   const [focused, setFocused] = useState(false);
 
-  let borderColor = '#ccc';
-  if (error) { borderColor = '#d32f2f'; }
+  let borderColor = globalColors.grey;
+  if (error) { borderColor = globalColors.danger; }
   else if (focused) { borderColor = globalColors.primary; }
 
-  // Cambia el fondo y el color del texto si no es editable
-  const backgroundColor = editable ? '#faf9fd' : '#ece9f3';
-  const textColor = editable ? '#222' : '#888';
+  const backgroundColor = editable ? globalColors.white : globalColors.greyLight;
+  const textColor = editable ? '#000' : globalColors.greyDark;
 
   return (
     <View style={[{ marginBottom: 18 }, style]}>
@@ -31,7 +30,7 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
         ]}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        placeholderTextColor="#aaa"
+        placeholderTextColor={globalColors.greyDark}
       />
       {error && <Text style={styles.error}>{error}</Text>}
     </View>

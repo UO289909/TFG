@@ -111,10 +111,12 @@ export const AddBookScreen = () => {
           <CustomTextInput
             label="ISBN:"
             value={isbn}
-            onChangeText={setIsbn}
+            onChangeText={text => setIsbn(text.replace(/[^0-9]/g, ''))}
+            onSubmitEditing={() => canSearch && isbn.length === 13 ? handleSearchISBN() : null}
             placeholder="Introduce ISBN de 13 dígitos"
             style={styles.container}
             keyboardType="numeric"
+            returnKeyType="search"
             editable={fieldsEnabled.includes('isbn')}
           />
           <CustomButton
@@ -142,14 +144,14 @@ export const AddBookScreen = () => {
         <CustomTextInput
           label="Número de páginas:"
           value={pages}
-          onChangeText={setPages}
+          onChangeText={text => setPages(text.replace(/[^0-9]/g, ''))}
           keyboardType="numeric"
           editable={fieldsEnabled.includes('pages')}
         />
         <CustomTextInput
           label="Año de publicación:"
           value={year}
-          onChangeText={setYear}
+          onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
           editable={fieldsEnabled.includes('year')}
         />
         <CustomTextInput

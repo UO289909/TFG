@@ -1,6 +1,4 @@
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { globalColors } from '../../../config/app-theme';
-import { FloatingButton } from '../../components/pressables';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';

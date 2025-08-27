@@ -4,7 +4,11 @@ import { UserMapper } from '../../../infrastructure/mappers/user.mapper';
 import { User } from '../../entities/user.entity';
 import { getUserAvatarUrl } from './get-user-avatar-url.use-case';
 
-
+/**
+ * Search users by their nickname.
+ * @param nickname The nickname to search for.
+ * @returns A promise that resolves to an array of User entities matching the nickname.
+ */
 export const searchUsersByNickname = async (nickname: string): Promise<User[]> => {
 
     if (!nickname.trim()) {

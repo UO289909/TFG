@@ -1,6 +1,10 @@
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import { databaseUploadMyAvatar } from '../../../infrastructure/database/user.repository';
 
+/**
+ * Change the current user's avatar.
+ * @param imageUri The URI of the image to be used as the new avatar.
+ */
 export const changeUserAvatar = async (imageUri: string): Promise<void> => {
 
     const treatedImage = await ImageResizer.createResizedImage(

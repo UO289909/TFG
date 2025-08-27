@@ -34,4 +34,14 @@ export const globalStyles = StyleSheet.create({
         margin: 10,
     },
 
+    separator: {
+        height: 1,
+        borderRadius: 1,
+        shadowColor: globalColors.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+
 });

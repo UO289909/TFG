@@ -7,7 +7,7 @@ import { NavigationProp, useNavigation, useFocusEffect } from '@react-navigation
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors } from '../../../config/app-theme';
+import { globalColors, globalStyles } from '../../../config/app-theme';
 import { useCallback, useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
@@ -102,7 +102,7 @@ export const MyBooksScreen = () => {
         onSearch={handleFilterBooks}
       />
 
-      <View style={styles.separator} />
+      <View style={globalStyles.separator} />
 
       <ScrollView
         refreshControl={refreshControl}
@@ -138,14 +138,5 @@ export const MyBooksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  separator: {
-    height: 1,
-    borderRadius: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
   },
 });

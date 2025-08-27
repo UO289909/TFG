@@ -5,7 +5,7 @@ import { CustomButton } from '../../components/pressables/CustomButton';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
 import { useNavigation } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors } from '../../../config/app-theme';
+import { globalColors, globalStyles } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user.use-case';
@@ -106,35 +106,37 @@ export const AddBookScreen = () => {
         />
       }
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.searchContainer}>
-          <CustomTextInput
-            label="ISBN:"
-            value={isbn}
-            onChangeText={text => setIsbn(text.replace(/[^0-9]/g, ''))}
-            onSubmitEditing={() => canSearch && isbn.length === 13 ? handleSearchISBN() : null}
-            placeholder="Introduce ISBN de 13 dígitos"
-            style={styles.container}
-            keyboardType="numeric"
-            returnKeyType="search"
-            editable={fieldsEnabled.includes('isbn')}
-          />
-          {isbn !== '' && canSearch &&
-            <CustomButton
-              title="X"
-              onPress={() => setIsbn('')}
-              style={styles.button}
-            />
-          }
+      <View style={styles.searchContainer}>
+        <CustomTextInput
+          label="ISBN:"
+          value={isbn}
+          onChangeText={text => setIsbn(text.replace(/[^0-9]/g, ''))}
+          onSubmitEditing={() => canSearch && isbn.length === 13 ? handleSearchISBN() : null}
+          placeholder="Introduce ISBN de 13 dígitos"
+          style={styles.container}
+          keyboardType="numeric"
+          returnKeyType="search"
+          editable={fieldsEnabled.includes('isbn')}
+        />
+        {isbn !== '' && canSearch &&
           <CustomButton
-            title="Buscar"
-            onPress={handleSearchISBN}
+            title="X"
+            onPress={() => setIsbn('')}
             style={styles.button}
-            disabled={!canSearch || !(isbn.length === 13)}
           />
-        </View>
+        }
+        <CustomButton
+          title="Buscar"
+          onPress={handleSearchISBN}
+          style={styles.button}
+          disabled={!canSearch || !(isbn.length === 13)}
+        />
+      </View>
 
-        <View style={styles.separator} />
+      <View style={globalStyles.separator} />
+
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+
 
         <CustomTextInput
           label="Título:"
@@ -203,6 +205,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 18,
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   button: {
     marginLeft: 10,

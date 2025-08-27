@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
 import { normalizeText } from '../../../utils/normalizeText';
+import { IonIcon } from '../../components/icons';
 
 export const MyBooksScreen = () => {
 
@@ -59,9 +60,10 @@ export const MyBooksScreen = () => {
         (book.author && normalizeText(book.author).includes(search))
     );
 
-    if (!filtered.length) {
+    if (filtered.length === 0) {
       setNotifMsg('No tienes libros que coincidan con la busqueda :(');
       setShowNotif(true);
+      setFilteredBooks(myBooks);
       return;
     }
 
@@ -104,6 +106,14 @@ export const MyBooksScreen = () => {
 
       <View style={globalStyles.separator} />
 
+      {filteredBooks.length === 0 && !refreshing &&
+        <IonIcon
+          name="book"
+          size={200}
+          color={globalColors.greyLight}
+          style={styles.bigIcon}
+        />
+      }
       <ScrollView
         refreshControl={refreshControl}
       >
@@ -138,5 +148,10 @@ export const MyBooksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bigIcon: {
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: 50,
   },
 });

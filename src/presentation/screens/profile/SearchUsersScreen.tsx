@@ -32,7 +32,7 @@ export const SearchUsersScreen = () => {
             const found = await searchUsersByNickname(normalizeText(text));
 
             if (found.length === 0) {
-                setNotifMsg('No se encontraron usuarios');
+                setNotifMsg('No se encontraron usuarios que coincidan con la busqueda :(');
                 setShowNotif(true);
             } else {
                 setUsers(found);
@@ -84,6 +84,7 @@ export const SearchUsersScreen = () => {
                             nickname={user.nickname}
                             name={user.full_name}
                             avatarUrl={user.avatarUrl}
+                            alreadyAdded={false}
                         />
                     ))}
 

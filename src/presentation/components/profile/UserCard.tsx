@@ -6,9 +6,10 @@ interface Props {
     nickname: string;
     avatarUrl: string | null;
     name: string;
+    alreadyAdded?: boolean;
 }
 
-export const UserCard = ({ nickname, avatarUrl, name }: Props) => {
+export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false }: Props) => {
     const default_avatar = 'https://placehold.co/80x80.png?text=No+Avatar';
 
 
@@ -23,10 +24,15 @@ export const UserCard = ({ nickname, avatarUrl, name }: Props) => {
             <View style={styles.infoContainer}>
                 <Text style={styles.nickname}>{nickname}</Text>
                 <Text style={styles.name}>{name}</Text>
+                {alreadyAdded &&
+                    <Text style={styles.alreadyFriend}>¡Ya es tu amigo!</Text>
+                }
             </View>
 
             <CustomIconButton
-                icon="person-add-outline"
+                icon={alreadyAdded ? 'person-remove-outline' : 'person-add-outline'}
+                color={alreadyAdded ? globalColors.danger : globalColors.primary}
+                colorPressed={alreadyAdded ? globalColors.dangerDark : globalColors.primaryDark}
                 onPress={() => { }}
                 style={styles.addButton}
             />
@@ -71,6 +77,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Roboto-Italic',
         color: globalColors.tertiary,
+    },
+    alreadyFriend: {
+        fontSize: 16,
+        fontFamily: 'Roboto-Light',
+        color: globalColors.black,
+        marginTop: 6,
     },
     addButton: {
         alignSelf: 'center',

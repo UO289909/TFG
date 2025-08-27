@@ -6,11 +6,13 @@ import { globalColors } from '../../../config/app-theme';
 interface Props {
     icon: IonIconNames;
     onPress: () => void;
+    color?: string;
+    colorPressed?: string;
     style?: StyleProp<ViewStyle>;
     disabled?: boolean;
 }
 
-export const CustomIconButton = ({ icon, onPress, style, disabled }: Props) => (
+export const CustomIconButton = ({ icon, onPress, color = globalColors.primary, colorPressed = globalColors.primaryDark,style, disabled }: Props) => (
 
     <Pressable
         onPress={onPress}
@@ -21,8 +23,8 @@ export const CustomIconButton = ({ icon, onPress, style, disabled }: Props) => (
                 backgroundColor: disabled
                     ? globalColors.grey
                     : pressed
-                        ? globalColors.primaryDark
-                        : globalColors.primary,
+                        ? colorPressed
+                        : color,
                 elevation: pressed ? 4 : 8,
             },
             style,

@@ -5,12 +5,20 @@ import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 
 export const ProfileScreen = () => {
+
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const { isLoading, myProfile, changeAvatar } = useProfile();
 
   const [changingAvatar, setChangingAvatar] = useState(false);
+
+  const handleSearchUsers = () => {
+    navigation.navigate('SearchUsers');
+  };
 
   const handleChangeAvatar = async () => {
 
@@ -64,7 +72,7 @@ export const ProfileScreen = () => {
         />
 
         <CustomMenuButton
-          onPress={() => {}}
+          onPress={handleSearchUsers}
           label="Buscar amigos"
           icon="person"
           style={styles.button}

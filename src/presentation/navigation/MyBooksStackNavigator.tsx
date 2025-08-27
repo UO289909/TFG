@@ -9,7 +9,7 @@ export type RootStackParams = {
   BookDetails: { book: Book };
   RateBook: { book: Book; rating: number };
   EditBook: { book: Book };
-};
+}
 
 const Stack = createNativeStackNavigator();
 

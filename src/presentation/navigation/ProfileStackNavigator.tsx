@@ -1,6 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ProfileScreen } from '../screens/profile';
+import { ProfileScreen, SearchUsersScreen } from '../screens/profile';
 
+export type RootStackParams = {
+    ProfileMenu: undefined;
+    SearchUsers: undefined;
+}
 
 const Stack = createNativeStackNavigator();
 
@@ -16,5 +20,6 @@ export const ProfileStackNavigator = () => (
         }}
     >
         <Stack.Screen name="ProfileMenu" component={ProfileScreen} options={{ title: 'Perfil' }} />
+        <Stack.Screen name="SearchUsers" component={SearchUsersScreen} options={{ title: 'Buscar usuarios' }} />
     </Stack.Navigator>
 );

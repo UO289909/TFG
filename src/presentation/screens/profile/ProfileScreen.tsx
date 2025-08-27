@@ -4,24 +4,39 @@ import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
+import { useState } from 'react';
 
 export const ProfileScreen = () => {
 
   const { isLoading, myProfile, changeAvatar } = useProfile();
 
+  const [changingAvatar, setChangingAvatar] = useState(false);
+
   const handleChangeAvatar = async () => {
 
-    const picker = await launchImageLibrary({
-      mediaType: 'photo',
-      selectionLimit: 1,
-    });
-    const asset = picker.assets ? picker.assets[0] : null;
-    console.log(asset?.uri);
-    if (!asset || picker.didCancel) {
+    if (changingAvatar) {
       return;
     }
 
-    await changeAvatar(asset.uri!);
+    setChangingAvatar(true);
+
+    try {
+      const picker = await launchImageLibrary({
+        mediaType: 'photo',
+        selectionLimit: 1,
+      });
+
+      const asset = picker.assets ? picker.assets[0] : null;
+
+      if (!asset || picker.didCancel) {
+        setChangingAvatar(false);
+        return;
+      }
+
+      await changeAvatar(asset.uri!);
+    } finally {
+      setChangingAvatar(false);
+    }
 
   };
 
@@ -45,6 +60,7 @@ export const ProfileScreen = () => {
           label="Cambiar foto de avatar"
           icon="images"
           style={styles.button}
+          disabled={changingAvatar}
         />
 
       </ScrollView>

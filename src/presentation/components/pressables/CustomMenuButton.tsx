@@ -21,7 +21,9 @@ export const CustomMenuButton = ({ onPress, label, icon, style, disabled = false
             {
                 backgroundColor: disabled
                     ? globalColors.grey
-                    : globalColors.background,
+                    : pressed
+                        ? globalColors.greyLight
+                        : globalColors.background,
                 borderColor: pressed
                     ? globalColors.primaryDark
                     : globalColors.primary,

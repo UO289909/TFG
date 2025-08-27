@@ -8,27 +8,20 @@ import { getUserAvatarUrl } from './get-user-avatar-url.use-case';
 export const searchUsersByNickname = async (nickname: string): Promise<User[]> => {
 
     if (!nickname.trim()) {
+        console.log('No se proporcionó un nickname para buscar.');
         return [];
     }
 
     const databaseUsers: DatabaseUser[] = await databaseSearchUsersByNickname(nickname.trim());
 
-    const avatarIndexes: number[] = [];
-    const avatarPromises: Promise<string>[] = [];
-    databaseUsers.forEach((user, idx) => {
-        if (user.has_avatar) {
-            avatarIndexes.push(idx);
-            avatarPromises.push(getUserAvatarUrl(3600, user.id));
-        }
-    });
-
-    const fetchedAvatars = await Promise.all(avatarPromises);
+    const avatars: Promise<string>[] = databaseUsers.map((user) => getUserAvatarUrl(3600, user.id));
+    const fetchedAvatars = await Promise.all(avatars);
 
     const users: User[] = databaseUsers.map(UserMapper.fromDatabaseUserToEntity);
 
-    let avatarPointer = 0;
-    return users.map((user, idx) => ({
+    return users.map((user, index) => ({
         ...user,
-        avatarUrl: databaseUsers[idx].has_avatar ? fetchedAvatars[avatarPointer++] : '',
+        avatarUrl: fetchedAvatars[index],
     }));
+
 };

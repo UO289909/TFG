@@ -23,6 +23,8 @@ export type IonIconNames =
     | 'star'
     | 'star-outline'
     | 'search'
+    | 'archive'
+    | 'send'
     | 'book'
     | 'book-outline'
     | 'trash-outline'

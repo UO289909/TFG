@@ -1,5 +1,16 @@
 import { databaseEditUserBook } from '../../../infrastructure/database/books.repository';
 
+/**
+ * Edits a book in the user's collection with the provided details.
+ * @param isbn ISBN of the book to edit.
+ * @param author Author of the book.
+ * @param pages Number of pages in the book.
+ * @param cover_url URL of the book's cover image.
+ * @param release_year Release year of the book.
+ * @param start_date Date when the user started reading the book.
+ * @param finish_date Date when the user finished reading the book.
+ * @param rating Rating given by the user to the book.
+ */
 export const editUserBook = async (
     isbn: string,
     author: string | null,

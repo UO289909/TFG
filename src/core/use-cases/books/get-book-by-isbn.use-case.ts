@@ -5,7 +5,12 @@ import { DatabaseBook } from '../../../infrastructure/interfaces/supabase.respon
 import { BookMapper } from '../../../infrastructure/mappers/book.mapper';
 import { Book } from '../../entities/book.entity';
 
-
+/**
+ * Gets a book by its ISBN. First checks the local database, if not found, fetches from OpenLibrary.
+ * @param fetcher Fetcher instance to make HTTP requests.
+ * @param isbn ISBN of the book to fetch.
+ * @returns Book entity, a flag indicating if it was fetched from OpenLibrary, and a flag indicating if it already exists in the user's collection.
+ */
 export const getBookByIsbn = async (
     fetcher: HttpAdapter,
     isbn: string,

@@ -2,7 +2,10 @@ import { databaseGetMyBooks, databaseSearchBookByIsbn } from '../../../infrastru
 import { DatabaseBook, UserBook } from '../../../infrastructure/interfaces/supabase.responses';
 import { Book } from '../../entities/book.entity';
 
-
+/**
+ * Gets the list of books in the user's collection, combining user-specific data with general book information from the database.
+ * @returns A list of books in the user's collection, combining user-specific data with general book information from the database.
+ */
 export const getMyBooks = async (): Promise<Book[]> => {
 
     try {

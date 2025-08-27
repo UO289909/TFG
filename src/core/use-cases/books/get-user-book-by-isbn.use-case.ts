@@ -1,7 +1,11 @@
 import { databaseSearchUserBookByIsbn } from '../../../infrastructure/database/books.repository';
 import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
 
-
+/**
+ * Gets a user book by its ISBN.
+ * @param isbn ISBN of the book to fetch.
+ * @returns UserBook entity.
+ */
 export const getUserBookByIsbn = async (
     isbn: string
 ): Promise<UserBook> => {

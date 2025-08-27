@@ -1,7 +1,12 @@
 import { databaseAddBook, databaseAddUserBook } from '../../../infrastructure/database/books.repository';
 import { Book } from '../../entities/book.entity';
 
-
+/**
+ * Adds a new book to the user's collection, handling both general book info and user-specific fields.
+ * @param book Book entity containing book details.
+ * @param userFields Fields corresponding to user-specific data (e.g., author, cover_url, release_year, pages).
+ * @param newBook Indicates if the book is new to the general database.
+ */
 export const postNewBook = async (
     book: Book,
     userFields: string[],

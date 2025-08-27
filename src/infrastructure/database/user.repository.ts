@@ -6,13 +6,15 @@ import { SupabaseClient } from './supabaseClient';
 const AVATARS_BUCKET = 'avatars';
 
 /**
- * Fetches the current user's information from the database.
+ * Fetches the id user information's from the database
+ * or the current user's information if no id is provided.
+ * @param id The ID of the user to fetch (optional).
  * @returns The user's information.
  */
-export const databaseGetUserInfo = async (): Promise<DatabaseUser> => {
+export const databaseGetUserInfo = async (id?: string): Promise<DatabaseUser> => {
 
     const accessToken = getAccessToken();
-    const userId = getUserId();
+    const userId = id || getUserId();
 
     try {
         const data: DatabaseUser[] = await supabaseFetcher.get(
@@ -21,7 +23,8 @@ export const databaseGetUserInfo = async (): Promise<DatabaseUser> => {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
-            });
+            }
+        );
         return data[0];
 
     } catch (error) {
@@ -61,15 +64,18 @@ export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> =
 
 
 /**
- * Creates a signed URL for the user's avatar.
+ * Creates a signed URL for the received id user's avatar
+ * or the current user's avatar if no id is provided.
  * @param expiresInSeconds The duration in seconds for which the signed URL is valid.
+ * @param id The ID of the user whose avatar URL is to be created (optional).
  * @returns A promise that resolves to the signed URL.
  */
 export const databaseCreateSignedAvatarUrl = async (
-    expiresInSeconds = 3600
+    expiresInSeconds = 3600,
+    id?: string
 ): Promise<string> => {
 
-    const userId = getUserId();
+    const userId = id || getUserId();
     const avatarPath = `${userId}.webp`;
 
 
@@ -95,7 +101,7 @@ export const databaseSearchUsersByNickname = async (nickname: string): Promise<D
     try {
 
         const data: DatabaseUser[] = await supabaseFetcher.get(
-            `/rest/v1/users?nickname=ilike.%${nickname}%&id=neq.${userId}`,
+            `/rest/v1/users?nickname=ilike.*${nickname}*&id=neq.${userId}`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

@@ -25,5 +25,6 @@ export interface DatabaseUser {
     id: string;
     nickname: string;
     full_name: string;
+    has_avatar: boolean;
     created_at: string;
 }

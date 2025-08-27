@@ -19,6 +19,8 @@ export type IonIconNames =
     | 'star'
     | 'star-outline'
     | 'search'
+    | 'book'
+    | 'book-outline'
     | 'trash-outline'
     | 'pencil-outline'
     | 'checkmark-outline';

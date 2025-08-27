@@ -1,15 +1,48 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
-import { globalStyles } from '../../../config/app-theme';
+import { globalColors, globalStyles } from '../../../config/app-theme';
 import { UserCard } from '../../components/profile/UserCard';
-import { CustomNotification } from '../../components/feedback';
+import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { useState } from 'react';
+import { User } from '../../../core/entities/user.entity';
+import { searchUsersByNickname } from '../../../core/use-cases/user/search-users-by-nickname.use-case';
+import { normalizeText } from '../../../utils/normalizeText';
+import { IonIcon } from '../../components/icons';
 
 
 export const SearchUsersScreen = () => {
 
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
+
+    const handleSearch = async (text: string) => {
+
+        setLoading(true);
+
+        try {
+
+            if (!text.trim()) {
+                setUsers([]);
+                return;
+            }
+
+            const found = await searchUsersByNickname(normalizeText(text));
+
+            if (found.length === 0) {
+                setNotifMsg('No se encontraron usuarios');
+                setShowNotif(true);
+            } else {
+                setUsers(found);
+            }
+
+        } finally {
+            setLoading(false);
+        }
+
+    };
 
     return (
         <View style={styles.container}>
@@ -23,47 +56,39 @@ export const SearchUsersScreen = () => {
             }
 
             <SearchBar
-                onSearch={() => {
-                    setNotifMsg('Buscando usuarios...');
-                    setShowNotif(true);
-                }}
+                onSearch={handleSearch}
+                disabled={loading}
             />
 
             <View style={globalStyles.separator} />
 
-            <ScrollView>
+            {loading &&
+                <FullScreenLoader />
+            }
 
-                <UserCard
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez Pérez"
-                    avatarUrl=""
+            {!loading && users.length === 0 &&
+                <IonIcon
+                    name="person"
+                    size={200}
+                    color={globalColors.greyLight}
+                    style={styles.bigIcon}
                 />
+            }
 
-                <UserCard
-                    nickname="dimenemene"
-                    name="Diego Menendez"
-                    avatarUrl="https://randomuser.me/api/portraits/men/2.jpg"
-                />
+            {!loading && users.length !== 0 &&
+                <ScrollView>
 
-                <UserCard
-                    nickname="rosirodriguez"
-                    name="Rosa Delia Rodríguez"
-                    avatarUrl=""
-                />
+                    {users.map((user) => (
+                        <UserCard
+                            key={user.id}
+                            nickname={user.nickname}
+                            name={user.full_name}
+                            avatarUrl={user.avatarUrl}
+                        />
+                    ))}
 
-                <UserCard
-                    nickname="ituya"
-                    name="Iñigo Tuya Cordera"
-                    avatarUrl=""
-                />
-
-                <UserCard
-                    nickname="paquillo72"
-                    name="Paco Quintana"
-                    avatarUrl="http://randomuser.me/api/portraits/men/3.jpg"
-                />
-
-            </ScrollView>
+                </ScrollView>
+            }
 
         </View>
     );
@@ -73,5 +98,10 @@ export const SearchUsersScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    bigIcon: {
+        flex: 1,
+        alignSelf: 'center',
+        marginTop: 50,
     },
 });

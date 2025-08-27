@@ -5,9 +5,10 @@ import { useState } from 'react';
 
 interface Props {
     onSearch: (text: string) => void;
+    disabled?: boolean;
 }
 
-export const SearchBar = ({ onSearch }: Props) => {
+export const SearchBar = ({ onSearch, disabled }: Props) => {
 
     const [searchText, setSearchText] = useState('');
 
@@ -32,20 +33,21 @@ export const SearchBar = ({ onSearch }: Props) => {
                 placeholder="Buscar por título o autor..."
                 returnKeyType="search"
                 onSubmitEditing={() => searchText.length > 0 ? handleSearch() : null}
+                editable={!disabled}
             />
 
             <CustomIconButton
                 icon="close"
                 onPress={handleClear}
                 style={styles.button}
-                disabled={searchText.length === 0}
+                disabled={searchText.length === 0 || disabled}
             />
 
             <CustomIconButton
                 icon="search"
                 onPress={handleSearch}
                 style={styles.button}
-                disabled={searchText.length === 0}
+                disabled={searchText.length === 0 || disabled}
             />
         </View>
     );

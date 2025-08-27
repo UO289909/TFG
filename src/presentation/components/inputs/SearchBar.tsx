@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { CustomIconButton } from '../pressables/CustomIconButton';
 import { CustomTextInput } from './CustomTextInput';
 import { useState } from 'react';
@@ -11,6 +11,17 @@ export const SearchBar = ({ onSearch }: Props) => {
 
     const [searchText, setSearchText] = useState('');
 
+    const handleSearch = () => {
+        onSearch(searchText);
+        Keyboard.dismiss();
+    };
+
+    const handleClear = () => {
+        setSearchText('');
+        onSearch('');
+        Keyboard.dismiss();
+    };
+
     return (
         <View style={styles.container}>
 
@@ -20,19 +31,19 @@ export const SearchBar = ({ onSearch }: Props) => {
                 onChangeText={setSearchText}
                 placeholder="Buscar por título o autor..."
                 returnKeyType="search"
-                onSubmitEditing={() => searchText.length > 0 ? onSearch(searchText) : null}
+                onSubmitEditing={() => searchText.length > 0 ? handleSearch() : null}
             />
 
             <CustomIconButton
                 icon="close"
-                onPress={() => setSearchText('')}
+                onPress={handleClear}
                 style={styles.button}
                 disabled={searchText.length === 0}
             />
 
             <CustomIconButton
                 icon="search"
-                onPress={() => onSearch(searchText)}
+                onPress={handleSearch}
                 style={styles.button}
                 disabled={searchText.length === 0}
             />

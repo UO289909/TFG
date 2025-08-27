@@ -8,12 +8,23 @@ import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
+import { CustomNotification } from '../../components/feedback';
 
 export const MyBooksScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
+  const { isLoading, myBooks, refetch } = useBooks();
+
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>(myBooks);
+  const [showNotif, setShowNotif] = useState(false);
+  const [notifMsg, setNotifMsg] = useState('');
+
+  useEffect(() => {
+    setFilteredBooks(myBooks);
+  }, [myBooks]);
 
   const handleAddBook = () => {
     navigation.navigate('AddBook');
@@ -25,9 +36,29 @@ export const MyBooksScreen = () => {
 
   const handleFilterBooks = (text: string) => {
     console.log(text);
+
+    const search = text.trim().toLowerCase();
+    if (!search) {
+      setFilteredBooks(myBooks);
+      return;
+    }
+
+    const filtered = myBooks.filter(
+      (book) =>
+        book.title.toLowerCase().includes(search) ||
+        book.author?.toLowerCase().includes(search)
+    );
+
+    if (!filtered.length) {
+      setNotifMsg('No tienes libros que coincidan con la busqueda');
+      setShowNotif(true);
+      return;
+    }
+
+    setFilteredBooks(filtered);
+
   };
 
-  const { isLoading, myBooks, refetch } = useBooks();
 
   useFocusEffect(
     useCallback(() => {
@@ -42,6 +73,14 @@ export const MyBooksScreen = () => {
   return (
     <View style={styles.container}>
 
+      {showNotif &&
+        <CustomNotification
+          message={notifMsg}
+          position="bottom"
+          onClose={() => setShowNotif(false)}
+        />
+      }
+
       <SearchBar
         onSearch={handleFilterBooks}
       />
@@ -50,7 +89,7 @@ export const MyBooksScreen = () => {
 
       <ScrollView>
 
-        {myBooks.map((book) => (
+        {filteredBooks.map((book) => (
           <BookCard
             key={book.isbn}
             onPress={() => handleBookDetails(book)}

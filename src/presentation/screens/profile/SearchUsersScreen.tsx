@@ -86,6 +86,7 @@ export const SearchUsersScreen = () => {
                             name={user.full_name}
                             avatarUrl={user.avatarUrl}
                             alreadyAdded={false}
+                            onButtonPress={() => { }}
                         />
                     ))}
 

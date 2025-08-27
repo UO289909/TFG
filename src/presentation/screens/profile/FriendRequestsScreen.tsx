@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { IonIcon } from '../../components/icons';
+import { RequestCard } from '../../components/profile/RequestCard';
 
 
 export const FriendRequestsScreen = () => {
@@ -14,7 +15,13 @@ export const FriendRequestsScreen = () => {
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text>No tienes solicitudes de amistad</Text>
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
             </ScrollView>
 
             <View style={globalStyles.separator} />
@@ -25,7 +32,13 @@ export const FriendRequestsScreen = () => {
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text>No has enviado ninguna solicitud de amistad</Text>
+                <RequestCard
+                    type="sent"
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
             </ScrollView>
 
         </View>

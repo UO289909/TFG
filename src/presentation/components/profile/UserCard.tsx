@@ -7,9 +7,10 @@ interface Props {
     avatarUrl: string | null;
     name: string;
     alreadyAdded?: boolean;
+    onButtonPress: () => void;
 }
 
-export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false }: Props) => {
+export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false, onButtonPress }: Props) => {
     const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
 
 
@@ -33,8 +34,8 @@ export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false }: Pr
                 icon={alreadyAdded ? 'person-remove-outline' : 'person-add-outline'}
                 color={alreadyAdded ? globalColors.danger : globalColors.primary}
                 colorPressed={alreadyAdded ? globalColors.dangerDark : globalColors.primaryDark}
-                onPress={() => { }}
-                style={styles.addButton}
+                onPress={onButtonPress}
+                style={styles.button}
             />
 
         </View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         padding: 12,
         marginVertical: 10,
-        shadowColor: '#000',
+        shadowColor: globalColors.black,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
         color: globalColors.black,
         marginTop: 6,
     },
-    addButton: {
+    button: {
         alignSelf: 'center',
     },
 });

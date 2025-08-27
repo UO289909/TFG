@@ -12,9 +12,11 @@ export type IonIconNames =
     | 'images'
     | 'images-outline'
     | 'add-outline'
+    | 'close'
     | 'close-outline'
     | 'star'
     | 'star-outline'
+    | 'search'
     | 'trash-outline'
     | 'pencil-outline'
     | 'checkmark-outline';

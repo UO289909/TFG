@@ -172,15 +172,17 @@ export const EditBookScreen = () => {
                 />
             )}
 
+            <Text style={styles.titleText}>{book.title}</Text>
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-                <Text style={styles.titleText}>{book.title}</Text>
 
                 {fieldsEnabled.includes('author') &&
                     <CustomTextInput
                         label="Autor:"
                         value={author}
                         onChangeText={setAuthor}
+                        style={styles.textInput}
                     />
                 }
 
@@ -190,6 +192,7 @@ export const EditBookScreen = () => {
                         value={pages}
                         onChangeText={setPages}
                         keyboardType="numeric"
+                        style={styles.textInput}
                     />
                 }
 
@@ -199,6 +202,7 @@ export const EditBookScreen = () => {
                         value={year}
                         onChangeText={setYear}
                         keyboardType="numeric"
+                        style={styles.textInput}
                     />
                 }
 
@@ -207,6 +211,7 @@ export const EditBookScreen = () => {
                         label="URL de la portada (opcional):"
                         value={cover}
                         onChangeText={setCover}
+                        style={styles.textInput}
                     />
                 }
 
@@ -274,7 +279,9 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 24,
         fontFamily: 'Roboto-Bold',
-        marginBottom: 4,
+        marginBottom: 10,
+        marginTop: 20,
+        marginLeft: 20,
     },
     subtitleText: {
         fontSize: 16,
@@ -286,6 +293,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 4,
         color: '#333',
+    },
+    textInput: {
+        marginBottom: 18,
     },
     dateInput: {
         borderWidth: 2,

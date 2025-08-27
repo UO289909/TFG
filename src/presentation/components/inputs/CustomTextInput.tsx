@@ -38,7 +38,7 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 18,
+    // marginBottom: 18,
   },
   label: {
     fontFamily: 'Roboto-Medium',

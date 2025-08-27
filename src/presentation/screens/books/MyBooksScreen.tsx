@@ -8,7 +8,8 @@ import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
-import React from 'react';
+import { useCallback } from 'react';
+import { SearchBar } from '../../components/inputs';
 
 export const MyBooksScreen = () => {
 
@@ -25,7 +26,7 @@ export const MyBooksScreen = () => {
   const { isLoading, myBooks, refetch } = useBooks();
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       refetch();
     }, [])
   );
@@ -36,7 +37,11 @@ export const MyBooksScreen = () => {
 
   return (
     <View style={styles.container}>
+
+      <SearchBar />
+
       <ScrollView>
+
         {myBooks.map((book) => (
           <BookCard
             key={book.isbn}
@@ -48,7 +53,9 @@ export const MyBooksScreen = () => {
             imageUrl={book.cover_url}
           />
         ))}
+
       </ScrollView>
+
       <FloatingButton
         onPress={handleAddBook}
         icon="add-outline"
@@ -56,6 +63,7 @@ export const MyBooksScreen = () => {
         color={globalColors.primary}
         colorPressed={globalColors.primaryDark}
       />
+
     </View>
   );
 };

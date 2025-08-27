@@ -141,12 +141,14 @@ export const AddBookScreen = () => {
           value={title}
           onChangeText={setTitle}
           editable={fieldsEnabled.includes('title')}
+          style={styles.textInput}
         />
         <CustomTextInput
           label="Autor:"
           value={author}
           onChangeText={setAuthor}
           editable={fieldsEnabled.includes('author')}
+          style={styles.textInput}
         />
         <CustomTextInput
           label="Número de páginas:"
@@ -154,12 +156,14 @@ export const AddBookScreen = () => {
           onChangeText={text => setPages(text.replace(/[^0-9]/g, ''))}
           keyboardType="numeric"
           editable={fieldsEnabled.includes('pages')}
+          style={styles.textInput}
         />
         <CustomTextInput
           label="Año de publicación:"
           value={year}
           onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
           editable={fieldsEnabled.includes('year')}
+          style={styles.textInput}
         />
         <CustomTextInput
           label="URL de la portada (opcional):"
@@ -198,6 +202,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 18,
   },
   button: {
     marginLeft: 10,
@@ -208,5 +213,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 30,
     borderRadius: 1,
+  },
+  textInput: {
+    marginBottom: 18,
   },
 });

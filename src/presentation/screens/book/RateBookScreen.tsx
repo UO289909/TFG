@@ -79,8 +79,9 @@ export const RateBookScreen = () => {
                 />
             )}
 
+            <Text style={styles.title}>Valorar "{book.title}"</Text>
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <Text style={styles.title}>Valorar "{book.title}"</Text>
 
                 <Text style={styles.label}>Fecha de inicio de lectura:</Text>
                 <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
@@ -132,7 +133,9 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontFamily: 'Roboto-Bold',
-        marginBottom: 24,
+        marginBottom: 10,
+        marginTop: 20,
+        marginLeft: 20,
     },
     label: {
         textAlign: 'center',

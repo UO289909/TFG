@@ -43,7 +43,7 @@ export const BottomTabsNavigator = () => {
         >
             <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon}} component={HomeScreen} />
             <Tab.Screen name="MyBooks" options={{ title: 'Mis libros', tabBarIcon: MyBooksTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={MyBooksStackNavigator} />
-            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon , headerShown: false }} component={ProfileStackNavigator} />
+            <Tab.Screen name="Profile" options={{ title: 'Perfil', tabBarIcon: ProfileTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={ProfileStackNavigator} />
         </Tab.Navigator>
     );
 };

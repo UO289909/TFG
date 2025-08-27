@@ -1,6 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { globalStyles } from '../../../config/app-theme';
+import { UserCard } from '../../components/profile/UserCard';
 
 
 export const SearchUsersScreen = () => {
@@ -10,13 +11,43 @@ export const SearchUsersScreen = () => {
         <View style={styles.container}>
 
             <SearchBar
-                onSearch={() => {}}
+                onSearch={() => { }}
             />
 
             <View style={globalStyles.separator} />
 
             <ScrollView>
-                <Text>Buscar usuarios</Text>
+
+                <UserCard
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez Pérez"
+                    avatarUrl=""
+                />
+
+                <UserCard
+                    nickname="dimenemene"
+                    name="Diego Menendez"
+                    avatarUrl="https://randomuser.me/api/portraits/men/2.jpg"
+                />
+
+                <UserCard
+                    nickname="rosirodriguez"
+                    name="Rosa Delia Rodríguez"
+                    avatarUrl=""
+                />
+
+                <UserCard
+                    nickname="ituya"
+                    name="Iñigo Tuya Cordera"
+                    avatarUrl=""
+                />
+
+                <UserCard
+                    nickname="paquillo72"
+                    name="Paco Quintana"
+                    avatarUrl="http://randomuser.me/api/portraits/men/3.jpg"
+                />
+
             </ScrollView>
 
         </View>

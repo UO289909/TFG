@@ -7,6 +7,7 @@ export type IonIconNames =
     | 'library-outline'
     | 'person'
     | 'person-outline'
+    | 'person-add'
     | 'home'
     | 'home-outline'
     | 'images'

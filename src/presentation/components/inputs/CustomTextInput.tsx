@@ -10,26 +10,27 @@ interface Props extends TextInputProps {
 export const CustomTextInput = ({ label, error, style, editable = true, ...props }: Props) => {
   const [focused, setFocused] = useState(false);
 
-  let borderColor = globalColors.grey;
-  if (error) { borderColor = globalColors.danger; }
-  else if (focused) { borderColor = globalColors.primary; }
-
-  const backgroundColor = editable ? globalColors.white : globalColors.greyLight;
-  const textColor = editable ? '#000' : globalColors.greyDark;
-
   return (
-    <View style={[styles.container, style]}>
+    <View style={style}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         {...props}
         editable={editable}
         style={[
           styles.input,
-          { borderColor, backgroundColor, color: textColor },
+          {
+            borderColor: error
+              ? globalColors.danger
+              : focused
+                ? globalColors.primary
+                : globalColors.grey,
+            backgroundColor: editable ? globalColors.white : globalColors.greyLight,
+            color: editable ? globalColors.black : globalColors.greyDark,
+          },
         ]}
+        placeholderTextColor={globalColors.greyDark}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        placeholderTextColor={globalColors.greyDark}
       />
       {error && <Text style={styles.error}>{error}</Text>}
     </View>
@@ -37,9 +38,6 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // marginBottom: 18,
-  },
   label: {
     fontFamily: 'Roboto-Medium',
     fontSize: 18,

@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: globalColors.grey,
     marginTop: 10,
     marginBottom: 30,
     borderRadius: 1,

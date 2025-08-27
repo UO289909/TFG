@@ -14,6 +14,7 @@ export const globalColors = {
     greyLight: '#eee',
     greyDark: '#999',
     white: '#fff',
+    black: '#000',
 
     background: '#fff',
 };

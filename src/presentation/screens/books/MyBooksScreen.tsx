@@ -40,6 +40,8 @@ export const MyBooksScreen = () => {
 
       <SearchBar />
 
+      <View style={styles.separator} />
+
       <ScrollView>
 
         {myBooks.map((book) => (
@@ -72,5 +74,14 @@ export const MyBooksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  separator: {
+    height: 1,
+    borderRadius: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });

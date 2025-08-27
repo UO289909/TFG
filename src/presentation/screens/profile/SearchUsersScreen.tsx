@@ -2,16 +2,31 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { globalStyles } from '../../../config/app-theme';
 import { UserCard } from '../../components/profile/UserCard';
+import { CustomNotification } from '../../components/feedback';
+import { useState } from 'react';
 
 
 export const SearchUsersScreen = () => {
 
+    const [showNotif, setShowNotif] = useState(false);
+    const [notifMsg, setNotifMsg] = useState('');
 
     return (
         <View style={styles.container}>
 
+            {showNotif &&
+                <CustomNotification
+                    message={notifMsg}
+                    position="bottom"
+                    onClose={() => setShowNotif(false)}
+                />
+            }
+
             <SearchBar
-                onSearch={() => { }}
+                onSearch={() => {
+                    setNotifMsg('Buscando usuarios...');
+                    setShowNotif(true);
+                }}
             />
 
             <View style={globalStyles.separator} />

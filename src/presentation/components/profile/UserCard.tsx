@@ -26,7 +26,7 @@ export const UserCard = ({ nickname, avatarUrl, name }: Props) => {
             </View>
 
             <CustomIconButton
-                icon="person-add"
+                icon="person-add-outline"
                 onPress={() => { }}
                 style={styles.addButton}
             />

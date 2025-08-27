@@ -23,6 +23,10 @@ export const MyBooksScreen = () => {
     navigation.navigate('BookDetails', { book });
   };
 
+  const handleFilterBooks = (text: string) => {
+    console.log(text);
+  };
+
   const { isLoading, myBooks, refetch } = useBooks();
 
   useFocusEffect(
@@ -38,7 +42,9 @@ export const MyBooksScreen = () => {
   return (
     <View style={styles.container}>
 
-      <SearchBar />
+      <SearchBar
+        onSearch={handleFilterBooks}
+      />
 
       <View style={styles.separator} />
 

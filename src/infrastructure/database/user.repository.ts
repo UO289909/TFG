@@ -15,11 +15,13 @@ export const databaseGetUserInfo = async (): Promise<DatabaseUser> => {
     const userId = getUserId();
 
     try {
-        const data: DatabaseUser[] = await supabaseFetcher.get(`/rest/v1/users?id=eq.${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+        const data: DatabaseUser[] = await supabaseFetcher.get(
+            `/rest/v1/users?id=eq.${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
         return data[0];
 
     } catch (error) {
@@ -82,4 +84,27 @@ export const databaseCreateSignedAvatarUrl = async (
 
     return data.signedURL;
 
+};
+
+
+export const databaseSearchUsersByNickname = async (nickname: string): Promise<DatabaseUser[]> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+
+        const data: DatabaseUser[] = await supabaseFetcher.get(
+            `/rest/v1/users?nickname=ilike.%${nickname}%&id=neq.${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error searching users by nickname: ${error}`);
+    }
 };

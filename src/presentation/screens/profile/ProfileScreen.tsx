@@ -7,6 +7,7 @@ import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
+import { globalStyles } from '../../../config/app-theme';
 
 export const ProfileScreen = () => {
 
@@ -59,13 +60,18 @@ export const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
+
+      <ProfileInfoHeader
+        nickname={myProfile!.nickname}
+        name={myProfile!.full_name}
+        avatarUrl={myProfile!.avatarUrl}
+        style={styles.profileHeader}
+      />
+
+      <View style={globalStyles.separator} />
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-        <ProfileInfoHeader
-          nickname={myProfile!.nickname}
-          name={myProfile!.full_name}
-          avatarUrl={myProfile!.avatarUrl}
-        />
 
         <CustomMenuButton
           onPress={handleChangeAvatar}
@@ -104,7 +110,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   profileHeader: {
-    marginBottom: 32,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    marginBottom: 10,
   },
   avatar: {
     width: 100,

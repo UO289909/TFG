@@ -1,17 +1,18 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
 
 interface Props {
     nickname: string;
     avatarUrl: string | null;
     name: string;
+    style?: StyleProp<ViewStyle>;
 }
 
-export const ProfileInfoHeader = ({ nickname, avatarUrl, name }: Props) => {
+export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style }: Props) => {
     const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <Image
                 source={{ uri: avatarUrl || default_avatar }}
                 style={styles.avatar}

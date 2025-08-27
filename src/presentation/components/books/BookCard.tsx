@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
 import { FiveStarsInput } from '../inputs/FiveStarsInput';
+import { globalColors } from '../../../config/app-theme';
 
 interface Props {
     title: string;
@@ -14,7 +15,16 @@ export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Pr
     const default_cover = 'https://placehold.co/80x128.png?text=No+Cover';
 
     return (
-        <Pressable style={styles.cardContainer} onPress={onPress}>
+        <Pressable
+            style={({pressed}) => [
+                styles.cardContainer,
+                {
+                    backgroundColor: pressed ? globalColors.greyLight : globalColors.white,
+                    elevation: pressed ? 2 : 4,
+                },
+            ]}
+            onPress={onPress}
+        >
             <Image
                 style={styles.image}
                 source={{ uri: imageUrl || default_cover }}
@@ -41,7 +51,6 @@ const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        backgroundColor: '#fff',
         width: '95%',
         minHeight: 148,
         borderRadius: 16,
@@ -49,7 +58,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
-        elevation: 5,
         alignSelf: 'center',
         marginVertical: 10,
         padding: 12,

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
@@ -11,6 +11,7 @@ import { globalColors } from '../../../config/app-theme';
 import { useCallback, useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
+import { normalizeText } from '../../../utils/normalizeText';
 
 export const MyBooksScreen = () => {
 
@@ -19,12 +20,21 @@ export const MyBooksScreen = () => {
   const { isLoading, myBooks, refetch } = useBooks();
 
   const [filteredBooks, setFilteredBooks] = useState<Book[]>(myBooks);
+
   const [showNotif, setShowNotif] = useState(false);
   const [notifMsg, setNotifMsg] = useState('');
+
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     setFilteredBooks(myBooks);
   }, [myBooks]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   const handleAddBook = () => {
     navigation.navigate('AddBook');
@@ -35,9 +45,9 @@ export const MyBooksScreen = () => {
   };
 
   const handleFilterBooks = (text: string) => {
-    console.log(text);
 
-    const search = text.trim().toLowerCase();
+    const search = normalizeText(text.trim());
+
     if (!search) {
       setFilteredBooks(myBooks);
       return;
@@ -45,12 +55,12 @@ export const MyBooksScreen = () => {
 
     const filtered = myBooks.filter(
       (book) =>
-        book.title.toLowerCase().includes(search) ||
-        book.author?.toLowerCase().includes(search)
+        normalizeText(book.title).includes(search) ||
+        (book.author && normalizeText(book.author).includes(search))
     );
 
     if (!filtered.length) {
-      setNotifMsg('No tienes libros que coincidan con la busqueda');
+      setNotifMsg('No tienes libros que coincidan con la busqueda :(');
       setShowNotif(true);
       return;
     }
@@ -59,11 +69,18 @@ export const MyBooksScreen = () => {
 
   };
 
-
   useFocusEffect(
     useCallback(() => {
       refetch();
     }, [])
+  );
+
+  const refreshControl = (
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      colors={[globalColors.primary]}
+    />
   );
 
   if (isLoading) {
@@ -87,7 +104,9 @@ export const MyBooksScreen = () => {
 
       <View style={styles.separator} />
 
-      <ScrollView>
+      <ScrollView
+        refreshControl={refreshControl}
+      >
 
         {filteredBooks.map((book) => (
           <BookCard

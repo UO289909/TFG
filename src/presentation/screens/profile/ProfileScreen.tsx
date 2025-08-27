@@ -63,6 +63,13 @@ export const ProfileScreen = () => {
           disabled={changingAvatar}
         />
 
+        <CustomMenuButton
+          onPress={() => {}}
+          label="Buscar amigos"
+          icon="person"
+          style={styles.button}
+        />
+
       </ScrollView>
     </View>
   );

@@ -24,9 +24,11 @@ export const CustomMenuButton = ({ onPress, label, icon, style, disabled = false
                     : pressed
                         ? globalColors.greyLight
                         : globalColors.background,
-                borderColor: pressed
-                    ? globalColors.primaryDark
-                    : globalColors.primary,
+                borderColor: disabled
+                    ? globalColors.greyDark
+                    : pressed
+                        ? globalColors.primaryDark
+                        : globalColors.primary,
                 elevation: pressed ? 4 : 8,
             },
             style,
@@ -43,14 +45,26 @@ export const CustomMenuButton = ({ onPress, label, icon, style, disabled = false
                     size={26}
                     color={
                         disabled
-                            ? globalColors.grey
+                            ? globalColors.greyDark
                             : pressed
                                 ? globalColors.primaryDark
                                 : globalColors.primary
                     }
                     style={styles.icon}
                 />
-                <Text style={styles.label}>{label}</Text>
+                <Text style={[
+                    styles.label,
+                    {
+                        color: disabled
+                            ? globalColors.greyDark
+                            : pressed
+                                ? globalColors.primaryDark
+                                : globalColors.primary,
+                    },
+                ]}
+                >
+                    {label}
+                </Text>
             </>
         )}
     </Pressable>

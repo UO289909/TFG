@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Props) => {
-    const default_cover = 'https://placehold.co/80x128.png?text=No+Cover';
+    const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
 
     return (
         <Pressable

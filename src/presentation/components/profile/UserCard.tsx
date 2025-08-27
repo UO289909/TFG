@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false }: Props) => {
-    const default_avatar = 'https://placehold.co/80x80.png?text=No+Avatar';
+    const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
 
 
     return (

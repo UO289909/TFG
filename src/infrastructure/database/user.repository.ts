@@ -68,7 +68,7 @@ export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> =
  * or the current user's avatar if no id is provided.
  * @param expiresInSeconds The duration in seconds for which the signed URL is valid.
  * @param id The ID of the user whose avatar URL is to be created (optional).
- * @returns A promise that resolves to the signed URL.
+ * @returns A promise that resolves to the signed URL or an empty string if the avatar does not exist.
  */
 export const databaseCreateSignedAvatarUrl = async (
     expiresInSeconds = 3600,
@@ -85,6 +85,9 @@ export const databaseCreateSignedAvatarUrl = async (
         .createSignedUrl(avatarPath, expiresInSeconds);
 
     if (error || !data?.signedURL) {
+        if (error?.message === 'Object not found') {
+            return '';
+        }
         throw new Error('Error creating signed avatar URL');
     }
 
@@ -92,7 +95,11 @@ export const databaseCreateSignedAvatarUrl = async (
 
 };
 
-
+/**
+ * Gets a list of users whose nicknames match the provided nickname (case insensitive).
+ * @param nickname The nickname to search for.
+ * @returns A promise that resolves to an array of users matching the nickname.
+ */
 export const databaseSearchUsersByNickname = async (nickname: string): Promise<DatabaseUser[]> => {
 
     const accessToken = getAccessToken();

@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const ProfileInfoHeader = ({ nickname, avatarUrl, name }: Props) => {
-    const default_avatar = 'https://placehold.co/80x80.png?text=No+Avatar';
+    const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
 
     return (
         <View style={styles.container}>

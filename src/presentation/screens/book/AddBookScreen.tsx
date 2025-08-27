@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
-import { CustomButton } from '../../components/pressables/CustomButton';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
 import { useNavigation } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
@@ -10,6 +9,8 @@ import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.us
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user.use-case';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
+import { SearchBar } from '../../components/inputs';
+import { normalizeDateToYear } from '../../../utils/normalizeDateToYear';
 
 export const AddBookScreen = () => {
 
@@ -25,7 +26,6 @@ export const AddBookScreen = () => {
   const [notifMsg, setNotifMsg] = useState('Introduce el ISBN del libro para buscarlo');
 
   const [isNewBook, setIsNewBook] = useState(false);
-  const [canSearch, setCanSearch] = useState(true);
 
   const navigation = useNavigation();
 
@@ -33,11 +33,29 @@ export const AddBookScreen = () => {
     navigation.goBack();
   };
 
-  const handleSearchISBN = async () => {
+  const handleSearchISBN = async (text: string) => {
+
+    setFieldsEnabled([]);
+
+    if (text.length === 0) {
+      setFieldsEnabled(['isbn']);
+      return;
+    }
+
+    if (text.length !== 13) {
+      setFieldsEnabled(['isbn']);
+      setNotifMsg(`El ISBN debe tener 13 dígitos (actualmente ${text.length})`);
+      setShowNotif(true);
+      return;
+    }
+
+    setIsbn(text);
+
     try {
-      const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryFetcher, isbn);
+      const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryFetcher, text);
 
       if (alreadyInUser) {
+        setFieldsEnabled(['isbn']);
         setNotifMsg('Este libro ya está en tu colección');
         setShowNotif(true);
         return;
@@ -48,6 +66,8 @@ export const AddBookScreen = () => {
           setIsNewBook(true);
         }
 
+        console.log('Libro encontrado:', book);
+
         setFieldsEnabled([]);
         setTitle(book.title);
 
@@ -57,17 +77,18 @@ export const AddBookScreen = () => {
         if (book.pages) { setPages(book.pages.toString()); }
         else { setFieldsEnabled(prev => [...prev, 'pages']); }
 
-        if (book.release_year) { setYear(book.release_year); }
+        if (book.release_year) {
+          setYear(normalizeDateToYear(book.release_year));
+        }
         else { setFieldsEnabled(prev => [...prev, 'year']); }
 
         if (book.cover_url) { setCover(book.cover_url); }
         else { setFieldsEnabled(prev => [...prev, 'cover']); }
 
-        setCanSearch(false);
-
         setNotifMsg('Rellena los campos que quieras editar y guarda tu libro');
         setShowNotif(true);
       } else {
+        setFieldsEnabled(['isbn']);
         setNotifMsg('No se encontró ningún libro con ese ISBN, prueba otro');
         setShowNotif(true);
       }
@@ -106,32 +127,12 @@ export const AddBookScreen = () => {
         />
       }
 
-      <View style={styles.searchContainer}>
-        <CustomTextInput
-          label="ISBN:"
-          value={isbn}
-          onChangeText={text => setIsbn(text.replace(/[^0-9]/g, ''))}
-          onSubmitEditing={() => canSearch && isbn.length === 13 ? handleSearchISBN() : null}
-          placeholder="Introduce ISBN de 13 dígitos"
-          style={styles.container}
-          keyboardType="numeric"
-          returnKeyType="search"
-          editable={fieldsEnabled.includes('isbn')}
-        />
-        {isbn !== '' && canSearch &&
-          <CustomButton
-            title="X"
-            onPress={() => setIsbn('')}
-            style={styles.button}
-          />
-        }
-        <CustomButton
-          title="Buscar"
-          onPress={handleSearchISBN}
-          style={styles.button}
-          disabled={!canSearch || !(isbn.length === 13)}
-        />
-      </View>
+      <SearchBar
+        placeholder="Introduce el ISBN de 13 dígitos..."
+        numeric
+        disabled={!fieldsEnabled.includes('isbn')}
+        onSearch={handleSearchISBN}
+      />
 
       <View style={globalStyles.separator} />
 

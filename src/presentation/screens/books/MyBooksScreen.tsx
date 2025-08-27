@@ -102,6 +102,7 @@ export const MyBooksScreen = () => {
 
       <SearchBar
         onSearch={handleFilterBooks}
+        placeholder="Buscar por título o autor..."
       />
 
       <View style={globalStyles.separator} />

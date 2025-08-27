@@ -5,10 +5,12 @@ import { useState } from 'react';
 
 interface Props {
     onSearch: (text: string) => void;
+    placeholder?: string;
+    numeric?: boolean;
     disabled?: boolean;
 }
 
-export const SearchBar = ({ onSearch, disabled }: Props) => {
+export const SearchBar = ({ onSearch, disabled, placeholder, numeric }: Props) => {
 
     const [searchText, setSearchText] = useState('');
 
@@ -29,8 +31,9 @@ export const SearchBar = ({ onSearch, disabled }: Props) => {
             <CustomTextInput
                 style={styles.textInput}
                 value={searchText}
-                onChangeText={setSearchText}
-                placeholder="Buscar por título o autor..."
+                onChangeText={numeric ? text => setSearchText(text.replace(/[^0-9]/g, '')) : setSearchText}
+                placeholder={placeholder}
+                keyboardType={numeric ? 'numeric' : 'default'}
                 returnKeyType="search"
                 onSubmitEditing={() => searchText.length > 0 ? handleSearch() : null}
                 editable={!disabled}

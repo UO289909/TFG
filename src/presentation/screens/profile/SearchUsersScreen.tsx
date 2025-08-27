@@ -57,6 +57,7 @@ export const SearchUsersScreen = () => {
 
             <SearchBar
                 onSearch={handleSearch}
+                placeholder="Buscar usuarios por nickname..."
                 disabled={loading}
             />
 

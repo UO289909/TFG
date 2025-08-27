@@ -11,6 +11,8 @@ export type IonIconNames =
     | 'person-add-outline'
     | 'person-remove'
     | 'person-remove-outline'
+    | 'people'
+    | 'people-outline'
     | 'home'
     | 'home-outline'
     | 'images'

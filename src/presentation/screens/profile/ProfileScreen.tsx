@@ -20,6 +20,10 @@ export const ProfileScreen = () => {
     navigation.navigate('SearchUsers');
   };
 
+  const handleFriendRequests = () => {
+    navigation.navigate('FriendRequests');
+  };
+
   const handleChangeAvatar = async () => {
 
     if (changingAvatar) {
@@ -75,6 +79,13 @@ export const ProfileScreen = () => {
           onPress={handleSearchUsers}
           label="Buscar amigos"
           icon="person"
+          style={styles.button}
+        />
+
+        <CustomMenuButton
+          onPress={handleFriendRequests}
+          label="Solicitudes de amistad"
+          icon="person-add"
           style={styles.button}
         />
 

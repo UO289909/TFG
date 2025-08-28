@@ -185,3 +185,27 @@ export const databaseGetFriendAvatarByRequest = async (expiresInSeconds = 3600, 
         throw new Error(`Error fetching friend avatar from database: ${error}`);
     }
 };
+
+/**
+ * Deletes a friend relationship from the database.
+ * @param friendId The ID of the friend to delete.
+ */
+export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        await supabaseFetcher.delete(
+            `/rest/v1/friends?or=(and(sender.eq.${userId},receiver.eq.${friendId}),and(sender.eq.${friendId},receiver.eq.${userId}))`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+    } catch (error) {
+        throw new Error(`Error deleting friend from database: ${error}`);
+    }
+};

@@ -37,6 +37,10 @@ export const useProfile = () => {
 
     };
 
+    const refetch = async () => {
+        await loadMyProfile();
+    };
+
     const changeAvatar = async (newAvatarUrl: string) => {
 
         setIsLoading(true);
@@ -52,6 +56,7 @@ export const useProfile = () => {
         isLoading,
         myProfile,
         friendRequests,
+        refetch,
         changeAvatar,
     };
 };

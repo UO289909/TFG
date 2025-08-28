@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
@@ -11,6 +11,7 @@ import { UserCard } from '../../components/profile/UserCard';
 import { normalizeText } from '../../../utils/normalizeText';
 import { User } from '../../../core/entities/user.entity';
 import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
+import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
 
 
 export const FriendsScreen = () => {
@@ -76,8 +77,16 @@ export const FriendsScreen = () => {
         setLoading(false);
     };
 
-    const handleDeleteFriend = () => {
+    const handleDeleteFriend = (friendId: string) => {
 
+        setLoading(true);
+
+        deleteFriend(friendId).then(() => {
+            setFriends(friends.filter(friend => friend.id !== friendId));
+            setFilteredFriends(filteredFriends.filter(friend => friend.id !== friendId));
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     return (
@@ -104,12 +113,15 @@ export const FriendsScreen = () => {
             }
 
             {!loading && friends.length === 0 &&
-                <IonIcon
-                    name="people"
-                    size={200}
-                    color={globalColors.greyLight}
-                    style={styles.bigIcon}
-                />
+                <>
+                    <IonIcon
+                        name="people"
+                        size={200}
+                        color={globalColors.greyLight}
+                        style={styles.bigIcon}
+                    />
+                    <Text style={styles.noFriendsText}>No tienes amigos aun</Text>
+                </>
             }
 
             {!loading && friends.length > 0 &&
@@ -122,7 +134,7 @@ export const FriendsScreen = () => {
                             name={friend.full_name}
                             avatarUrl={friend.avatarUrl}
                             alreadyAdded={true}
-                            onButtonPress={handleDeleteFriend}
+                            onButtonPress={() => handleDeleteFriend(friend.id)}
                         />
                     ))}
 
@@ -143,5 +155,13 @@ const styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
         marginTop: 50,
+    },
+    noFriendsText: {
+        flex: 1,
+        fontSize: 20,
+        fontFamily: 'Roboto-Light',
+        color: globalColors.grey,
+        alignSelf: 'center',
+        textAlign: 'center',
     },
 });

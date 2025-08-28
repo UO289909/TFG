@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
-import { useState } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
+import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { globalStyles } from '../../../config/app-theme';
 
@@ -13,7 +14,7 @@ export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-  const { isLoading, myProfile, friendRequests, changeAvatar } = useProfile();
+  const { isLoading, myProfile, friendRequests, refetch, changeAvatar } = useProfile();
 
   const [changingAvatar, setChangingAvatar] = useState(false);
 
@@ -56,6 +57,12 @@ export const ProfileScreen = () => {
     }
 
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [])
+  );
 
 
   if (isLoading) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { globalColors, globalStyles } from '../../../config/app-theme';
@@ -8,23 +9,48 @@ import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { IonIcon } from '../../components/icons';
 import { UserCard } from '../../components/profile/UserCard';
 import { normalizeText } from '../../../utils/normalizeText';
+import { User } from '../../../core/entities/user.entity';
+import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
 
 
 export const FriendsScreen = () => {
 
-    // const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'Friends'>>();
-    const { friends } = params;
+    const { friendRequests } = params;
 
-    const [filteredFriends, setFilteredFriends] = useState(friends);
+    const [friends, setFriends] = useState<User[]>([]);
+    const [filteredFriends, setFilteredFriends] = useState<User[]>(friends);
     const [loading, setLoading] = useState(false);
 
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
 
     useEffect(() => {
+        fetchFriends();
+
+        if (friends.length === 0) {
+            setNotifMsg('Aun no tienes amigos agregados :(');
+            setShowNotif(true);
+        }
+    }, []);
+
+    useEffect(() => {
         setFilteredFriends(friends);
+        console.log('Filtered friends on state:', filteredFriends);
     }, [friends]);
+
+    const fetchFriends = async () => {
+
+        setLoading(true);
+
+        console.log('Fetching friends for requests:', friendRequests);
+        const fetchedFriends = await getFriendsByRequests(3600, friendRequests);
+        setFriends(fetchedFriends);
+        console.log('Fetched friends on state:', fetchedFriends);
+
+        setLoading(false);
+
+    };
 
     const handleFilterFriends = (text: string) => {
 
@@ -54,6 +80,10 @@ export const FriendsScreen = () => {
 
         setFilteredFriends(filtered);
         setLoading(false);
+    };
+
+    const handleDeleteFriend = () => {
+
     };
 
     return (
@@ -98,7 +128,7 @@ export const FriendsScreen = () => {
                             name={friend.full_name}
                             avatarUrl={friend.avatarUrl}
                             alreadyAdded={true}
-                            onButtonPress={() => { }}
+                            onButtonPress={handleDeleteFriend}
                         />
                     ))}
 

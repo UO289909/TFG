@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { User } from '../../core/entities/user.entity';
 import { signIn } from '../../infrastructure/database/auth.repository';
-import { getUserInfo } from '../../core/use-cases/user/get-user-info.use-case';
-import { getUserAvatarUrl } from '../../core/use-cases/user/get-user-avatar-url.use-case';
 import { changeUserAvatar } from '../../core/use-cases/user/change-user-avatar.use-case';
-import { DatabaseFriend } from '../../infrastructure/interfaces/supabase.responses';
+import { getFriendRequests } from '../../core/use-cases/user/get-friend-requests.use-case';
+import { Friend } from '../../core/entities/friend.entity';
+import { getUser } from '../../core/use-cases/user/get-user.use-case';
 
 
 export const useProfile = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [myProfile, setMyProfile] = useState<User>();
-    const [friendRequests, setFriendRequests] = useState<DatabaseFriend[]>([]);
-    const [friends, setFriends] = useState<User[]>([]);
+    const [friendRequests, setFriendRequests] = useState<Friend[]>([]);
 
     useEffect(() => {
         loadMyProfile();
@@ -24,14 +23,15 @@ export const useProfile = () => {
 
         await signIn('dev@test.es', 'test');
 
-        const userPromise = getUserInfo();
-        const avatarUrlPromise = getUserAvatarUrl();
+        const userPromise = getUser();
+        const friendRequestsPromise = getFriendRequests();
 
-        const [user, avatarUrl] = await Promise.all([userPromise, avatarUrlPromise]);
-        user.avatarUrl = avatarUrl;
+        const [user, friendRequestsFetched] = await Promise.all([userPromise, friendRequestsPromise]);
 
-        console.log('User profile loaded:', user);
         setMyProfile(user);
+        setFriendRequests(friendRequestsFetched);
+
+        console.log('Friend requests fetched:', friendRequestsFetched);
 
         setIsLoading(false);
 
@@ -51,7 +51,7 @@ export const useProfile = () => {
     return {
         isLoading,
         myProfile,
-        friends,
+        friendRequests,
         changeAvatar,
     };
 };

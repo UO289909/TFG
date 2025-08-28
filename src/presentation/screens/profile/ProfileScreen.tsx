@@ -13,12 +13,12 @@ export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-  const { isLoading, myProfile, friends, changeAvatar } = useProfile();
+  const { isLoading, myProfile, friendRequests, changeAvatar } = useProfile();
 
   const [changingAvatar, setChangingAvatar] = useState(false);
 
   const handleFriends = () => {
-    navigation.navigate('Friends', { friends });
+    navigation.navigate('Friends', { friendRequests });
   };
 
   const handleSearchUsers = () => {

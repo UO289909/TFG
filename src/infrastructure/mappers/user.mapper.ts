@@ -1,5 +1,6 @@
+import { Friend } from '../../core/entities/friend.entity';
 import { User } from '../../core/entities/user.entity';
-import { DatabaseUser } from '../interfaces/supabase.responses';
+import { DatabaseFriend, DatabaseUser } from '../interfaces/supabase.responses';
 
 
 export class UserMapper {
@@ -10,6 +11,14 @@ export class UserMapper {
             nickname: databaseUser.nickname,
             full_name: databaseUser.full_name,
             avatarUrl: null,
+        };
+    }
+
+    static fromDatabaseFriendToEntity(databaseFriend: DatabaseFriend): Friend {
+        return {
+            sender: databaseFriend.sender,
+            receiver: databaseFriend.receiver,
+            accepted: databaseFriend.accepted,
         };
     }
 }

@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FriendRequestsScreen, FriendsScreen, ProfileScreen, SearchUsersScreen } from '../screens/profile';
-import { User } from '../../core/entities/user.entity';
+import { Friend } from '../../core/entities/friend.entity';
 
 export type RootStackParams = {
     ProfileMenu: undefined;
-    Friends: {friends: User[]};
+    Friends: {friendRequests: Friend[]};
     SearchUsers: undefined;
     FriendRequests: undefined;
 }

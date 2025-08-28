@@ -1,5 +1,6 @@
 import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
-import { DatabaseUser } from '../interfaces/supabase.responses';
+import { Friend } from '../../core/entities/friend.entity';
+import { DatabaseFriend, DatabaseUser } from '../interfaces/supabase.responses';
 import { getUserId, getAccessToken } from './auth.repository';
 import { SupabaseClient } from './supabaseClient';
 
@@ -119,5 +120,68 @@ export const databaseSearchUsersByNickname = async (nickname: string): Promise<D
 
     } catch (error) {
         throw new Error(`Error searching users by nickname: ${error}`);
+    }
+};
+
+/**
+ * Gets a list of friend requests (accepted or not, sended or received) for the current user.
+ * @returns A promise that resolves to an array of friend requests.
+ */
+export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+
+        const data: DatabaseFriend[] = await supabaseFetcher.get(
+            `/rest/v1/friends?or=(sender.eq.${userId},receiver.eq.${userId})`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching friend requests: ${error}`);
+    }
+};
+
+/**
+ * Gets the user information for a friend request.
+ * @param friendRequest The friend request object.
+ * @returns A promise that resolves to the user information of the friend.
+ */
+export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<DatabaseUser> => {
+
+    const id = friendRequest.sender === getUserId() ? friendRequest.receiver : friendRequest.sender;
+
+    try {
+        const data: DatabaseUser = await databaseGetUserInfo(id);
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching friend info from database: ${error}`);
+    }
+};
+
+/**
+ * Gets the avatar URL for a friend request.
+ * @param expiresInSeconds The duration in seconds for which the signed URL is valid.
+ * @param friendRequest The friend request object.
+ * @returns A promise that resolves to the signed avatar URL or an empty string if the avatar does not exist.
+ */
+export const databaseGetFriendAvatarByRequest = async (expiresInSeconds = 3600, friendRequest: Friend): Promise<string> => {
+
+    const id = friendRequest.sender === getUserId() ? friendRequest.receiver : friendRequest.sender;
+
+    try {
+        const avatarUrl = await databaseCreateSignedAvatarUrl(expiresInSeconds, id);
+        return avatarUrl;
+
+    } catch (error) {
+        throw new Error(`Error fetching friend avatar from database: ${error}`);
     }
 };

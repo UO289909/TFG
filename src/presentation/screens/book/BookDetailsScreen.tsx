@@ -23,7 +23,7 @@ export const BookDetailsScreen = () => {
 
   const handleDeleteBook = async () => {
     await deleteUserBook(book.isbn);
-    navigation.navigate('MyBooksList');
+    navigation.navigate('MyBooksList', { doRefetch: true });
   };
 
   const handleEditBook = () => {

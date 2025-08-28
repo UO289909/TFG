@@ -126,7 +126,7 @@ export const EditBookScreen = () => {
                 fieldsEnabled.includes('rating') ? rating : null,
             );
 
-            navigation.navigate('MyBooksList');
+            navigation.navigate('MyBooksList', { doRefetch: true });
         }
     };
 

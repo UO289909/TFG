@@ -4,7 +4,7 @@ import { AddBookScreen, BookDetailsScreen, RateBookScreen, EditBookScreen } from
 import { Book } from '../../core/entities/book.entity';
 
 export type RootStackParams = {
-  MyBooksList: undefined;
+  MyBooksList: { doRefetch?: boolean };
   AddBook: undefined;
   BookDetails: { book: Book };
   RateBook: { book: Book; rating: number };

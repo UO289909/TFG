@@ -47,7 +47,7 @@ export const RateBookScreen = () => {
             startDate,
             finishDate
         );
-        navigation.navigate('MyBooksList');
+        navigation.navigate('MyBooksList', { doRefetch: true });
     };
 
     const handleCancel = () => {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.use-case';
@@ -11,6 +11,7 @@ import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 import { SearchBar } from '../../components/inputs';
 import { normalizeDateToYear } from '../../../utils/normalizeDateToYear';
+import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 
 export const AddBookScreen = () => {
 
@@ -27,7 +28,7 @@ export const AddBookScreen = () => {
 
   const [isNewBook, setIsNewBook] = useState(false);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -112,7 +113,7 @@ export const AddBookScreen = () => {
 
     await postNewBook(book, fieldsEnabled, isNewBook);
 
-    handleGoBack();
+    navigation.navigate('MyBooksList', { doRefetch: true });
 
   };
 

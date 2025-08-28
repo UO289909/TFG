@@ -3,12 +3,12 @@ import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
-import { NavigationProp, useNavigation, useFocusEffect } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors, globalStyles } from '../../../config/app-theme';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
 import { normalizeText } from '../../../utils/normalizeText';
@@ -17,6 +17,8 @@ import { IonIcon } from '../../components/icons';
 export const MyBooksScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+  const { params } = useRoute<RouteProp<RootStackParams, 'MyBooksList'>>();
+  const doRefetch = params?.doRefetch ?? false;
 
   const { isLoading, myBooks, refetch } = useBooks();
 
@@ -30,6 +32,13 @@ export const MyBooksScreen = () => {
   useEffect(() => {
     setFilteredBooks(myBooks);
   }, [myBooks]);
+
+  useEffect(() => {
+    if (doRefetch) {
+      refetch();
+      navigation.setParams({ doRefetch: false });
+    }
+  }, [doRefetch]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -71,12 +80,6 @@ export const MyBooksScreen = () => {
 
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [])
-  );
-
   const refreshControl = (
     <RefreshControl
       refreshing={refreshing}
@@ -85,9 +88,6 @@ export const MyBooksScreen = () => {
     />
   );
 
-  if (isLoading) {
-    return <FullScreenLoader />;
-  }
 
   return (
     <View style={styles.container}>
@@ -103,11 +103,16 @@ export const MyBooksScreen = () => {
       <SearchBar
         onSearch={handleFilterBooks}
         placeholder="Buscar por título o autor..."
+        disabled={isLoading || refreshing}
       />
 
       <View style={globalStyles.separator} />
 
-      {filteredBooks.length === 0 && !refreshing &&
+      {(isLoading || refreshing) &&
+        <FullScreenLoader />
+      }
+
+      {filteredBooks.length === 0 && !refreshing && !isLoading &&
         <IonIcon
           name="book"
           size={200}
@@ -115,23 +120,26 @@ export const MyBooksScreen = () => {
           style={styles.bigIcon}
         />
       }
-      <ScrollView
-        refreshControl={refreshControl}
-      >
 
-        {filteredBooks.map((book) => (
-          <BookCard
-            key={book.isbn}
-            onPress={() => handleBookDetails(book)}
-            title={book.title}
-            author={book.author}
-            pages={book.pages}
-            rating={book.rating}
-            imageUrl={book.cover_url}
-          />
-        ))}
+      {filteredBooks.length > 0 && !refreshing && !isLoading &&
+        <ScrollView
+          refreshControl={refreshControl}
+        >
 
-      </ScrollView>
+          {filteredBooks.map((book) => (
+            <BookCard
+              key={book.isbn}
+              onPress={() => handleBookDetails(book)}
+              title={book.title}
+              author={book.author}
+              pages={book.pages}
+              rating={book.rating}
+              imageUrl={book.cover_url}
+            />
+          ))}
+
+        </ScrollView>
+      }
 
       <FloatingButton
         onPress={handleAddBook}
@@ -139,6 +147,7 @@ export const MyBooksScreen = () => {
         position="bottom-right"
         color={globalColors.primary}
         colorPressed={globalColors.primaryDark}
+        disabled={isLoading || refreshing}
       />
 
     </View>

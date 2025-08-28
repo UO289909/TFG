@@ -14,6 +14,8 @@ export const FriendRequestsScreen = () => {
                 <IonIcon name="archive" size={30} color={globalColors.grey} />
             </View>
 
+            <View style={globalStyles.separator} />
+
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <RequestCard
                     type="received"
@@ -59,12 +61,14 @@ export const FriendRequestsScreen = () => {
                 />
             </ScrollView>
 
-            <View style={globalStyles.separator} />
+            <View style={[globalStyles.separator, styles.bigSeparator]} />
 
             <View style={styles.titleHeader}>
                 <Text style={styles.title}>Solicitudes enviadas</Text>
                 <IonIcon name="send" size={30} color={globalColors.grey} />
             </View>
+
+            <View style={globalStyles.separator} />
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <RequestCard
@@ -115,6 +119,10 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         padding: 10,
+    },
+    bigSeparator: {
+        backgroundColor: globalColors.grey,
+        height: 4,
     },
     title: {
         fontSize: 20,

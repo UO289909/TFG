@@ -27,16 +27,10 @@ export const FriendsScreen = () => {
 
     useEffect(() => {
         fetchFriends();
-
-        if (friends.length === 0) {
-            setNotifMsg('Aun no tienes amigos agregados :(');
-            setShowNotif(true);
-        }
     }, []);
 
     useEffect(() => {
         setFilteredFriends(friends);
-        console.log('Filtered friends on state:', filteredFriends);
     }, [friends]);
 
     const fetchFriends = async () => {

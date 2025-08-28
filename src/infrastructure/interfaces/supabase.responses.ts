@@ -28,3 +28,10 @@ export interface DatabaseUser {
     has_avatar: boolean;
     created_at: string;
 }
+
+export interface DatabaseFriend {
+    sender: string;
+    receiver: string;
+    accepted: boolean;
+    created_at: string;
+}

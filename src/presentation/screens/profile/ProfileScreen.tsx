@@ -13,9 +13,13 @@ export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-  const { isLoading, myProfile, changeAvatar } = useProfile();
+  const { isLoading, myProfile, friends, changeAvatar } = useProfile();
 
   const [changingAvatar, setChangingAvatar] = useState(false);
+
+  const handleFriends = () => {
+    navigation.navigate('Friends', { friends });
+  };
 
   const handleSearchUsers = () => {
     navigation.navigate('SearchUsers');
@@ -82,9 +86,16 @@ export const ProfileScreen = () => {
         />
 
         <CustomMenuButton
+          onPress={handleFriends}
+          label="Amigos"
+          icon="people"
+          style={styles.button}
+        />
+
+        <CustomMenuButton
           onPress={handleSearchUsers}
-          label="Buscar amigos"
-          icon="person"
+          label="Buscar usuarios"
+          icon="search"
           style={styles.button}
         />
 

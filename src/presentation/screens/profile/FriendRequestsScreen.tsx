@@ -22,6 +22,41 @@ export const FriendRequestsScreen = () => {
                     onAccept={() => { }}
                     onDecline={() => { }}
                 />
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="received"
+                    nickname="rosirodriguez08"
+                    name="Rosa Delia Rodríguez Lozano"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
             </ScrollView>
 
             <View style={globalStyles.separator} />
@@ -32,6 +67,34 @@ export const FriendRequestsScreen = () => {
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <RequestCard
+                    type="sent"
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="sent"
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="sent"
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
+                <RequestCard
+                    type="sent"
+                    nickname="daniirguez"
+                    name="Daniel Rodríguez"
+                    onAccept={() => { }}
+                    onDecline={() => { }}
+                />
                 <RequestCard
                     type="sent"
                     nickname="daniirguez"

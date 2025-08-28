@@ -1,8 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { FriendRequestsScreen, ProfileScreen, SearchUsersScreen } from '../screens/profile';
+import { FriendRequestsScreen, FriendsScreen, ProfileScreen, SearchUsersScreen } from '../screens/profile';
+import { User } from '../../core/entities/user.entity';
 
 export type RootStackParams = {
     ProfileMenu: undefined;
+    Friends: {friends: User[]};
     SearchUsers: undefined;
     FriendRequests: undefined;
 }
@@ -21,6 +23,7 @@ export const ProfileStackNavigator = () => (
         }}
     >
         <Stack.Screen name="ProfileMenu" component={ProfileScreen} options={{ title: 'Perfil' }} />
+        <Stack.Screen name="Friends" component={FriendsScreen} options={{ title: 'Amigos' }} />
         <Stack.Screen name="SearchUsers" component={SearchUsersScreen} options={{ title: 'Buscar usuarios' }} />
         <Stack.Screen name="FriendRequests" component={FriendRequestsScreen} options={{ title: 'Solicitudes de amistad' }} />
     </Stack.Navigator>

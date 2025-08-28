@@ -76,7 +76,7 @@ export const SearchUsersScreen = () => {
                 />
             }
 
-            {!loading && users.length !== 0 &&
+            {!loading && users.length > 0 &&
                 <ScrollView>
 
                     {users.map((user) => (

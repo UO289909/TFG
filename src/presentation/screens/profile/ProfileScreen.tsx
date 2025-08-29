@@ -1,25 +1,41 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
-import { useCallback, useState } from 'react';
-import { NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
-import { globalStyles } from '../../../config/app-theme';
+import { globalColors, globalStyles } from '../../../config/app-theme';
 
 export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-  const { isLoading, myProfile, friendRequests, refetch, changeAvatar } = useProfile();
+  const {
+    isLoading,
+    isLoadingProfile,
+    isLoadingFriendRequests,
+    myProfile,
+    friendRequests,
+    refetch,
+    refetchProfile,
+    refetchFriendRequests,
+    changeAvatar,
+  } = useProfile();
 
   const [changingAvatar, setChangingAvatar] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   const handleFriends = () => {
-    navigation.navigate('Friends', { friendRequests });
+    navigation.navigate('Friends', { friendRequests, refetchFriendRequests });
   };
 
   const handleSearchUsers = () => {
@@ -52,16 +68,20 @@ export const ProfileScreen = () => {
       }
 
       await changeAvatar(asset.uri!);
+      await refetchProfile();
+
     } finally {
       setChangingAvatar(false);
     }
 
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      refetch();
-    }, [])
+  const refreshControl = (
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      colors={[globalColors.primary]}
+    />
   );
 
 
@@ -72,24 +92,27 @@ export const ProfileScreen = () => {
   return (
     <View style={styles.container}>
 
-      <ProfileInfoHeader
-        nickname={myProfile!.nickname}
-        name={myProfile!.full_name}
-        avatarUrl={myProfile!.avatarUrl}
-        style={styles.profileHeader}
-      />
+        <ProfileInfoHeader
+          nickname={myProfile!.nickname}
+          name={myProfile!.full_name}
+          avatarUrl={myProfile!.avatarUrl}
+          style={styles.profileHeader}
+          loadingAvatar={isLoadingProfile}
+        />
 
       <View style={globalStyles.separator} />
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={refreshControl}
+      >
 
         <CustomMenuButton
           onPress={handleChangeAvatar}
           label="Cambiar foto de avatar"
           icon="images"
           style={styles.button}
-          disabled={changingAvatar}
+          disabled={changingAvatar || isLoadingProfile}
         />
 
         <CustomMenuButton
@@ -97,6 +120,7 @@ export const ProfileScreen = () => {
           label="Amigos"
           icon="people"
           style={styles.button}
+          disabled={isLoadingFriendRequests}
         />
 
         <CustomMenuButton
@@ -104,6 +128,7 @@ export const ProfileScreen = () => {
           label="Buscar usuarios"
           icon="search"
           style={styles.button}
+          disabled={isLoadingFriendRequests}
         />
 
         <CustomMenuButton
@@ -111,6 +136,7 @@ export const ProfileScreen = () => {
           label="Solicitudes de amistad"
           icon="person-add"
           style={styles.button}
+          disabled={isLoadingFriendRequests}
         />
 
       </ScrollView>

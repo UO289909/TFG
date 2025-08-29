@@ -10,6 +10,9 @@ import { getUser } from '../../core/use-cases/user/get-user.use-case';
 export const useProfile = () => {
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+    const [isLoadingFriendRequests, setIsLoadingFriendRequests] = useState(false);
+
     const [myProfile, setMyProfile] = useState<User>();
     const [friendRequests, setFriendRequests] = useState<Friend[]>([]);
 
@@ -37,25 +40,50 @@ export const useProfile = () => {
 
     };
 
+    const refetchFriendRequests = async () => {
+
+        setIsLoadingFriendRequests(true);
+
+        const friendRequestsFetched = await getFriendRequests();
+        setFriendRequests(friendRequestsFetched);
+
+        setIsLoadingFriendRequests(false);
+
+    };
+
+    const refetchProfile = async () => {
+
+        setIsLoadingProfile(true);
+
+        const profile = await getUser();
+        setMyProfile(profile);
+
+        setIsLoadingProfile(false);
+
+    };
+
     const refetch = async () => {
         await loadMyProfile();
     };
 
     const changeAvatar = async (newAvatarUrl: string) => {
 
-        setIsLoading(true);
+        setIsLoadingProfile(true);
 
         await changeUserAvatar(newAvatarUrl);
-        loadMyProfile();
 
-        setIsLoading(false);
+        setIsLoadingProfile(false);
 
     };
 
     return {
         isLoading,
+        isLoadingProfile,
+        isLoadingFriendRequests,
         myProfile,
         friendRequests,
+        refetchFriendRequests,
+        refetchProfile,
         refetch,
         changeAvatar,
     };

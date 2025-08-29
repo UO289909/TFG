@@ -1,22 +1,31 @@
 import { View, Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { globalColors } from '../../../config/app-theme';
+import { FullScreenLoader } from '../feedback';
 
 interface Props {
     nickname: string;
     avatarUrl: string | null;
     name: string;
     style?: StyleProp<ViewStyle>;
+    loadingAvatar?: boolean;
 }
 
-export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style }: Props) => {
+export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAvatar = false }: Props) => {
     const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
 
     return (
         <View style={[styles.container, style]}>
-            <Image
-                source={{ uri: avatarUrl || default_avatar }}
-                style={styles.avatar}
-            />
+            {loadingAvatar &&
+                <FullScreenLoader style={styles.loader} />
+            }
+
+            {!loadingAvatar &&
+                <Image
+                    source={{ uri: avatarUrl || default_avatar }}
+                    style={styles.avatar}
+                />
+            }
+
             <View style={styles.infoContainer}>
                 <Text style={styles.nickname}>{nickname}</Text>
                 <Text style={styles.name}>{name}</Text>
@@ -31,6 +40,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+    },
+    loader: {
+        height: 150,
+        maxWidth: 150,
+        borderRadius: 15,
+        borderWidth: 2,
+        borderColor: globalColors.primary,
+        marginRight: 12,
     },
     avatar: {
         width: 150,

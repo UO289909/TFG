@@ -4,7 +4,7 @@ import { Friend } from '../../core/entities/friend.entity';
 
 export type RootStackParams = {
     ProfileMenu: undefined;
-    Friends: {friendRequests: Friend[]};
+    Friends: {friendRequests: Friend[], refetchFriendRequests: () => void};
     SearchUsers: undefined;
     FriendRequests: undefined;
 }

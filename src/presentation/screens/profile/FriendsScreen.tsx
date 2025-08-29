@@ -17,7 +17,7 @@ import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-cas
 export const FriendsScreen = () => {
 
     const { params } = useRoute<RouteProp<RootStackParams, 'Friends'>>();
-    const { friendRequests } = params;
+    const { friendRequests, refetchFriendRequests } = params;
 
     const [friends, setFriends] = useState<User[]>([]);
     const [filteredFriends, setFilteredFriends] = useState<User[]>(friends);
@@ -85,6 +85,7 @@ export const FriendsScreen = () => {
             setFriends(friends.filter(friend => friend.id !== friendId));
             setFilteredFriends(filteredFriends.filter(friend => friend.id !== friendId));
         }).finally(() => {
+            refetchFriendRequests();
             setLoading(false);
         });
     };

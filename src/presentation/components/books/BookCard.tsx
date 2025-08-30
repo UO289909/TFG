@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 6,
         alignSelf: 'center',
-        marginVertical: 10,
+        marginTop: 10,
         padding: 12,
     },
     image: {

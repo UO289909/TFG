@@ -180,7 +180,9 @@ export const SearchUsersScreen = () => {
             }
 
             {!loading && users.length > 0 &&
-                <ScrollView>
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                >
 
                     {users.map(({ user, type }) => (
                         <UserCard
@@ -211,6 +213,9 @@ export const SearchUsersScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    scrollContainer: {
+        paddingBottom: 10,
     },
     bigIcon: {
         flex: 1,

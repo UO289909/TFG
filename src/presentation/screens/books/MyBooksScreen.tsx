@@ -124,6 +124,7 @@ export const MyBooksScreen = () => {
       {filteredBooks.length > 0 && !refreshing && !isLoading &&
         <ScrollView
           refreshControl={refreshControl}
+          contentContainerStyle={styles.scrollContainer}
         >
 
           {filteredBooks.map((book) => (
@@ -158,6 +159,9 @@ export const MyBooksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
+    paddingBottom: 10,
   },
   bigIcon: {
     flex: 1,

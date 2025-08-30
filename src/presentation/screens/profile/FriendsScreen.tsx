@@ -133,6 +133,7 @@ export const FriendsScreen = () => {
             {!loading &&
                 <ScrollView
                     refreshControl={refreshControl}
+                    contentContainerStyle={styles.scrollContainer}
                 >
 
                     {!loading && friends.length === 0 &&
@@ -174,6 +175,9 @@ export const FriendsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    scrollContainer: {
+        paddingBottom: 10,
     },
     bigIcon: {
         flex: 1,

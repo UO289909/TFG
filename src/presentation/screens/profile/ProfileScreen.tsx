@@ -19,10 +19,8 @@ export const ProfileScreen = () => {
     isLoadingProfile,
     isLoadingFriendRequests,
     myProfile,
-    friendRequests,
     refetch,
     refetchProfile,
-    refetchFriendRequests,
     changeAvatar,
   } = useProfile();
 
@@ -40,7 +38,7 @@ export const ProfileScreen = () => {
   };
 
   const handleFriends = () => {
-    navigation.navigate('Friends', { friendRequests, refetchFriendRequests });
+    navigation.navigate('Friends');
   };
 
   const handleSearchUsers = () => {

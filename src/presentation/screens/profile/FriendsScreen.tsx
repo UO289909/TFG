@@ -4,20 +4,18 @@ import { SearchBar } from '../../components/inputs';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { IonIcon } from '../../components/icons';
 import { UserCard } from '../../components/profile/UserCard';
 import { normalizeText } from '../../../utils/normalizeText';
 import { User } from '../../../core/entities/user.entity';
 import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
+import { useProfile } from '../../hooks/useProfile';
 
 
 export const FriendsScreen = () => {
 
-    const { params } = useRoute<RouteProp<RootStackParams, 'Friends'>>();
-    const { friendRequests, refetchFriendRequests } = params;
+    const { friendRequests, refetchFriendRequests } = useProfile();
 
     const [friends, setFriends] = useState<User[]>([]);
     const [filteredFriends, setFilteredFriends] = useState<User[]>(friends);
@@ -27,8 +25,12 @@ export const FriendsScreen = () => {
     const [notifMsg, setNotifMsg] = useState('');
 
     useEffect(() => {
-        fetchFriends();
+        refetchFriendRequests();
     }, []);
+
+    useEffect(() => {
+        fetchFriends();
+    }, [friendRequests]);
 
     useEffect(() => {
         setFilteredFriends(friends);
@@ -38,10 +40,8 @@ export const FriendsScreen = () => {
 
         setLoading(true);
 
-        console.log('Fetching friends for requests:', friendRequests);
         const fetchedFriends = await getFriendsByRequests(3600, friendRequests);
         setFriends(fetchedFriends);
-        console.log('Fetched friends on state:', fetchedFriends);
 
         setLoading(false);
 

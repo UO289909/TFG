@@ -134,8 +134,8 @@ export const FriendsScreen = () => {
                             nickname={friend.nickname}
                             name={friend.full_name}
                             avatarUrl={friend.avatarUrl}
-                            alreadyAdded={true}
-                            onButtonPress={() => handleDeleteFriend(friend.id)}
+                            type="friend"
+                            onRightButtonPress={() => handleDeleteFriend(friend.id)}
                         />
                     ))}
 

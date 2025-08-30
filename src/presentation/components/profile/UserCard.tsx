@@ -6,11 +6,14 @@ interface Props {
     nickname: string;
     avatarUrl: string | null;
     name: string;
-    alreadyAdded?: boolean;
-    onButtonPress: () => void;
+    type?: UserType;
+    onRightButtonPress: () => void;
+    onRejectRequest?: () => void;
 }
 
-export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false, onButtonPress }: Props) => {
+export type UserType = 'user' | 'friend' | 'requestSent' | 'requestReceived';
+
+export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => {} }: Props) => {
     const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
 
 
@@ -25,16 +28,43 @@ export const UserCard = ({ nickname, avatarUrl, name, alreadyAdded = false, onBu
             <View style={styles.infoContainer}>
                 <Text style={styles.nickname}>{nickname}</Text>
                 <Text style={styles.name}>{name}</Text>
-                {alreadyAdded &&
+                {type === 'friend' &&
                     <Text style={styles.alreadyFriend}>¡Ya es tu amigo!</Text>
                 }
             </View>
 
+            {type === 'requestReceived' &&
+                <CustomIconButton
+                    icon="close"
+                    color={globalColors.danger}
+                    colorPressed={globalColors.dangerDark}
+                    onPress={onRejectRequest}
+                    style={styles.button}
+                />
+            }
+
+
             <CustomIconButton
-                icon={alreadyAdded ? 'person-remove-outline' : 'person-add-outline'}
-                color={alreadyAdded ? globalColors.danger : globalColors.primary}
-                colorPressed={alreadyAdded ? globalColors.dangerDark : globalColors.primaryDark}
-                onPress={onButtonPress}
+                icon={
+                    type === 'friend'
+                        ? 'person-remove-outline'
+                        : type === 'user'
+                            ? 'person-add-outline'
+                            : type === 'requestReceived'
+                            ? 'checkmark-outline'
+                            : 'close'
+                }
+                color={
+                    type === 'user' || type === 'requestReceived'
+                        ? globalColors.primary
+                        : globalColors.danger
+                }
+                colorPressed={
+                    type === 'user' || type === 'requestReceived'
+                        ? globalColors.primaryDark
+                        : globalColors.dangerDark
+                }
+                onPress={onRightButtonPress}
                 style={styles.button}
             />
 
@@ -87,5 +117,6 @@ const styles = StyleSheet.create({
     },
     button: {
         alignSelf: 'center',
+        marginLeft: 8,
     },
 });

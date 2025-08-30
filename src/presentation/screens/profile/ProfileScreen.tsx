@@ -39,7 +39,7 @@ export const ProfileScreen = () => {
   };
 
   const handleSearchUsers = () => {
-    navigation.navigate('SearchUsers');
+    navigation.navigate('SearchUsers', { friendRequests, refetchFriendRequests });
   };
 
   const handleFriendRequests = () => {

@@ -209,3 +209,81 @@ export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
         throw new Error(`Error deleting friend from database: ${error}`);
     }
 };
+
+/**
+ * Sends a friend request to another user.
+ * @param friendId The ID of the user to send the friend request to.
+ */
+export const databaseSendRequest = async (friendId: string): Promise<void> => {
+
+    const accessToken = getAccessToken();
+    const userId = getUserId();
+
+    try {
+        await supabaseFetcher.post(
+            '/rest/v1/friends',
+            {
+                sender: userId,
+                receiver: friendId,
+                accepted: false,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+    } catch (error) {
+        throw new Error(`Error sending friend request: ${error}`);
+    }
+};
+
+/**
+ * Accepts a friend request.
+ * @param friendRequest The friend request to accept.
+ */
+export const databaseAcceptRequest = async (friendRequest: Friend): Promise<void> => {
+
+    const accessToken = getAccessToken();
+
+    try {
+        await supabaseFetcher.patch(
+            `/rest/v1/friends?sender=eq.${friendRequest.sender}&receiver=eq.${friendRequest.receiver}`,
+            {
+                accepted: true,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+    } catch (error) {
+        throw new Error(`Error accepting friend request: ${error}`);
+    }
+};
+
+/**
+ * Rejects a friend request.
+ * @param friendRequest The friend request to reject.
+ */
+export const databaseRejectRequest = async (friendRequest: Friend): Promise<void> => {
+
+    const accessToken = getAccessToken();
+
+    try {
+        await supabaseFetcher.delete(
+            `/rest/v1/friends?sender=eq.${friendRequest.sender}&receiver=eq.${friendRequest.receiver}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            }
+        );
+
+    } catch (error) {
+        throw new Error(`Error rejecting friend request: ${error}`);
+    }
+};

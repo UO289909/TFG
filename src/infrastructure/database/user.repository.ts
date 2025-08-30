@@ -150,17 +150,17 @@ export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => 
 };
 
 /**
- * Gets the user information for a friend request.
+ * Gets the user information for a friend request, the type of request (sent or received) and if it's accepted.
  * @param friendRequest The friend request object.
- * @returns A promise that resolves to the user information of the friend.
+ * @returns A promise that resolves to the user information of the friend, the type of request and if it's accepted.
  */
-export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<DatabaseUser> => {
+export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<{user: DatabaseUser, request: 'sent' | 'received', accepted: boolean}> => {
 
     const id = friendRequest.sender === getUserId() ? friendRequest.receiver : friendRequest.sender;
 
     try {
         const data: DatabaseUser = await databaseGetUserInfo(id);
-        return data;
+        return { user: data, request: friendRequest.sender === getUserId() ? 'sent' : 'received', accepted: friendRequest.accepted };
 
     } catch (error) {
         throw new Error(`Error fetching friend info from database: ${error}`);

@@ -48,8 +48,8 @@ export const FriendsScreen = () => {
 
         setLoading(true);
 
-        const fetchedFriends = await getFriendsByRequests(3600, friendRequests);
-        setFriends(fetchedFriends);
+        const fetchedFriends = await getFriendsByRequests(3600, friendRequests, true);
+        setFriends(fetchedFriends.map(friend => friend.user));
 
         setLoading(false);
 

@@ -1,10 +1,71 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { IonIcon } from '../../components/icons';
-import { RequestCard } from '../../components/profile/RequestCard';
+import { UserCard } from '../../components/profile/UserCard';
+import { useProfile } from '../../hooks/useProfile';
+import { useEffect, useState } from 'react';
+import { User } from '../../../core/entities/user.entity';
+import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
+import { FullScreenLoader } from '../../components/feedback';
+import { handleRequest } from '../../../core/use-cases/user/handle-request.use-case';
+import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
 
 
 export const FriendRequestsScreen = () => {
+
+    const { friendRequests, refetchFriendRequests } = useProfile();
+
+    const [sentUsers, setSentUsers] = useState<User[]>([]);
+    const [receivedUsers, setReceivedUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        refetchFriendRequests();
+    }, []);
+
+    useEffect(() => {
+        handleRequestToUsers();
+    }, [friendRequests]);
+
+    const handleRequestToUsers = async () => {
+
+        setLoading(true);
+
+        const users = await getFriendsByRequests(3600, friendRequests);
+        console.log(friendRequests);
+        console.log(users);
+
+        setSentUsers(users.filter(user => user.request === 'sent' && user.accepted === false).map(u => u.user));
+        setReceivedUsers(users.filter(user => user.request === 'received' && user.accepted === false).map(u => u.user));
+
+        setLoading(false);
+    };
+
+    const handleDeleteFriend = (friendId: string) => {
+
+        setLoading(true);
+
+        deleteFriend(friendId).finally(() => {
+            refetchFriendRequests();
+            setLoading(false);
+        });
+    };
+
+    const handleFriendRequest = (friendId: string, accept: boolean) => {
+
+        setLoading(true);
+
+        handleRequest(friendId, accept).then(() => {
+        }).finally(() => {
+            refetchFriendRequests();
+            setLoading(false);
+        });
+    };
+
+    if (loading) {
+        return <FullScreenLoader />;
+    }
 
     return (
         <View style={styles.container}>
@@ -16,49 +77,25 @@ export const FriendRequestsScreen = () => {
 
             <View style={globalStyles.separator} />
 
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="received"
-                    nickname="rosirodriguez08"
-                    name="Rosa Delia Rodríguez Lozano"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
+            <ScrollView
+                style={styles.scrollContainer}
+                contentContainerStyle={styles.scrollContainerContent}
+            >
+
+
+                {receivedUsers.map((user) => (
+                    <UserCard
+                        key={user.id}
+                        type="requestReceived"
+                        nickname={user.nickname}
+                        name={user.full_name}
+                        avatarUrl={user.avatarUrl}
+                        onRightButtonPress={() => handleFriendRequest(user.id, true)}
+                        onRejectRequest={() => handleFriendRequest(user.id, false)}
+                    />
+                ))}
+
+
             </ScrollView>
 
             <View style={[globalStyles.separator, styles.bigSeparator]} />
@@ -70,42 +107,22 @@ export const FriendRequestsScreen = () => {
 
             <View style={globalStyles.separator} />
 
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <RequestCard
-                    type="sent"
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="sent"
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="sent"
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="sent"
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
-                <RequestCard
-                    type="sent"
-                    nickname="daniirguez"
-                    name="Daniel Rodríguez"
-                    onAccept={() => { }}
-                    onDecline={() => { }}
-                />
+            <ScrollView
+                style={styles.scrollContainer}
+                contentContainerStyle={styles.scrollContainerContent}
+            >
+
+                {sentUsers.map((user) => (
+                    <UserCard
+                        key={user.id}
+                        type="requestSent"
+                        nickname={user.nickname}
+                        name={user.full_name}
+                        avatarUrl={user.avatarUrl}
+                        onRightButtonPress={() => handleDeleteFriend(user.id)}
+                    />
+                ))}
+
             </ScrollView>
 
         </View>
@@ -118,7 +135,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContainer: {
-        padding: 10,
+        minHeight: 200,
+    },
+    scrollContainerContent: {
+        paddingBottom: 10,
     },
     bigSeparator: {
         backgroundColor: globalColors.grey,

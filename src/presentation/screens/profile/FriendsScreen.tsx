@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
@@ -19,6 +19,7 @@ export const FriendsScreen = () => {
 
     const [friends, setFriends] = useState<User[]>([]);
     const [filteredFriends, setFilteredFriends] = useState<User[]>(friends);
+
     const [loading, setLoading] = useState(false);
 
     const [showNotif, setShowNotif] = useState(false);
@@ -35,6 +36,13 @@ export const FriendsScreen = () => {
     useEffect(() => {
         setFilteredFriends(friends);
     }, [friends]);
+
+    const onRefresh = async () => {
+        setLoading(true);
+        await refetchFriendRequests();
+        await fetchFriends();
+        setLoading(false);
+    };
 
     const fetchFriends = async () => {
 
@@ -90,6 +98,15 @@ export const FriendsScreen = () => {
         });
     };
 
+    const refreshControl = (
+        <RefreshControl
+            refreshing={loading}
+            onRefresh={onRefresh}
+            colors={[globalColors.primary]}
+        />
+    );
+
+
     return (
         <View style={styles.container}>
 
@@ -113,31 +130,37 @@ export const FriendsScreen = () => {
                 <FullScreenLoader />
             }
 
-            {!loading && friends.length === 0 &&
-                <>
-                    <IonIcon
-                        name="people"
-                        size={200}
-                        color={globalColors.greyLight}
-                        style={styles.bigIcon}
-                    />
-                    <Text style={styles.noFriendsText}>No tienes amigos aun</Text>
-                </>
-            }
+            {!loading &&
+                <ScrollView
+                    refreshControl={refreshControl}
+                >
 
-            {!loading && friends.length > 0 &&
-                <ScrollView>
+                    {!loading && friends.length === 0 &&
+                        <>
+                            <IonIcon
+                                name="people"
+                                size={200}
+                                color={globalColors.greyLight}
+                                style={styles.bigIcon}
+                            />
+                            <Text style={styles.noFriendsText}>No tienes amigos aun</Text>
+                        </>
+                    }
 
-                    {filteredFriends.map((friend) => (
-                        <UserCard
-                            key={friend.id}
-                            nickname={friend.nickname}
-                            name={friend.full_name}
-                            avatarUrl={friend.avatarUrl}
-                            type="friend"
-                            onRightButtonPress={() => handleDeleteFriend(friend.id)}
-                        />
-                    ))}
+                    {!loading && friends.length > 0 &&
+
+                        filteredFriends.map((friend) => (
+                            <UserCard
+                                key={friend.id}
+                                nickname={friend.nickname}
+                                name={friend.full_name}
+                                avatarUrl={friend.avatarUrl}
+                                type="friend"
+                                onRightButtonPress={() => handleDeleteFriend(friend.id)}
+                            />
+                        ))
+
+                    }
 
                 </ScrollView>
             }

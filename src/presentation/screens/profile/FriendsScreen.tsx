@@ -104,7 +104,7 @@ export const FriendsScreen = () => {
             <SearchBar
                 onSearch={handleFilterFriends}
                 placeholder="Buscar amigos por nickname..."
-                disabled={loading}
+                disabled={loading || friends.length === 0}
             />
 
             <View style={globalStyles.separator} />

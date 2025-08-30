@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { globalColors, globalStyles } from '../../../config/app-theme';
@@ -28,6 +29,10 @@ export const ProfileScreen = () => {
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -39,7 +44,7 @@ export const ProfileScreen = () => {
   };
 
   const handleSearchUsers = () => {
-    navigation.navigate('SearchUsers', { friendRequests, refetchFriendRequests });
+    navigation.navigate('SearchUsers');
   };
 
   const handleFriendRequests = () => {

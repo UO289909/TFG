@@ -9,26 +9,58 @@ import { User } from '../../../core/entities/user.entity';
 import { searchUsersByNickname } from '../../../core/use-cases/user/search-users-by-nickname.use-case';
 import { normalizeText } from '../../../utils/normalizeText';
 import { IonIcon } from '../../components/icons';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
-import { Friend } from '../../../core/entities/friend.entity';
 import { handleRequest } from '../../../core/use-cases/user/handle-request.use-case';
 import { sendRequest } from '../../../core/use-cases/user/send-request.use-case';
+import { useProfile } from '../../hooks/useProfile';
 
 
 export const SearchUsersScreen = () => {
 
-    const { params } = useRoute<RouteProp<RootStackParams, 'SearchUsers'>>();
-    const { friendRequests, refetchFriendRequests } = params;
-
-    const [friends, setFriends] = useState<User[]>([]);
+    const { friendRequests, refetchFriendRequests } = useProfile();
 
     const [users, setUsers] = useState<{ user: User, type: UserType }[]>([]);
     const [loading, setLoading] = useState(false);
 
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
+
+    useEffect(() => {
+        refetchFriendRequests();
+    }, []);
+
+    useEffect(() => {
+
+        if (users.length === 0) {
+            return;
+        }
+
+        setLoading(true);
+
+        const reTypedUsers = users.map(reUser => {
+            const friendRequest = friendRequests.find(
+                fr => fr.sender === reUser.user.id || fr.receiver === reUser.user.id
+            );
+
+            let type: UserType = 'user';
+
+            if (friendRequest) {
+                if (friendRequest.accepted) {
+                    type = 'friend';
+                } else if (friendRequest.sender === reUser.user.id) {
+                    type = 'requestReceived';
+                } else if (friendRequest.receiver === reUser.user.id) {
+                    type = 'requestSent';
+                }
+            }
+
+            return { user: reUser.user, type };
+        });
+
+        setUsers(reTypedUsers);
+        setLoading(false);
+
+    }, [friendRequests]);
 
     const handleSearch = async (text: string) => {
 
@@ -41,6 +73,7 @@ export const SearchUsersScreen = () => {
                 return;
             }
 
+            await refetchFriendRequests();
             const found = await searchUsersByNickname(normalizeText(text));
 
             if (found.length === 0) {
@@ -59,9 +92,9 @@ export const SearchUsersScreen = () => {
                         if (friendRequest.accepted) {
                             type = 'friend';
                         } else if (friendRequest.sender === user.id) {
-                            type = 'requestSent';
-                        } else if (friendRequest.receiver === user.id) {
                             type = 'requestReceived';
+                        } else if (friendRequest.receiver === user.id) {
+                            type = 'requestSent';
                         }
                     }
 
@@ -82,7 +115,11 @@ export const SearchUsersScreen = () => {
         setLoading(true);
 
         deleteFriend(friendId).then(() => {
-            setFriends(friends.filter(friend => friend.id !== friendId));
+            setUsers(prevUsers =>
+                prevUsers.map(u =>
+                    u.user.id === friendId ? { ...u, type: 'user' } : u
+                )
+            );
         }).finally(() => {
             refetchFriendRequests();
             setLoading(false);
@@ -99,11 +136,11 @@ export const SearchUsersScreen = () => {
         });
     };
 
-    const handleFriendRequest = (friendRequest: Friend, accept: boolean) => {
+    const handleFriendRequest = (friendId: string, accept: boolean) => {
 
         setLoading(true);
 
-        handleRequest(friendRequest, accept).then(() => {
+        handleRequest(friendId, accept).then(() => {
         }).finally(() => {
             refetchFriendRequests();
             setLoading(false);
@@ -152,8 +189,14 @@ export const SearchUsersScreen = () => {
                             name={user.full_name}
                             avatarUrl={user.avatarUrl}
                             type={type}
-                            onRightButtonPress={() => { }}
-                            onRejectRequest={type === 'requestReceived' ? () => { } : undefined}
+                            onRightButtonPress={() => {
+                                type === 'user'
+                                    ? handleSendRequest(user.id)
+                                    : type === 'requestReceived'
+                                        ? handleFriendRequest(user.id, true)
+                                        : handleDeleteFriend(user.id);
+                            }}
+                            onRejectRequest={() => handleFriendRequest(user.id, false)}
                         />
                     ))}
 

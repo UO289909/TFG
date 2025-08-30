@@ -241,15 +241,16 @@ export const databaseSendRequest = async (friendId: string): Promise<void> => {
 
 /**
  * Accepts a friend request.
- * @param friendRequest The friend request to accept.
+ * @param friendId The ID of the friend request to accept.
  */
-export const databaseAcceptRequest = async (friendRequest: Friend): Promise<void> => {
+export const databaseAcceptRequest = async (friendId: string): Promise<void> => {
 
     const accessToken = getAccessToken();
+    const userId = getUserId();
 
     try {
         await supabaseFetcher.patch(
-            `/rest/v1/friends?sender=eq.${friendRequest.sender}&receiver=eq.${friendRequest.receiver}`,
+            `/rest/v1/friends?sender=eq.${friendId}&receiver=eq.${userId}`,
             {
                 accepted: true,
             },
@@ -267,15 +268,16 @@ export const databaseAcceptRequest = async (friendRequest: Friend): Promise<void
 
 /**
  * Rejects a friend request.
- * @param friendRequest The friend request to reject.
+ * @param friendId The ID of the friend request to reject.
  */
-export const databaseRejectRequest = async (friendRequest: Friend): Promise<void> => {
+export const databaseRejectRequest = async (friendId: string): Promise<void> => {
 
     const accessToken = getAccessToken();
+    const userId = getUserId();
 
     try {
         await supabaseFetcher.delete(
-            `/rest/v1/friends?sender=eq.${friendRequest.sender}&receiver=eq.${friendRequest.receiver}`,
+            `/rest/v1/friends?sender=eq.${friendId}&receiver=eq.${userId}`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { User } from '../../core/entities/user.entity';
 import { signIn } from '../../infrastructure/database/auth.repository';
 import { changeUserAvatar } from '../../core/use-cases/user/change-user-avatar.use-case';
@@ -15,10 +15,6 @@ export const useProfile = () => {
 
     const [myProfile, setMyProfile] = useState<User>();
     const [friendRequests, setFriendRequests] = useState<Friend[]>([]);
-
-    useEffect(() => {
-        loadMyProfile();
-    }, []);
 
     const loadMyProfile = async () => {
 

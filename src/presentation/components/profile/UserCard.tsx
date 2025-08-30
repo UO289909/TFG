@@ -13,7 +13,7 @@ interface Props {
 
 export type UserType = 'user' | 'friend' | 'requestSent' | 'requestReceived';
 
-export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => {} }: Props) => {
+export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => { } }: Props) => {
     const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
 
 
@@ -28,9 +28,16 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
             <View style={styles.infoContainer}>
                 <Text style={styles.nickname}>{nickname}</Text>
                 <Text style={styles.name}>{name}</Text>
-                {type === 'friend' &&
-                    <Text style={styles.alreadyFriend}>¡Ya es tu amigo!</Text>
-                }
+                <Text style={styles.alreadyFriend}>{
+                    type === 'friend'
+                        ? '¡Ya es tu amigo!'
+                        : type === 'requestSent'
+                            ? 'Solicitud enviada'
+                            : type === 'requestReceived'
+                                ? 'Solicitud recibida'
+                                : null
+                }</Text>
+
             </View>
 
             {type === 'requestReceived' &&
@@ -51,8 +58,8 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
                         : type === 'user'
                             ? 'person-add-outline'
                             : type === 'requestReceived'
-                            ? 'checkmark-outline'
-                            : 'close'
+                                ? 'checkmark-outline'
+                                : 'close'
                 }
                 color={
                     type === 'user' || type === 'requestReceived'
@@ -95,6 +102,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: globalColors.primary,
         marginRight: 12,
+        alignSelf: 'center',
     },
     infoContainer: {
         flex: 1,

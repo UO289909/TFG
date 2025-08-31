@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { globalColors, globalStyles } from '../../../config/app-theme';
 import { IonIcon } from '../../components/icons';
 import { UserCard } from '../../components/profile/UserCard';
@@ -15,6 +15,9 @@ import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-cas
 export const FriendRequestsScreen = () => {
 
     const { friendRequests, refetchFriendRequests } = useProfile();
+
+    const { width, height } = useWindowDimensions();
+    const isLandscape = width > height;
 
     const [sentUsers, setSentUsers] = useState<User[]>([]);
     const [receivedUsers, setReceivedUsers] = useState<User[]>([]);
@@ -68,62 +71,66 @@ export const FriendRequestsScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
-            <View style={styles.titleHeader}>
-                <Text style={styles.title}>Solicitudes recibidas</Text>
-                <IonIcon name="archive" size={30} color={globalColors.grey} />
+            <View style={styles.block}>
+                <View style={styles.titleHeader}>
+                    <Text style={styles.title}>Solicitudes recibidas</Text>
+                    <IonIcon name="archive" size={30} color={globalColors.grey} />
+                </View>
+
+                <View style={globalStyles.separator} />
+
+                <ScrollView
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.scrollContainerContent}
+                >
+
+
+                    {receivedUsers.map((user) => (
+                        <UserCard
+                            key={user.id}
+                            type="requestReceived"
+                            nickname={user.nickname}
+                            name={user.full_name}
+                            avatarUrl={user.avatarUrl}
+                            onRightButtonPress={() => handleFriendRequest(user.id, true)}
+                            onRejectRequest={() => handleFriendRequest(user.id, false)}
+                        />
+                    ))}
+
+
+                </ScrollView>
             </View>
 
-            <View style={globalStyles.separator} />
+            <View style={[globalStyles.separator, styles.bigSeparator, isLandscape && styles.bigSeparatorLandscape]} />
 
-            <ScrollView
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.scrollContainerContent}
-            >
+            <View style={styles.block}>
+                <View style={styles.titleHeader}>
+                    <Text style={styles.title}>Solicitudes enviadas</Text>
+                    <IonIcon name="send" size={30} color={globalColors.grey} />
+                </View>
 
+                <View style={globalStyles.separator} />
 
-                {receivedUsers.map((user) => (
-                    <UserCard
-                        key={user.id}
-                        type="requestReceived"
-                        nickname={user.nickname}
-                        name={user.full_name}
-                        avatarUrl={user.avatarUrl}
-                        onRightButtonPress={() => handleFriendRequest(user.id, true)}
-                        onRejectRequest={() => handleFriendRequest(user.id, false)}
-                    />
-                ))}
+                <ScrollView
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.scrollContainerContent}
+                >
 
+                    {sentUsers.map((user) => (
+                        <UserCard
+                            key={user.id}
+                            type="requestSent"
+                            nickname={user.nickname}
+                            name={user.full_name}
+                            avatarUrl={user.avatarUrl}
+                            onRightButtonPress={() => handleDeleteFriend(user.id)}
+                        />
+                    ))}
 
-            </ScrollView>
-
-            <View style={[globalStyles.separator, styles.bigSeparator]} />
-
-            <View style={styles.titleHeader}>
-                <Text style={styles.title}>Solicitudes enviadas</Text>
-                <IonIcon name="send" size={30} color={globalColors.grey} />
+                </ScrollView>
             </View>
-
-            <View style={globalStyles.separator} />
-
-            <ScrollView
-                style={styles.scrollContainer}
-                contentContainerStyle={styles.scrollContainerContent}
-            >
-
-                {sentUsers.map((user) => (
-                    <UserCard
-                        key={user.id}
-                        type="requestSent"
-                        nickname={user.nickname}
-                        name={user.full_name}
-                        avatarUrl={user.avatarUrl}
-                        onRightButtonPress={() => handleDeleteFriend(user.id)}
-                    />
-                ))}
-
-            </ScrollView>
 
         </View>
     );
@@ -132,6 +139,13 @@ export const FriendRequestsScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+    },
+    containerLandscape: {
+        flexDirection: 'row',
+        alignItems: 'stretch',
+    },
+    block: {
         flex: 1,
     },
     scrollContainer: {
@@ -143,6 +157,12 @@ const styles = StyleSheet.create({
     bigSeparator: {
         backgroundColor: globalColors.grey,
         height: 4,
+    },
+    bigSeparatorLandscape: {
+        width: 4,
+        height: 'auto',
+        alignSelf: 'stretch',
+        backgroundColor: globalColors.grey,
     },
     title: {
         fontSize: 20,

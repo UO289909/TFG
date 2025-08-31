@@ -44,4 +44,15 @@ export const globalStyles = StyleSheet.create({
         elevation: 2,
     },
 
+    separatorLandscape: {
+        width: 1,
+        height: '100%',
+        borderRadius: 1,
+        shadowColor: globalColors.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+
 });

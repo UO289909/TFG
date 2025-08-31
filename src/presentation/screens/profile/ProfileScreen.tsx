@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, useWindowDimensions } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
@@ -23,6 +23,9 @@ export const ProfileScreen = () => {
     refetchProfile,
     changeAvatar,
   } = useProfile();
+
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -93,7 +96,7 @@ export const ProfileScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
         <ProfileInfoHeader
           nickname={myProfile!.nickname}
@@ -101,9 +104,10 @@ export const ProfileScreen = () => {
           avatarUrl={myProfile!.avatarUrl}
           style={styles.profileHeader}
           loadingAvatar={isLoadingProfile}
+          landscape={isLandscape}
         />
 
-      <View style={globalStyles.separator} />
+      <View style={[globalStyles.separator, isLandscape && globalStyles.separatorLandscape]} />
 
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
@@ -151,6 +155,10 @@ export const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  containerLandscape: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   scrollContainer: {
     alignItems: 'center',

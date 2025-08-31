@@ -8,13 +8,14 @@ interface Props {
     name: string;
     style?: StyleProp<ViewStyle>;
     loadingAvatar?: boolean;
+    landscape?: boolean;
 }
 
-export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAvatar = false }: Props) => {
+export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAvatar = false, landscape = false }: Props) => {
     const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
 
     return (
-        <View style={[styles.container, style]}>
+        <View style={[styles.container, landscape && styles.containerLandscape, style]}>
             {loadingAvatar &&
                 <FullScreenLoader style={styles.loader} />
             }
@@ -26,7 +27,7 @@ export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAva
                 />
             }
 
-            <View style={styles.infoContainer}>
+            <View style={[styles.infoContainer, landscape && styles.infoContainerLandscape]}>
                 <Text style={styles.nickname}>{nickname}</Text>
                 <Text style={styles.name}>{name}</Text>
             </View>
@@ -40,6 +41,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+    },
+    containerLandscape: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginRight: 20,
     },
     loader: {
         height: 150,
@@ -59,6 +65,9 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         flex: 1,
+    },
+    infoContainerLandscape: {
+        marginTop: 10,
     },
     nickname: {
         fontSize: 20,

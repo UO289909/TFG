@@ -5,7 +5,7 @@ import { globalColors } from '../../../config/app-theme';
 interface Props {
   onPress: () => void;
   icon: IonIconNames;
-  position: 'bottom-right' | 'bottom-left';
+  position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   color: string;
   colorPressed?: string;
   colorDisabled?: string;
@@ -19,7 +19,12 @@ export const FloatingButton = ({ onPress, icon, position, color, colorPressed = 
       {
         backgroundColor: disabled ? colorDisabled : pressed ? colorPressed : color,
         elevation: pressed ? 4 : 8,
-        ...(position === 'bottom-right' ? { right: 16 } : { left: 16 }),
+        ...(position === 'bottom-right' || position === 'top-right'
+          ? { right: 16 }
+          : { left: 16 }),
+        ...(position === 'top-right' || position === 'top-left'
+          ? { top: 16 }
+          : { bottom: 16 }),
       },
     ]}
     onPress={onPress}
@@ -32,7 +37,6 @@ export const FloatingButton = ({ onPress, icon, position, color, colorPressed = 
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 16,
     borderRadius: 15,
     width: 56,
     height: 56,

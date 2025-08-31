@@ -1,6 +1,6 @@
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { globalColors } from '../../../config/app-theme';
@@ -9,9 +9,13 @@ import { useState } from 'react';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 
 export const BookDetailsScreen = () => {
+
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const { params } = useRoute<RouteProp<RootStackParams, 'BookDetails'>>();
   const { book } = params;
+
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
   const [showNotif, setShowNotif] = useState(false);
 
@@ -31,19 +35,25 @@ export const BookDetailsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
-    {showNotif &&
-      <CustomNotification
-      message="Seguro que quieres eliminar este libro?"
-      position="bottom"
-      onClose={() => setShowNotif(false)}
-      onAccept={handleDeleteBook}
-      />
-    }
+      {showNotif &&
+        <CustomNotification
+          message="Seguro que quieres eliminar este libro?"
+          position="bottom"
+          onClose={() => setShowNotif(false)}
+          onAccept={handleDeleteBook}
+        />
+      }
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+      {isLandscape &&
+        <Image source={{ uri: book.cover_url || default_cover }} style={styles.coverLandscape} />
+      }
+
+      <ScrollView contentContainerStyle={isLandscape ? styles.scrollContainerLandscape : styles.scrollContainer}>
+        {!isLandscape &&
+          <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+        }
         <Text style={styles.titleText}>{book.title}</Text>
         <Text style={styles.authorText}>{book.author}</Text>
         <Text style={styles.pagesText}>{book.pages} páginas</Text>
@@ -60,7 +70,7 @@ export const BookDetailsScreen = () => {
 
       <FloatingButton
         onPress={() => setShowNotif(true)}
-        position="bottom-left"
+        position={'bottom-left'}
         icon="trash-outline"
         color={globalColors.danger}
         colorPressed={globalColors.dangerDark}
@@ -68,7 +78,7 @@ export const BookDetailsScreen = () => {
 
       <FloatingButton
         onPress={handleEditBook}
-        position="bottom-right"
+        position={'bottom-right'}
         icon="pencil-outline"
         color={globalColors.primary}
         colorPressed={globalColors.primaryDark}
@@ -83,13 +93,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  containerLandscape: {
+    flexDirection: 'row',
+  },
   scrollContainer: {
     alignItems: 'center',
+    padding: 20,
+  },
+  scrollContainerLandscape: {
+    alignItems: 'flex-start',
     padding: 20,
   },
   cover: {
     width: 200,
     height: 320,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  coverLandscape: {
+    width: undefined,
+    height: '95%',
+    aspectRatio: 0.625,
+    marginVertical: 5,
+    marginLeft: '20%',
     borderRadius: 12,
     marginBottom: 20,
   },

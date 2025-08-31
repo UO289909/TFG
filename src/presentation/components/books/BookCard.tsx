@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Image, StyleProp } from 'react-native';
 import { FiveStarsInput } from '../inputs/FiveStarsInput';
 import { globalColors } from '../../../config/app-theme';
 
@@ -9,9 +9,10 @@ interface Props {
     rating: 1 | 2 | 3 | 4 | 5 | null;
     imageUrl: string | null;
     onPress: () => void;
+    style?: StyleProp<any>;
 }
 
-export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Props) => {
+export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, style }: Props) => {
     const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
 
     return (
@@ -22,6 +23,7 @@ export const BookCard = ({ title, author, pages, rating, imageUrl, onPress }: Pr
                     backgroundColor: pressed ? globalColors.greyLight : globalColors.white,
                     elevation: pressed ? 2 : 4,
                 },
+                style,
             ]}
             onPress={onPress}
         >

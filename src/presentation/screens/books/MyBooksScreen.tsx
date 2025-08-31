@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
@@ -19,6 +19,9 @@ export const MyBooksScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
   const { params } = useRoute<RouteProp<RootStackParams, 'MyBooksList'>>();
   const doRefetch = params?.doRefetch ?? false;
+
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
   const { isLoading, myBooks, refetch } = useBooks();
 
@@ -80,6 +83,18 @@ export const MyBooksScreen = () => {
 
   };
 
+  const renderBookCard = ({ item }: { item: Book }) => (
+    <BookCard
+      onPress={() => handleBookDetails(item)}
+      title={item.title}
+      author={item.author}
+      pages={item.pages}
+      rating={item.rating}
+      imageUrl={item.cover_url}
+      style={isLandscape ? styles.bookCardLandscape : undefined}
+    />
+  );
+
   const refreshControl = (
     <RefreshControl
       refreshing={refreshing}
@@ -122,24 +137,17 @@ export const MyBooksScreen = () => {
       }
 
       {filteredBooks.length > 0 && !refreshing && !isLoading &&
-        <ScrollView
+
+        <FlatList
+          data={filteredBooks}
+          key={isLandscape ? 'h' : 'v'}
+          renderItem={renderBookCard}
+          keyExtractor={book => book.isbn}
+          numColumns={isLandscape ? 2 : 1}
           refreshControl={refreshControl}
           contentContainerStyle={styles.scrollContainer}
-        >
+        />
 
-          {filteredBooks.map((book) => (
-            <BookCard
-              key={book.isbn}
-              onPress={() => handleBookDetails(book)}
-              title={book.title}
-              author={book.author}
-              pages={book.pages}
-              rating={book.rating}
-              imageUrl={book.cover_url}
-            />
-          ))}
-
-        </ScrollView>
       }
 
       <FloatingButton
@@ -167,5 +175,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
     marginTop: 50,
+  },
+  bookCardLandscape: {
+    flex: 1,
+    margin: 8,
   },
 });

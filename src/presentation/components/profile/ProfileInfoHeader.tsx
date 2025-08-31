@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     containerLandscape: {
         flexDirection: 'column',
         alignItems: 'center',
-        marginRight: 20,
+        marginLeft: 24,
+        marginRight: 18,
     },
     loader: {
         height: 150,

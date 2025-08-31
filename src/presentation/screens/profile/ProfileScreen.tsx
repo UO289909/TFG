@@ -110,7 +110,7 @@ export const ProfileScreen = () => {
       <View style={[globalStyles.separator, isLandscape && globalStyles.separatorLandscape]} />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContainer}
+        contentContainerStyle={[styles.scrollContainer, isLandscape && styles.scrollContainerLandscape]}
         refreshControl={refreshControl}
       >
 
@@ -163,6 +163,10 @@ const styles = StyleSheet.create({
   scrollContainer: {
     alignItems: 'center',
     padding: 20,
+  },
+  scrollContainerLandscape: {
+    paddingVertical: 10,
+    paddingHorizontal: 36,
   },
   profileHeader: {
     paddingHorizontal: 10,

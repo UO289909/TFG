@@ -99,10 +99,9 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 15,
-        borderWidth: 2,
-        borderColor: globalColors.primary,
         marginRight: 12,
         alignSelf: 'center',
+        elevation: 2,
     },
     infoContainer: {
         flex: 1,

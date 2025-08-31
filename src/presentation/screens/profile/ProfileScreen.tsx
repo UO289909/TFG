@@ -8,7 +8,7 @@ import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
-import { globalColors, globalStyles } from '../../../config/app-theme';
+import { globalColors } from '../../../config/app-theme';
 
 export const ProfileScreen = () => {
 
@@ -106,8 +106,6 @@ export const ProfileScreen = () => {
           loadingAvatar={isLoadingProfile}
           landscape={isLandscape}
         />
-
-      <View style={[globalStyles.separator, isLandscape && globalStyles.separatorLandscape]} />
 
       <ScrollView
         contentContainerStyle={[styles.scrollContainer, isLandscape && styles.scrollContainerLandscape]}

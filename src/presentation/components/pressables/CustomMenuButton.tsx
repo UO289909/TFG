@@ -24,12 +24,7 @@ export const CustomMenuButton = ({ onPress, label, icon, style, disabled = false
                     : pressed
                         ? globalColors.greyLight
                         : globalColors.background,
-                borderColor: disabled
-                    ? globalColors.greyDark
-                    : pressed
-                        ? globalColors.primaryDark
-                        : globalColors.primary,
-                elevation: pressed ? 4 : 8,
+                elevation: pressed ? 2 : 4,
             },
             style,
         ]}
@@ -78,9 +73,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 10,
         paddingHorizontal: 12,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: globalColors.primary,
+        borderRadius: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
         marginVertical: 5,
     },
     icon: {

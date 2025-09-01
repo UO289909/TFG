@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
         width: '95%',
         minHeight: 148,
         borderRadius: 16,
-        shadowColor: '#000',
+        shadowColor: globalColors.black,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         height: 128,
         borderRadius: 10,
         marginRight: 16,
-        backgroundColor: '#eee',
+        backgroundColor: globalColors.background,
     },
     dataContainer: {
         flex: 1,
@@ -83,18 +83,18 @@ const styles = StyleSheet.create({
     authorText: {
         fontSize: 16,
         fontFamily: 'Roboto-Regular',
-        color: '#333',
+        color: globalColors.primaryDark,
     },
     pagesText: {
         fontSize: 14,
         fontFamily: 'Roboto-Light',
-        color: '#333',
+        color: globalColors.black,
         marginBottom: 10,
     },
     ratingText: {
         fontSize: 14,
         fontFamily: 'Roboto-Italic',
-        color: '#333',
+        color: globalColors.black,
     },
     infoContainer: {
         flex: 1,

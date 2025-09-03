@@ -1,20 +1,27 @@
-// import { useColorScheme } from 'react-native';
-// import { CustomLightTheme } from './config/app-theme';
+import { useColorScheme } from 'react-native';
+import { CustomLightTheme } from './config/app-theme';
 import { CustomDarkTheme } from './config/app-theme';
 import { BottomTabsNavigator } from './presentation/navigation/BottomTabsNavigator';
 import { NavigationContainer } from '@react-navigation/native';
+import { useThemeMode } from './config/ThemeContext';
 
 export const App = () => {
 
-  // const scheme = useColorScheme();
+  const { themeMode } = useThemeMode();
+  const systemScheme = useColorScheme();
+
+  const theme =
+    themeMode === 'light'
+      ? CustomLightTheme
+      : themeMode === 'dark'
+        ? CustomDarkTheme
+        : systemScheme === 'dark'
+          ? CustomDarkTheme
+          : CustomLightTheme;
 
   return (
-    <NavigationContainer
-      // theme={scheme === 'dark' ? CustomDarkTheme : CustomLightTheme}
-      theme={CustomDarkTheme}
-      // theme={CustomLightTheme}
-    >
-      <BottomTabsNavigator />
-    </NavigationContainer>
+      <NavigationContainer theme={theme}>
+        <BottomTabsNavigator />
+      </NavigationContainer>
   );
 };

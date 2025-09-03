@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
+import { ThemeSelectorMenu } from './ThemeSelectorMenu';
 
 export const ProfileScreen = () => {
 
@@ -31,6 +32,7 @@ export const ProfileScreen = () => {
 
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
 
   useEffect(() => {
     refetch();
@@ -100,14 +102,20 @@ export const ProfileScreen = () => {
   return (
     <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
-        <ProfileInfoHeader
-          nickname={myProfile!.nickname}
-          name={myProfile!.full_name}
-          avatarUrl={myProfile!.avatarUrl}
-          style={styles.profileHeader}
-          loadingAvatar={isLoadingProfile}
-          landscape={isLandscape}
+      {showThemeSelector &&
+        <ThemeSelectorMenu
+          onClose={() => setShowThemeSelector(false)}
         />
+      }
+
+      <ProfileInfoHeader
+        nickname={myProfile!.nickname}
+        name={myProfile!.full_name}
+        avatarUrl={myProfile!.avatarUrl}
+        style={styles.profileHeader}
+        loadingAvatar={isLoadingProfile}
+        landscape={isLandscape}
+      />
 
       <ScrollView
         contentContainerStyle={[styles.scrollContainer, isLandscape && styles.scrollContainerLandscape]}
@@ -144,6 +152,14 @@ export const ProfileScreen = () => {
           icon="person-add"
           style={styles.button}
           disabled={isLoadingFriendRequests}
+        />
+
+        <CustomMenuButton
+          onPress={() => setShowThemeSelector(true)}
+          label="Cambiar esquema de color"
+          icon="contrast"
+          style={styles.button}
+          disabled={showThemeSelector}
         />
 
       </ScrollView>

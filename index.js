@@ -4,6 +4,13 @@
 
 import {AppRegistry} from 'react-native';
 import { App } from './src/App';
+import { ThemeProvider } from './src/config/ThemeContext';
 import {name as appName} from './app.json';
 
-AppRegistry.registerComponent(appName, () => App);
+const Root = () => (
+    <ThemeProvider>
+        <App />
+    </ThemeProvider>
+);
+
+AppRegistry.registerComponent(appName, () => Root);

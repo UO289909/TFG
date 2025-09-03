@@ -22,7 +22,7 @@ export const FloatingButton = ({ onPress, icon, position, color, colorPressed = 
       style={({ pressed }) => [
         styles.button,
         {
-          backgroundColor: disabled ? colorDisabled || colors.grey : pressed ? colorPressed : color,
+          backgroundColor: disabled ? colorDisabled || colors.buttonDisabled : pressed ? colorPressed : color,
           elevation: pressed ? 4 : 8,
           ...(position === 'bottom-right' || position === 'top-right'
             ? { right: 16 }

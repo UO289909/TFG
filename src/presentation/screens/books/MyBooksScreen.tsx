@@ -3,11 +3,11 @@ import { FlatList, RefreshControl, StyleSheet, useWindowDimensions, View } from 
 import { BookCard } from '../../components/books/BookCard';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
-import { NavigationProp, useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useRoute, RouteProp, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors, globalStyles } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { useEffect, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
@@ -22,6 +22,8 @@ export const MyBooksScreen = () => {
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
+
+  const { colors } = useTheme() as CustomTheme;
 
   const { isLoading, myBooks, refetch } = useBooks();
 
@@ -99,7 +101,7 @@ export const MyBooksScreen = () => {
     <RefreshControl
       refreshing={refreshing}
       onRefresh={onRefresh}
-      colors={[globalColors.primary]}
+      colors={[colors.primary]}
     />
   );
 
@@ -121,7 +123,7 @@ export const MyBooksScreen = () => {
         disabled={isLoading || refreshing}
       />
 
-      <View style={globalStyles.separator} />
+      <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
       {(isLoading || refreshing) &&
         <FullScreenLoader />
@@ -131,7 +133,7 @@ export const MyBooksScreen = () => {
         <IonIcon
           name="book"
           size={200}
-          color={globalColors.greyLight}
+          color={colors.greyLight}
           style={styles.bigIcon}
         />
       }
@@ -154,8 +156,8 @@ export const MyBooksScreen = () => {
         onPress={handleAddBook}
         icon="add-outline"
         position="bottom-right"
-        color={globalColors.primary}
-        colorPressed={globalColors.primaryDark}
+        color={colors.primary}
+        colorPressed={colors.primaryDark}
         disabled={isLoading || refreshing}
       />
 
@@ -167,6 +169,14 @@ export const MyBooksScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  separator: {
+    height: 1,
+    borderRadius: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
   scrollContainer: {
     paddingBottom: 10,

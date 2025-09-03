@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
-import { globalColors, globalStyles } from '../../../config/app-theme';
 import { UserCard, UserType } from '../../components/profile/UserCard';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
@@ -13,9 +12,13 @@ import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-cas
 import { handleRequest } from '../../../core/use-cases/user/handle-request.use-case';
 import { sendRequest } from '../../../core/use-cases/user/send-request.use-case';
 import { useProfile } from '../../hooks/useProfile';
+import { useTheme } from '@react-navigation/native';
+import { CustomTheme } from '../../../config/app-theme';
 
 
 export const SearchUsersScreen = () => {
+
+    const { colors } = useTheme() as CustomTheme;
 
     const { friendRequests, refetchFriendRequests } = useProfile();
 
@@ -164,7 +167,7 @@ export const SearchUsersScreen = () => {
                 disabled={loading}
             />
 
-            <View style={globalStyles.separator} />
+            <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
             {loading &&
                 <FullScreenLoader />
@@ -174,7 +177,7 @@ export const SearchUsersScreen = () => {
                 <IonIcon
                     name="person"
                     size={200}
-                    color={globalColors.greyLight}
+                    color={colors.greyLight}
                     style={styles.bigIcon}
                 />
             }
@@ -213,6 +216,14 @@ export const SearchUsersScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    separator: {
+        height: 1,
+        borderRadius: 1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
     },
     scrollContainer: {
         paddingBottom: 10,

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
-import { globalColors, globalStyles } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { IonIcon } from '../../components/icons';
@@ -11,9 +11,12 @@ import { User } from '../../../core/entities/user.entity';
 import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
 import { useProfile } from '../../hooks/useProfile';
+import { useTheme } from '@react-navigation/native';
 
 
 export const FriendsScreen = () => {
+
+    const { colors } = useTheme() as CustomTheme;
 
     const { friendRequests, refetchFriendRequests } = useProfile();
 
@@ -102,7 +105,7 @@ export const FriendsScreen = () => {
         <RefreshControl
             refreshing={loading}
             onRefresh={onRefresh}
-            colors={[globalColors.primary]}
+            colors={[colors.primary]}
         />
     );
 
@@ -124,7 +127,7 @@ export const FriendsScreen = () => {
                 disabled={loading || friends.length === 0}
             />
 
-            <View style={globalStyles.separator} />
+            <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
             {loading &&
                 <FullScreenLoader />
@@ -141,10 +144,10 @@ export const FriendsScreen = () => {
                             <IonIcon
                                 name="people"
                                 size={200}
-                                color={globalColors.greyLight}
+                                color={colors.greyLight}
                                 style={styles.bigIcon}
                             />
-                            <Text style={styles.noFriendsText}>No tienes amigos aun</Text>
+                            <Text style={{ ...styles.noFriendsText, color: colors.grey }}>No tienes amigos aun</Text>
                         </>
                     }
 
@@ -176,6 +179,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    separator: {
+        height: 1,
+        borderRadius: 1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
+    },
     scrollContainer: {
         paddingBottom: 10,
     },
@@ -188,7 +199,6 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 20,
         fontFamily: 'Roboto-Light',
-        color: globalColors.grey,
         alignSelf: 'center',
         textAlign: 'center',
     },

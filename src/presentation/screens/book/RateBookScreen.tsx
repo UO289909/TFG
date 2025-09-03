@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { DateType } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
 
@@ -14,6 +14,8 @@ export const RateBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'RateBook'>>();
     const { book, rating } = params;
+
+    const { colors } = useTheme() as CustomTheme;
 
     const today = new Date();
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -79,27 +81,35 @@ export const RateBookScreen = () => {
                 />
             )}
 
-            <Text style={styles.title}>Valorar "{book.title}"</Text>
+            <Text style={{ ...styles.title, color: colors.text }}>Valorar "{book.title}"</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-                <Text style={styles.label}>Fecha de inicio de lectura:</Text>
-                <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
-                    <Text style={styles.dateLabel}>
+                <Text style={{ ...styles.label, color: colors.text }}>Fecha de inicio de lectura:</Text>
+                <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
+                    ...styles.dateInput,
+                    borderColor: colors.border,
+                    backgroundColor: colors.field,
+                }}>
+                    <Text style={{ ...styles.dateLabel, color: colors.text }}>
                         {startDate
                             ? startDate.toLocaleDateString()
                             : 'Selecciona la fecha de inicio'}
                     </Text>
                 </TouchableOpacity>
 
-                <Text style={styles.label}>Fecha de fin de lectura:</Text>
-                <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
-                    <Text style={styles.dateLabel}>
+                <Text style={{ ...styles.label, color: colors.text }}>Fecha de fin de lectura:</Text>
+                <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
+                    ...styles.dateInput,
+                    borderColor: colors.border,
+                    backgroundColor: colors.field,
+                }}>
+                    <Text style={{ ...styles.dateLabel, color: colors.text }}>
                         {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
                     </Text>
                 </TouchableOpacity>
 
-                <Text style={styles.label}>Valoración:</Text>
+                <Text style={{ ...styles.label, color: colors.text }}>Valoración:</Text>
                 <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
             </ScrollView>
 
@@ -107,8 +117,8 @@ export const RateBookScreen = () => {
                 onPress={handleSubmit}
                 icon="checkmark-outline"
                 position="bottom-right"
-                color={globalColors.primary}
-                colorPressed={globalColors.primaryDark}
+                color={colors.primary}
+                colorPressed={colors.primaryDark}
                 disabled={!startDate || !finishDate || currentRating === 0}
             />
 
@@ -116,8 +126,8 @@ export const RateBookScreen = () => {
                 onPress={handleCancel}
                 icon="close-outline"
                 position="bottom-left"
-                color={globalColors.danger}
-                colorPressed={globalColors.dangerDark}
+                color={colors.danger}
+                colorPressed={colors.dangerDark}
             />
         </View>
     );
@@ -146,8 +156,6 @@ const styles = StyleSheet.create({
     },
     dateInput: {
         borderWidth: 2,
-        borderColor: '#ccc',
-        backgroundColor: '#faf9fd',
         borderRadius: 10,
         paddingVertical: 8,
         paddingHorizontal: 12,
@@ -156,7 +164,6 @@ const styles = StyleSheet.create({
     dateLabel: {
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
-        color: '#222',
     },
     pickerOverlay: {
         position: 'absolute',
@@ -168,12 +175,5 @@ const styles = StyleSheet.create({
     overlayBg: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0,0,0,0.2)',
-    },
-    pickerContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 4,
-        elevation: 10,
-        margin: 12,
     },
 });

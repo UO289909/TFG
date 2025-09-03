@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { CustomTheme, globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { CustomIconButton } from '../pressables/CustomIconButton';
 import { useTheme } from '@react-navigation/native';
 
@@ -69,13 +69,13 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
                 }
                 color={
                     type === 'user' || type === 'requestReceived'
-                        ? globalColors.primary
-                        : globalColors.danger
+                        ? colors.primary
+                        : colors.danger
                 }
                 colorPressed={
                     type === 'user' || type === 'requestReceived'
-                        ? globalColors.primaryDark
-                        : globalColors.dangerDark
+                        ? colors.primaryDark
+                        : colors.dangerDark
                 }
                 onPress={onRightButtonPress}
                 style={styles.button}

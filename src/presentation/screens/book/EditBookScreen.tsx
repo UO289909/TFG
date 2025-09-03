@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
 import { getUserBookByIsbn } from '../../../core/use-cases/books/get-user-book-by-isbn.use-case';
@@ -19,6 +19,8 @@ export const EditBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'EditBook'>>();
     const { book } = params;
+
+    const { colors } = useTheme() as CustomTheme;
 
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
@@ -172,7 +174,7 @@ export const EditBookScreen = () => {
                 />
             )}
 
-            <Text style={styles.titleText}>{book.title}</Text>
+            <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
@@ -217,18 +219,26 @@ export const EditBookScreen = () => {
 
                 {fieldsEnabled.includes('dates') &&
                     <View>
-                        <Text style={styles.label}>Fecha de inicio de lectura:</Text>
-                        <TouchableOpacity onPress={() => setShowStartPicker(true)} style={styles.dateInput}>
-                            <Text style={styles.dateLabel}>
+                        <Text style={{ ...styles.label, color: colors.text }}>Fecha de inicio de lectura:</Text>
+                        <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
+                            ...styles.dateInput,
+                            backgroundColor: colors.field,
+                            borderColor: colors.border,
+                        }}>
+                            <Text style={{ ...styles.dateLabel, color: colors.text }}>
                                 {startDate
                                     ? new Date(startDate).toLocaleDateString()
                                     : 'Selecciona la fecha de inicio'}
                             </Text>
                         </TouchableOpacity>
 
-                        <Text style={styles.label}>Fecha de fin de lectura:</Text>
-                        <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={styles.dateInput}>
-                            <Text style={styles.dateLabel}>
+                        <Text style={{ ...styles.label, color: colors.text }}>Fecha de fin de lectura:</Text>
+                        <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
+                            ...styles.dateInput,
+                            backgroundColor: colors.field,
+                            borderColor: colors.border,
+                        }}>
+                            <Text style={{ ...styles.dateLabel, color: colors.text }}>
                                 {finishDate ? new Date(finishDate).toLocaleDateString() : today.toLocaleDateString()}
                             </Text>
                         </TouchableOpacity>
@@ -237,7 +247,7 @@ export const EditBookScreen = () => {
 
                 {fieldsEnabled.includes('rating') &&
                     <View>
-                        <Text style={{ ...styles.label, ...styles.ratingLabel }}>Valoración:</Text>
+                        <Text style={{ ...styles.label, ...styles.ratingLabel, color: colors.text }}>Valoración:</Text>
                         <FiveStarsInput
                             value={rating}
                             onPress={setRating}
@@ -250,15 +260,15 @@ export const EditBookScreen = () => {
                 onPress={handleGoBack}
                 icon="close-outline"
                 position="bottom-left"
-                color={globalColors.danger}
-                colorPressed={globalColors.dangerDark}
+                color={colors.danger}
+                colorPressed={colors.dangerDark}
             />
             <FloatingButton
                 onPress={handleEditBook}
                 icon="checkmark-outline"
                 position="bottom-right"
-                color={globalColors.primary}
-                colorPressed={globalColors.primaryDark}
+                color={colors.primary}
+                colorPressed={colors.primaryDark}
                 disabled={
                     fieldsEnabled.length === 0 ||
                     isAnyEditableFieldEmpty
@@ -292,15 +302,12 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Medium',
         fontSize: 18,
         marginBottom: 4,
-        color: '#333',
     },
     textInput: {
         marginBottom: 18,
     },
     dateInput: {
         borderWidth: 2,
-        borderColor: '#ccc',
-        backgroundColor: '#faf9fd',
         borderRadius: 10,
         paddingVertical: 8,
         paddingHorizontal: 12,
@@ -309,7 +316,6 @@ const styles = StyleSheet.create({
     dateLabel: {
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
-        color: '#222',
     },
     ratingLabel: {
         alignSelf: 'center',

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
-import { globalColors, globalStyles } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user.use-case';
@@ -14,6 +14,8 @@ import { normalizeDateToYear } from '../../../utils/normalizeDateToYear';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 
 export const AddBookScreen = () => {
+
+  const { colors } = useTheme() as CustomTheme;
 
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
@@ -135,7 +137,7 @@ export const AddBookScreen = () => {
         onSearch={handleSearchISBN}
       />
 
-      <View style={globalStyles.separator} />
+      <View style={{...styles.separator, shadowColor: colors.shadow}} />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
@@ -180,15 +182,15 @@ export const AddBookScreen = () => {
         onPress={handleGoBack}
         icon="close-outline"
         position="bottom-left"
-        color={globalColors.danger}
-        colorPressed={globalColors.dangerDark}
+        color={colors.danger}
+        colorPressed={colors.dangerDark}
       />
       <FloatingButton
         onPress={handleAddBook}
         icon="add-outline"
         position="bottom-right"
-        color={globalColors.primary}
-        colorPressed={globalColors.primaryDark}
+        color={colors.primary}
+        colorPressed={colors.primaryDark}
         disabled={!isbn || !title || !author || !pages || !year}
       />
     </View>
@@ -215,10 +217,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: globalColors.grey,
-    marginTop: 10,
-    marginBottom: 30,
     borderRadius: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
   textInput: {
     marginBottom: 18,

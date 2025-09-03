@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { globalColors, globalStyles } from '../../../config/app-theme';
 import { IonIcon } from '../../components/icons';
 import { UserCard } from '../../components/profile/UserCard';
 import { useProfile } from '../../hooks/useProfile';
@@ -10,9 +9,13 @@ import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-b
 import { FullScreenLoader } from '../../components/feedback';
 import { handleRequest } from '../../../core/use-cases/user/handle-request.use-case';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
+import { useTheme } from '@react-navigation/native';
+import { CustomTheme } from '../../../config/app-theme';
 
 
 export const FriendRequestsScreen = () => {
+
+    const { colors } = useTheme() as CustomTheme;
 
     const { friendRequests, refetchFriendRequests } = useProfile();
 
@@ -75,11 +78,11 @@ export const FriendRequestsScreen = () => {
 
             <View style={styles.block}>
                 <View style={styles.titleHeader}>
-                    <Text style={styles.title}>Solicitudes recibidas</Text>
-                    <IonIcon name="archive" size={30} color={globalColors.grey} />
+                    <Text style={{ ...styles.title, color: colors.text }}>Solicitudes recibidas</Text>
+                    <IonIcon name="archive" size={30} color={colors.grey} />
                 </View>
 
-                <View style={globalStyles.separator} />
+                <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
                 <ScrollView
                     style={styles.scrollContainer}
@@ -103,15 +106,20 @@ export const FriendRequestsScreen = () => {
                 </ScrollView>
             </View>
 
-            <View style={[globalStyles.separator, styles.bigSeparator, isLandscape && styles.bigSeparatorLandscape]} />
+            <View style={[
+                styles.separator,
+                styles.bigSeparator,
+                isLandscape && styles.bigSeparatorLandscape,
+                { shadowColor: colors.shadow, backgroundColor: colors.grey },
+            ]} />
 
             <View style={styles.block}>
                 <View style={styles.titleHeader}>
-                    <Text style={styles.title}>Solicitudes enviadas</Text>
-                    <IonIcon name="send" size={30} color={globalColors.grey} />
+                    <Text style={{ ...styles.title, color: colors.text }}>Solicitudes enviadas</Text>
+                    <IonIcon name="send" size={30} color={colors.grey} />
                 </View>
 
-                <View style={globalStyles.separator} />
+                <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
                 <ScrollView
                     style={styles.scrollContainer}
@@ -148,6 +156,14 @@ const styles = StyleSheet.create({
     block: {
         flex: 1,
     },
+    separator: {
+        height: 1,
+        borderRadius: 1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 2,
+    },
     scrollContainer: {
         minHeight: 200,
     },
@@ -155,14 +171,12 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     bigSeparator: {
-        backgroundColor: globalColors.grey,
         height: 4,
     },
     bigSeparatorLandscape: {
         width: 4,
         height: 'auto',
         alignSelf: 'stretch',
-        backgroundColor: globalColors.grey,
     },
     title: {
         fontSize: 20,

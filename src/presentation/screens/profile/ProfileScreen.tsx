@@ -6,13 +6,15 @@ import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useEffect, useState } from 'react';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 
 export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
+  const { colors } = useTheme() as CustomTheme;
 
   const {
     isLoading,
@@ -86,7 +88,7 @@ export const ProfileScreen = () => {
     <RefreshControl
       refreshing={refreshing}
       onRefresh={onRefresh}
-      colors={[globalColors.primary]}
+      colors={[colors.primary]}
     />
   );
 

@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { BookStatsCard } from '../../components/home/StatsCard';
+import { BookStatsCard } from '../../components/home';
 
 export const HomeScreen = () => {
 

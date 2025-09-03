@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     message: string;
@@ -18,6 +19,8 @@ export const CustomNotification = ({
     position = 'top',
 }: Props) => {
     const slideAnim = useRef(new Animated.Value(position === 'top' ? -80 : 80)).current;
+
+    const { colors } = useTheme() as CustomTheme;
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -45,7 +48,10 @@ export const CustomNotification = ({
             style={[
                 styles.container,
                 position === 'top' ? styles.top : styles.bottom,
-                { transform: [{ translateY: slideAnim }] },
+                {
+                    transform: [{ translateY: slideAnim }],
+                    backgroundColor: colors.primary,
+                },
             ]}
         >
             <Text style={styles.text}>{message}</Text>
@@ -68,7 +74,6 @@ const styles = StyleSheet.create({
     container: {
         left: 5,
         right: 5,
-        backgroundColor: globalColors.primary,
         paddingVertical: 16,
         paddingHorizontal: 24,
         flexDirection: 'row',

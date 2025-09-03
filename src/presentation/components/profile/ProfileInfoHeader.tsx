@@ -1,6 +1,7 @@
 import { View, Image, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { FullScreenLoader } from '../feedback';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     nickname: string;
@@ -14,11 +15,24 @@ interface Props {
 export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAvatar = false, landscape = false }: Props) => {
     const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
 
+    const { colors } = useTheme() as CustomTheme;
+
     return (
-        <View style={[styles.container, landscape && styles.containerLandscape, style]}>
+        <View style={[
+            styles.container,
+            landscape && styles.containerLandscape,
+            {
+                shadowColor: colors.shadow,
+                backgroundColor: colors.card,
+            },
+            style]}>
 
             {loadingAvatar &&
-                <View style={styles.avatarContainer}>
+                <View style={{
+                    ...styles.avatarContainer,
+                    backgroundColor: colors.cardPressed,
+                    borderColor: colors.cardPressed,
+                }}>
                     <FullScreenLoader />
                 </View>
             }
@@ -27,14 +41,18 @@ export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAva
                 <View style={styles.avatarContainer}>
                     <Image
                         source={{ uri: avatarUrl || default_avatar }}
-                        style={styles.avatar}
+                        style={{
+                            ...styles.avatar,
+                            backgroundColor: colors.cardPressed,
+                            borderColor: colors.cardPressed,
+                        }}
                     />
                 </View>
             }
 
             <View style={[styles.infoContainer, landscape && styles.infoContainerLandscape]}>
-                <Text style={styles.nickname}>{nickname}</Text>
-                <Text style={styles.name}>{name}</Text>
+                <Text style={{...styles.nickname, color: colors.text}}>{nickname}</Text>
+                <Text style={{...styles.name, color: colors.secondaryText}}>{name}</Text>
             </View>
         </View>
     );
@@ -47,13 +65,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '95%',
         borderRadius: 16,
-        shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
         alignSelf: 'center',
         marginTop: 10,
-        backgroundColor: globalColors.white,
         elevation: 4,
         padding: 10,
         marginBottom: 20,
@@ -64,13 +80,11 @@ const styles = StyleSheet.create({
         width: '20%',
         height: '95%',
         borderRadius: 16,
-        shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
         alignSelf: 'center',
         marginTop: 10,
-        backgroundColor: globalColors.white,
         elevation: 4,
         paddingLeft: 20,
         marginLeft: 34,
@@ -79,16 +93,14 @@ const styles = StyleSheet.create({
     avatarContainer: {
         width: 150,
         height: 150,
-        borderRadius: 15,
-        backgroundColor: globalColors.greyLight,
+        borderRadius: 16,
         borderWidth: 1,
-        borderColor: globalColors.greyLight,
         marginRight: 10,
     },
     avatar: {
         width: '100%',
         height: '100%',
-        borderRadius: 15,
+        borderRadius: 16,
     },
     infoContainer: {
         flex: 1,
@@ -104,6 +116,5 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 16,
         fontFamily: 'Roboto-Italic',
-        color: globalColors.tertiary,
     },
 });

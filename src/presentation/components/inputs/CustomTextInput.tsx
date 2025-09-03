@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
+import { useTheme } from '@react-navigation/native';
 
 interface Props extends TextInputProps {
   label?: string;
@@ -8,11 +9,14 @@ interface Props extends TextInputProps {
 }
 
 export const CustomTextInput = ({ label, error, style, editable = true, ...props }: Props) => {
+
+  const { colors } = useTheme() as CustomTheme;
+
   const [focused, setFocused] = useState(false);
 
   return (
     <View style={style}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={{...styles.label, color: colors.text}}>{label}</Text>}
       <TextInput
         {...props}
         editable={editable}
@@ -20,19 +24,19 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
           styles.input,
           {
             borderColor: error
-              ? globalColors.danger
+              ? colors.danger
               : focused
-                ? globalColors.primary
-                : globalColors.grey,
-            backgroundColor: editable ? globalColors.white : globalColors.greyLight,
-            color: editable ? globalColors.black : globalColors.greyDark,
+                ? colors.primary
+                : colors.grey,
+            backgroundColor: editable ? colors.field : colors.fieldDisabled,
+            color: editable ? colors.text : colors.greyDark,
           },
         ]}
-        placeholderTextColor={globalColors.greyDark}
+        placeholderTextColor={colors.greyDark}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <Text style={{...styles.error, color: colors.danger}}>{error}</Text>}
     </View>
   );
 };
@@ -42,7 +46,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     fontSize: 18,
     marginBottom: 4,
-    color: '#333',
   },
   input: {
     borderWidth: 2,
@@ -51,11 +54,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
-    backgroundColor: '#faf9fd',
-    color: '#222',
   },
   error: {
-    color: '#d32f2f',
     marginTop: 2,
     fontSize: 12,
   },

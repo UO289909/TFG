@@ -1,7 +1,8 @@
 import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import DateTimePicker, { DateType } from 'react-native-ui-datepicker';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
 import { useEffect, useRef } from 'react';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     minDate: Date | undefined;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const CustomDatePicker = ({ minDate, maxDate, defaultDate, onChange, onTouchOutside }: Props) => {
+
+    const { colors } = useTheme() as CustomTheme;
 
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
     const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -38,6 +41,7 @@ export const CustomDatePicker = ({ minDate, maxDate, defaultDate, onChange, onTo
                 style={[
                     styles.pickerContainer,
                     {
+                        backgroundColor: colors.card,
                         transform: [{ scale: scaleAnim }],
                         opacity: opacityAnim,
                     },
@@ -51,7 +55,7 @@ export const CustomDatePicker = ({ minDate, maxDate, defaultDate, onChange, onTo
                     maxDate={maxDate}
                     locale="es"
                     firstDayOfWeek={1}
-                    styles={datePickerStyles}
+                    styles={getDatePickerStyles(colors)}
                 />
             </Animated.View>
         </View>
@@ -72,7 +76,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.2)',
     },
     pickerContainer: {
-        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 4,
         elevation: 10,
@@ -80,17 +83,17 @@ const styles = StyleSheet.create({
     },
 });
 
-export const datePickerStyles = StyleSheet.create({
-    selected: { backgroundColor: globalColors.primary, borderRadius: 20 },
-    selected_label: { color: globalColors.white, fontFamily: 'Roboto-Bold', fontSize: 16 },
-    disabled_label: { color: globalColors.grey },
-    day_label: { color: globalColors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
-    month_selector_label: { color: globalColors.primary, fontFamily: 'Roboto-Bold', fontSize: 20 },
-    month_label: { color: globalColors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
-    button_prev_image: { tintColor: globalColors.primary },
-    button_next_image: { tintColor: globalColors.primary },
-    weekday_label: { color: globalColors.primary, fontFamily: 'Roboto-Light', fontSize: 18 },
-    year_selector_label: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
-    year_selector: { color: globalColors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
-    year_label: { color: globalColors.primaryDark, fontFamily: 'Roboto-Regular', fontSize: 18 },
+const getDatePickerStyles = (colors: CustomTheme['colors']) => StyleSheet.create({
+    selected: { backgroundColor: colors.primary, borderRadius: 20 },
+    selected_label: { color: '#fff', fontFamily: 'Roboto-Bold', fontSize: 16 },
+    disabled_label: { color: colors.grey },
+    day_label: { color: colors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
+    month_selector_label: { color: colors.primary, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    month_label: { color: colors.primary, fontFamily: 'Roboto-Regular', fontSize: 16 },
+    button_prev_image: { tintColor: colors.primary },
+    button_next_image: { tintColor: colors.primary },
+    weekday_label: { color: colors.primary, fontFamily: 'Roboto-Light', fontSize: 18 },
+    year_selector_label: { color: colors.primaryDark, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    year_selector: { color: colors.secondaryText, fontFamily: 'Roboto-Bold', fontSize: 20 },
+    year_label: { color: colors.secondaryText, fontFamily: 'Roboto-Regular', fontSize: 18 },
 });

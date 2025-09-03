@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { IonIcon, IonIconNames } from '../icons/IonIcon';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
   onPress: () => void;
@@ -12,27 +13,34 @@ interface Props {
   disabled?: boolean;
 }
 
-export const FloatingButton = ({ onPress, icon, position, color, colorPressed = color, colorDisabled = globalColors.grey, disabled = false }: Props) => (
-  <Pressable
-    style={({ pressed }) => [
-      styles.button,
-      {
-        backgroundColor: disabled ? colorDisabled : pressed ? colorPressed : color,
-        elevation: pressed ? 4 : 8,
-        ...(position === 'bottom-right' || position === 'top-right'
-          ? { right: 16 }
-          : { left: 16 }),
-        ...(position === 'top-right' || position === 'top-left'
-          ? { top: 16 }
-          : { bottom: 16 }),
-      },
-    ]}
-    onPress={onPress}
-    disabled={disabled}
-  >
-    <IonIcon name={icon} size={36} color="#fff" />
-  </Pressable>
-);
+export const FloatingButton = ({ onPress, icon, position, color, colorPressed = color, colorDisabled, disabled = false }: Props) => {
+
+  const { colors } = useTheme() as CustomTheme;
+
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.button,
+        {
+          backgroundColor: disabled ? colorDisabled || colors.grey : pressed ? colorPressed : color,
+          elevation: pressed ? 4 : 8,
+          ...(position === 'bottom-right' || position === 'top-right'
+            ? { right: 16 }
+            : { left: 16 }),
+          ...(position === 'top-right' || position === 'top-left'
+            ? { top: 16 }
+            : { bottom: 16 }),
+          shadowColor: colors.shadow,
+        },
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <IonIcon name={icon} size={36} color="#fff" />
+    </Pressable>
+  );
+
+};
 
 const styles = StyleSheet.create({
   button: {
@@ -42,7 +50,6 @@ const styles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,

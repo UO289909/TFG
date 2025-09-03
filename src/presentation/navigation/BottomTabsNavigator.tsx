@@ -1,9 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { IonIcon } from '../components/icons/IonIcon';
-import { globalColors } from '../../config/app-theme';
+import { CustomTheme } from '../../config/app-theme';
 import { MyBooksStackNavigator } from './MyBooksStackNavigator';
 import { ProfileStackNavigator } from './ProfileStackNavigator';
 import { HomeStackNavigator } from './HomeStackNavigator';
+import { useTheme } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,6 +21,9 @@ const ProfileTabBarIcon = ({ focused, color }: { focused: boolean, color: string
 );
 
 export const BottomTabsNavigator = () => {
+
+    const { colors } = useTheme() as CustomTheme;
+
     return (
         <Tab.Navigator
             screenOptions={{
@@ -37,8 +41,9 @@ export const BottomTabsNavigator = () => {
                     fontFamily: 'Roboto-Bold',
                     fontSize: 14,
                 },
-                tabBarActiveBackgroundColor: globalColors.background,
-                tabBarActiveTintColor: globalColors.primary,
+                tabBarInactiveBackgroundColor: colors.navigationBackground,
+                tabBarActiveBackgroundColor: colors.navigationBackground,
+                tabBarActiveTintColor: colors.primary,
             }}
         >
             <Tab.Screen name="Home" options={{ title: 'Inicio', tabBarIcon: HomeTabBarIcon, popToTopOnBlur: true, headerShown: false }} component={HomeStackNavigator} />

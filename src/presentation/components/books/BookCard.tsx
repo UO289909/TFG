@@ -1,6 +1,7 @@
 import { View, Text, Pressable, StyleSheet, Image, StyleProp } from 'react-native';
 import { FiveStarsInput } from '../inputs/FiveStarsInput';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme } from '../../../config/app-theme';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     title: string;
@@ -15,33 +16,36 @@ interface Props {
 export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, style }: Props) => {
     const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
 
+    const { colors } = useTheme() as CustomTheme;
+
     return (
         <Pressable
             style={({pressed}) => [
                 styles.cardContainer,
                 {
-                    backgroundColor: pressed ? globalColors.greyLight : globalColors.white,
+                    backgroundColor: pressed ? colors.cardPressed : colors.card,
                     elevation: pressed ? 2 : 4,
+                    shadowColor: colors.shadow,
                 },
                 style,
             ]}
             onPress={onPress}
         >
             <Image
-                style={styles.image}
+                style={{...styles.image, backgroundColor: colors.background}}
                 source={{ uri: imageUrl || default_cover }}
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.titleText}>{title}</Text>
-                    <Text style={styles.authorText}>{author}</Text>
-                    <Text style={styles.pagesText}>{pages} páginas</Text>
+                    <Text style={{...styles.titleText, color: colors.text}}>{title}</Text>
+                    <Text style={{...styles.authorText, color: colors.secondaryText}}>{author}</Text>
+                    <Text style={{...styles.pagesText, color: colors.text}}>{pages} páginas</Text>
                 </View>
                 <View style={styles.ratingContainer}>
                     {rating
                         ? <FiveStarsInput value={rating} editable={false} small onPress={() => { }} />
-                        : <Text style={styles.ratingText}>Lectura en curso</Text>
+                        : <Text style={{...styles.ratingText, color: colors.text}}>Lectura en curso</Text>
                     }
                 </View>
             </View>
@@ -56,7 +60,6 @@ const styles = StyleSheet.create({
         width: '95%',
         minHeight: 148,
         borderRadius: 16,
-        shadowColor: globalColors.black,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
@@ -69,7 +72,6 @@ const styles = StyleSheet.create({
         height: 128,
         borderRadius: 10,
         marginRight: 16,
-        backgroundColor: globalColors.background,
     },
     dataContainer: {
         flex: 1,
@@ -83,18 +85,15 @@ const styles = StyleSheet.create({
     authorText: {
         fontSize: 16,
         fontFamily: 'Roboto-Regular',
-        color: globalColors.primaryDark,
     },
     pagesText: {
         fontSize: 14,
         fontFamily: 'Roboto-Light',
-        color: globalColors.black,
         marginBottom: 10,
     },
     ratingText: {
         fontSize: 14,
         fontFamily: 'Roboto-Italic',
-        color: globalColors.black,
     },
     infoContainer: {
         flex: 1,

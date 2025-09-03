@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { globalColors } from '../../../config/app-theme';
+import { CustomTheme, globalColors } from '../../../config/app-theme';
 import { CustomIconButton } from '../pressables/CustomIconButton';
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     nickname: string;
@@ -16,9 +17,14 @@ export type UserType = 'user' | 'friend' | 'requestSent' | 'requestReceived';
 export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => { } }: Props) => {
     const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
 
+    const { colors } = useTheme() as CustomTheme;
 
     return (
-        <View style={styles.cardContainer}>
+        <View style={{
+            ...styles.cardContainer,
+            backgroundColor: colors.card,
+            shadowColor: colors.shadow,
+        }}>
 
             <Image
                 source={{ uri: avatarUrl || default_avatar }}
@@ -26,9 +32,9 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
             />
 
             <View style={styles.infoContainer}>
-                <Text style={styles.nickname}>{nickname}</Text>
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.alreadyFriend}>{
+                <Text style={{...styles.nickname, color: colors.text}}>{nickname}</Text>
+                <Text style={{...styles.name, color: colors.secondaryText}}>{name}</Text>
+                <Text style={{...styles.alreadyFriend, color: colors.text}}>{
                     type === 'friend'
                         ? '¡Ya es tu amigo!'
                         : type === 'requestSent'
@@ -43,8 +49,8 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
             {type === 'requestReceived' &&
                 <CustomIconButton
                     icon="close"
-                    color={globalColors.danger}
-                    colorPressed={globalColors.dangerDark}
+                    color={colors.danger}
+                    colorPressed={colors.dangerDark}
                     onPress={onRejectRequest}
                     style={styles.button}
                 />
@@ -85,11 +91,9 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         width: '95%',
         borderRadius: 16,
-        backgroundColor: globalColors.white,
         elevation: 2,
         padding: 12,
         marginTop: 10,
-        shadowColor: globalColors.black,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
@@ -114,12 +118,10 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 16,
         fontFamily: 'Roboto-Italic',
-        color: globalColors.tertiary,
     },
     alreadyFriend: {
         fontSize: 16,
         fontFamily: 'Roboto-Light',
-        color: globalColors.black,
         marginTop: 6,
     },
     button: {

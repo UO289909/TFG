@@ -7,16 +7,17 @@ interface Props {
     bottomLabel?: string;
     value: number;
     type: 'small' | 'large';
+    landscape?: boolean;
 }
 
-export const BookStatsCard = ({ topLabel, bottomLabel, value, type }: Props) => {
+export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
     return (
         <View style={[
             styles.container,
-            type === 'small' ? styles.small : styles.large,
+            type === 'large' ? landscape ? styles.largeLandscape : styles.large : landscape ? styles.smallLandscape : styles.small,
             {
                 backgroundColor: colors.card,
                 shadowColor: colors.shadow,
@@ -48,9 +49,17 @@ const styles = StyleSheet.create({
         width: '45%',
         aspectRatio: 1,
     },
+    smallLandscape: {
+        width: '45%',
+        aspectRatio: 2.5,
+    },
     large: {
         width: '95%',
-        aspectRatio: 2,
+        aspectRatio: 2.5,
+    },
+    largeLandscape: {
+        width: '95%',
+        aspectRatio: 5,
     },
     text: {
         fontSize: 24,

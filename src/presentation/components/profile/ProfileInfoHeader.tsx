@@ -38,7 +38,11 @@ export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAva
             }
 
             {!loadingAvatar &&
-                <View style={styles.avatarContainer}>
+                <View style={{
+                    ...styles.avatarContainer,
+                    backgroundColor: colors.cardPressed,
+                    borderColor: colors.cardPressed,
+                }}>
                     <Image
                         source={{ uri: avatarUrl || default_avatar }}
                         style={{

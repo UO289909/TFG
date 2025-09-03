@@ -80,7 +80,7 @@ export const SearchUsersScreen = () => {
             const found = await searchUsersByNickname(normalizeText(text));
 
             if (found.length === 0) {
-                setNotifMsg('No se encontraron usuarios que coincidan con la busqueda :(');
+                setNotifMsg('No se encontraron usuarios que coincidan con la busqueda');
                 setShowNotif(true);
             } else {
                 const foundWithType = found.map(user => {

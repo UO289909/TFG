@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     },
     alreadyFriend: {
         fontSize: 16,
-        fontFamily: 'Roboto-Light',
+        fontFamily: 'Roboto-Thin',
         marginTop: 6,
     },
     button: {

@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     pagesText: {
         fontSize: 14,
-        fontFamily: 'Roboto-Light',
+        fontFamily: 'Roboto-Thin',
         marginBottom: 10,
     },
     ratingText: {

@@ -77,7 +77,7 @@ export const FriendsScreen = () => {
         );
 
         if (filtered.length === 0) {
-            setNotifMsg('No tienes amigos que coincidan con la busqueda :(');
+            setNotifMsg('No tienes amigos que coincidan con la busqueda');
             setShowNotif(true);
             setFilteredFriends(friends);
             setLoading(false);
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     noFriendsText: {
         flex: 1,
         fontSize: 20,
-        fontFamily: 'Roboto-Light',
+        fontFamily: 'Roboto-Thin',
         alignSelf: 'center',
         textAlign: 'center',
     },

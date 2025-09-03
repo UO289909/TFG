@@ -33,6 +33,7 @@ export const getMyBooks = async (): Promise<Book[]> => {
                 rating: userBook.rating,
                 start_date: userBook.start_date,
                 finish_date: userBook.finish_date,
+                created_at: userBook.created_at,
             };
         });
         console.log('Mapped books:', myBooks);

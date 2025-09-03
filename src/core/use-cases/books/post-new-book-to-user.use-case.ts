@@ -25,6 +25,7 @@ export const postNewBook = async (
                 rating: null,
                 start_date: null,
                 finish_date: null,
+                created_at: null,
             };
             await databaseAddBook(bookGeneralInfo);
             console.log('Libro añadido a books', bookGeneralInfo);
@@ -40,6 +41,7 @@ export const postNewBook = async (
             rating: null,
             start_date: null,
             finish_date: null,
+            created_at: null,
         };
         await databaseAddUserBook(bookUserInfo);
         console.log('Libro añadido a user_books', bookUserInfo);

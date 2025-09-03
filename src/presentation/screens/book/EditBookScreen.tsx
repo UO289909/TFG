@@ -91,7 +91,7 @@ export const EditBookScreen = () => {
         if (fieldsEnabled.length > 0) {
             setNotifMsg('Esta es toda la información que puedes modificar');
         } else {
-            setNotifMsg('No puedes modificar ninguna información de este libro :( ');
+            setNotifMsg('No puedes modificar ninguna información de este libro');
         }
         setShowNotif(true);
     }, [fieldsEnabled]);

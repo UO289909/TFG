@@ -18,6 +18,7 @@ export class BookMapper {
             rating: null,
             start_date: null,
             finish_date: null,
+            created_at: null,
         };
     }
 
@@ -32,6 +33,7 @@ export class BookMapper {
             rating: null,
             start_date: null,
             finish_date: null,
+            created_at: null,
         };
     }
 }

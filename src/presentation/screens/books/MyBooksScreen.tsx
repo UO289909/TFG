@@ -75,7 +75,7 @@ export const MyBooksScreen = () => {
     );
 
     if (filtered.length === 0) {
-      setNotifMsg('No tienes libros que coincidan con la busqueda :(');
+      setNotifMsg('No tienes libros que coincidan con la busqueda');
       setShowNotif(true);
       setFilteredBooks(myBooks);
       return;

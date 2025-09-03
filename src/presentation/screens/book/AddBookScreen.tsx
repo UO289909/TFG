@@ -111,6 +111,7 @@ export const AddBookScreen = () => {
       rating: null,
       start_date: null,
       finish_date: null,
+      created_at: null,
     };
 
     await postNewBook(book, fieldsEnabled, isNewBook);

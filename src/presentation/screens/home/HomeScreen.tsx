@@ -19,7 +19,7 @@ export const HomeScreen = () => {
 
 
   const [refreshing, setRefreshing] = useState(true);
-  const [finishedThisMonth, setFinishedThisMonth] = useState(0);
+  const [pagesThisMonth, setPagesThisMonth] = useState(0);
   const [lastBook, setLastBook] = useState<Book>();
   const [totalBooks, setTotalBooks] = useState(0);
 
@@ -41,14 +41,16 @@ export const HomeScreen = () => {
 
     const finishedReadingThisMonth = myBooks.filter(book => {
       if (!book.finish_date) {
-        return false;
+      return false;
       }
       const finishedDate = new Date(book.finish_date);
       return (
-        finishedDate.getMonth() === currentMonth &&
-        finishedDate.getFullYear() === currentYear
+      finishedDate.getMonth() === currentMonth &&
+      finishedDate.getFullYear() === currentYear
       );
-    }).length;
+    });
+
+    const pagesReadThisMonth = finishedReadingThisMonth.reduce((sum, book) => sum + (Number(book.pages) || 0), 0);
 
     const lastReadBook = myBooks
       .slice()
@@ -58,7 +60,7 @@ export const HomeScreen = () => {
         return bDate.getTime() - aDate.getTime();
       })[0];
 
-    setFinishedThisMonth(finishedReadingThisMonth);
+    setPagesThisMonth(pagesReadThisMonth);
     setLastBook(lastReadBook);
     setTotalBooks(myBooks.length);
 
@@ -103,9 +105,9 @@ export const HomeScreen = () => {
         <>
           <View style={styles.statsRow}>
             <StatsCard
-              topLabel="Has leido un total de"
-              bottomLabel="libros este mes"
-              value={finishedThisMonth}
+              topLabel="Has leido"
+              bottomLabel="páginas este mes"
+              value={pagesThisMonth}
               type="small"
               landscape={isLandscape}
             />

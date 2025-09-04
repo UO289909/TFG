@@ -50,7 +50,7 @@ export const CustomNotification = ({
                 position === 'top' ? styles.top : styles.bottom,
                 {
                     transform: [{ translateY: slideAnim }],
-                    backgroundColor: colors.primary,
+                    backgroundColor: colors.notification,
                 },
             ]}
         >

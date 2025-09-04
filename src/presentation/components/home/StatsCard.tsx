@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
 import { useTheme } from '@react-navigation/native';
 
@@ -9,16 +9,17 @@ interface Props {
     type: 'small' | 'large';
     landscape?: boolean;
     cover_url?: string;
+    onPress?: () => void;
 }
 
-export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover_url }: Props) => {
+export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover_url, onPress }: Props) => {
     const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
 
     const { colors } = useTheme() as CustomTheme;
 
     return (
-        <View
-            style={[
+        <Pressable
+            style={({ pressed }) => [
                 styles.container,
                 type === 'large'
                     ? landscape
@@ -29,10 +30,11 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                         : styles.small,
                 cover_url && styles.containerWithCover,
                 {
-                    backgroundColor: colors.card,
+                    backgroundColor: pressed && onPress ? colors.cardPressed : colors.card,
                     shadowColor: colors.shadow,
                 },
             ]}
+            onPress={onPress}
         >
 
             {cover_url &&
@@ -68,7 +70,7 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                 )}
             </View>
 
-        </View>
+        </Pressable>
     );
 };
 

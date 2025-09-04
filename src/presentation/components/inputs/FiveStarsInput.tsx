@@ -7,10 +7,10 @@ interface Props {
     onPress: (rating: number) => void;
     value?: number | null;
     editable?: boolean;
-    small?: boolean;
+    size?: 'large' | 'small' | 'tiny';
 }
 
-export const FiveStarsInput = ({ onPress, value = 0, editable = true, small = false }: Props) => {
+export const FiveStarsInput = ({ onPress, value = 0, editable = true, size = 'large' }: Props) => {
     const [rating, setRating] = useState(value === null ? 0 : value > 5 ? 5 : value < 0 ? 0 : value);
 
     return (
@@ -32,7 +32,7 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true, small = fa
                 >
                     <IonIcon
                         name={rating >= star ? 'star' : 'star-outline'}
-                        size={small ? 24 : 36}
+                        size={size === 'tiny' ? 14 : size === 'small' ? 24 : 36}
                         color={
                             editable
                                 ? '#AAA'

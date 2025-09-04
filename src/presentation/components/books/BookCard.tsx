@@ -44,7 +44,7 @@ export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, styl
                 </View>
                 <View style={styles.ratingContainer}>
                     {rating
-                        ? <FiveStarsInput value={rating} editable={false} small onPress={() => { }} />
+                        ? <FiveStarsInput value={rating} editable={false} size="small" onPress={() => { }} />
                         : <Text style={{...styles.ratingText, color: colors.text}}>Lectura en curso</Text>
                     }
                 </View>

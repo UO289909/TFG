@@ -4,11 +4,14 @@ import { StatsCard } from '../../components/home';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
+import { FriendBooks } from '../../components/home/FriendBooks';
 
 export const HomeScreen = () => {
+
+  const navigation = useNavigation();
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -68,6 +71,10 @@ export const HomeScreen = () => {
 
   };
 
+  // const handleGoToMyBooks = () => {
+  //   navigation.navigate('MyBooksList');
+  // };
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -118,6 +125,7 @@ export const HomeScreen = () => {
               value={totalBooks}
               type="small"
               landscape={isLandscape}
+              onPress={() => {}}
             />
           </View>
 
@@ -136,6 +144,10 @@ export const HomeScreen = () => {
       }
 
       <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
+
+      <FriendBooks />
+
+      <FriendBooks />
 
     </ScrollView>
 

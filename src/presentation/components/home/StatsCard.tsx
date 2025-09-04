@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     textWithCover: {
-        fontSize: 16,
+        fontSize: 18,
         textAlign: 'left',
     },
     value: {

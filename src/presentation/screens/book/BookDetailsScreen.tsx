@@ -17,7 +17,7 @@ export const BookDetailsScreen = () => {
   const { colors } = useTheme() as CustomTheme;
 
   const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+  const isLandscape = width > height || width >= 768;
 
   const [showNotif, setShowNotif] = useState(false);
 
@@ -56,13 +56,13 @@ export const BookDetailsScreen = () => {
         {!isLandscape &&
           <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
         }
-        <Text style={{...styles.titleText, color: colors.text}}>{book.title}</Text>
-        <Text style={{...styles.authorText, color: colors.text}}>{book.author}</Text>
-        <Text style={{...styles.pagesText, color: colors.text}}>{book.pages} páginas</Text>
-        <Text style={{...styles.releaseYearText, color: colors.text}}>Publicado en {book.release_year}</Text>
+        <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
+        <Text style={{ ...styles.authorText, color: colors.text }}>{book.author}</Text>
+        <Text style={{ ...styles.pagesText, color: colors.text }}>{book.pages} páginas</Text>
+        <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
         <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
-        <Text style={{...styles.datesText, color: colors.text}}>
+        <Text style={{ ...styles.datesText, color: colors.text }}>
           {book.rating !== null && book.start_date && book.finish_date
             ? `Leido entre el ${new Date(book.start_date).toLocaleDateString()} y ${new Date(book.finish_date).toLocaleDateString()}`
             : 'No has terminado este libro aún'}

@@ -21,7 +21,7 @@ export const MyBooksScreen = () => {
   const doRefetch = params?.doRefetch ?? false;
 
   const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+  const isLandscape = width > height || width >= 768;
 
   const { colors } = useTheme() as CustomTheme;
 

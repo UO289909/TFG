@@ -28,7 +28,7 @@ export const ProfileScreen = () => {
   } = useProfile();
 
   const { width, height } = useWindowDimensions();
-  const isLandscape = width > height;
+  const isLandscape = width > height || width >= 768;
 
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);

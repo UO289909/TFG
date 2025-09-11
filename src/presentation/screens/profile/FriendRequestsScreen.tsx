@@ -20,7 +20,7 @@ export const FriendRequestsScreen = () => {
     const { friendRequests, refetchFriendRequests } = useProfile();
 
     const { width, height } = useWindowDimensions();
-    const isLandscape = width > height;
+    const isLandscape = width > height || width >= 768;
 
     const [sentUsers, setSentUsers] = useState<User[]>([]);
     const [receivedUsers, setReceivedUsers] = useState<User[]>([]);

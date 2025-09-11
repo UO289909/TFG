@@ -6,7 +6,7 @@ interface Props {
     topLabel: string;
     bottomLabel?: string;
     value: number | string;
-    type: 'small' | 'large';
+    type: 'small' | 'large' | 'cover';
     landscape?: boolean;
     cover_url?: string;
     onPress?: () => void;
@@ -21,14 +21,14 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
         <Pressable
             style={({ pressed }) => [
                 styles.container,
-                type === 'large'
+                type === 'large' || type === 'cover'
                     ? landscape
                         ? styles.largeLandscape
                         : styles.large
                     : landscape
                         ? styles.smallLandscape
                         : styles.small,
-                cover_url && styles.containerWithCover,
+                type === 'cover' && styles.containerWithCover,
                 {
                     backgroundColor: pressed && onPress ? colors.cardPressed : colors.card,
                     shadowColor: colors.shadow,
@@ -37,24 +37,24 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
             onPress={onPress}
         >
 
-            {cover_url &&
+            {type === 'cover' &&
                 <Image source={{ uri: cover_url || default_cover }} style={styles.coverImage} />
             }
 
             <View style={[
-                cover_url ? styles.textContainerWithCover : styles.textContainer,
+                type === 'cover' ? styles.textContainerWithCover : styles.textContainer,
                 landscape ? styles.textContainerWithCoverLandscape : {},
             ]}>
                 <Text style={{
                     ...styles.text,
-                    ...(cover_url && styles.textWithCover),
+                    ...(type === 'cover' && styles.textWithCover),
                     color: colors.secondaryText,
                 }}>
                     {topLabel}
                 </Text>
                 <Text style={{
                     ...styles.value,
-                    ...(cover_url && styles.valueWithCover),
+                    ...(type === 'cover' && styles.valueWithCover),
                     color: colors.text,
                 }}>
                     {value}
@@ -62,7 +62,7 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                 {bottomLabel && (
                     <Text style={{
                         ...styles.text,
-                        ...(cover_url && styles.textWithCover),
+                        ...(type === 'cover' && styles.textWithCover),
                         color: colors.secondaryText,
                     }}>
                         {bottomLabel}

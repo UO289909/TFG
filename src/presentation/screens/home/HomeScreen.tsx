@@ -8,10 +8,12 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
 import { FriendBooks } from '../../components/home/FriendBooks';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { RootTabParams } from '../../navigation/BottomTabsNavigator';
 
 export const HomeScreen = () => {
 
-  const navigation = useNavigation();
+  const bottomTabsNavigation = useNavigation<BottomTabNavigationProp<RootTabParams>>();
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -71,9 +73,9 @@ export const HomeScreen = () => {
 
   };
 
-  // const handleGoToMyBooks = () => {
-  //   navigation.navigate('MyBooksList');
-  // };
+  const handleGoToMyBooks = () => {
+    bottomTabsNavigation.navigate('MyBooks');
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -125,7 +127,7 @@ export const HomeScreen = () => {
               value={totalBooks}
               type="small"
               landscape={isLandscape}
-              onPress={() => {}}
+              onPress={handleGoToMyBooks}
             />
           </View>
 
@@ -135,7 +137,7 @@ export const HomeScreen = () => {
                 ? 'El último libro que has leido es'
                 : 'El último libro que has empezado es'}
               value={lastBook.title}
-              type="large"
+              type="cover"
               landscape={isLandscape}
               cover_url={lastBook.cover_url!}
             />

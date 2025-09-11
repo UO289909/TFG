@@ -6,6 +6,12 @@ import { ProfileStackNavigator } from './ProfileStackNavigator';
 import { HomeStackNavigator } from './HomeStackNavigator';
 import { useTheme } from '@react-navigation/native';
 
+export type RootTabParams = {
+    Home: undefined;
+    MyBooks: undefined;
+    Profile: undefined;
+}
+
 const Tab = createBottomTabNavigator();
 
 const HomeTabBarIcon = ({ focused, color }: { focused: boolean, color: string }) => (

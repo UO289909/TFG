@@ -37,7 +37,8 @@ export type IonIconNames =
     | 'book-outline'
     | 'trash-outline'
     | 'pencil-outline'
-    | 'checkmark-outline';
+    | 'checkmark-outline'
+    | 'logo-google';
 
 interface Props {
     name: IonIconNames;

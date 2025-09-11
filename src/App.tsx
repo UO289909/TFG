@@ -25,12 +25,12 @@ export const App = () => {
 
   return (
     <NavigationContainer theme={theme}>
-      {/* {loading
+      {loading
         ? <FullScreenLoader />
         : currentUser
           ? <BottomTabsNavigator />
-          : <AuthStackNavigator />} */}
-          <BottomTabsNavigator />
+          : <AuthStackNavigator />}
+          {/* <BottomTabsNavigator /> */}
     </NavigationContainer>
   );
 };

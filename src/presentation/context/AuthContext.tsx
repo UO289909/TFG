@@ -13,9 +13,9 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps>({
   currentUser: null,
   loading: true,
-  signIn: async () => {},
-  signUp: async () => {},
-  signOut: async () => {},
+  signIn: async () => { },
+  signUp: async () => { },
+  signOut: async () => { },
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -38,7 +38,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     const { user, error } = await SupabaseClient.auth.signIn({ email, password });
     if (error) {
-        throw error;
+      setLoading(false);
+      throw error;
     }
     setUser(user);
     setLoading(false);
@@ -48,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     const { user, error } = await SupabaseClient.auth.signUp({ email, password });
     if (error) {
-        throw error;
+      throw error;
     }
     setUser(user);
     setLoading(false);

@@ -4,16 +4,17 @@ import { StatsCard } from '../../components/home';
 import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
 import { FriendBooks } from '../../components/home/FriendBooks';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { RootTabParams } from '../../navigation/BottomTabsNavigator';
+import { RootStackParams } from '../../navigation/HomeStackNavigator';
 
 export const HomeScreen = () => {
 
-  const bottomTabsNavigation = useNavigation<BottomTabNavigationProp<RootTabParams>>();
+  const bottomTabsNavigation = useNavigation<NavigationProp<RootTabParams>>();
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -75,6 +76,13 @@ export const HomeScreen = () => {
 
   const handleGoToMyBooks = () => {
     bottomTabsNavigation.navigate('MyBooks');
+  };
+
+  const handleGoToBookDetails = () => {
+    if (!lastBook) {
+      return;
+    }
+    navigation.navigate('BookDetails', { book: lastBook });
   };
 
   const onRefresh = async () => {
@@ -140,6 +148,7 @@ export const HomeScreen = () => {
               type="cover"
               landscape={isLandscape}
               cover_url={lastBook.cover_url!}
+              onPress={handleGoToBookDetails}
             />
           }
         </>

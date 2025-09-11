@@ -3,7 +3,7 @@ import { CustomLightTheme } from './config/app-theme';
 import { CustomDarkTheme } from './config/app-theme';
 import { BottomTabsNavigator } from './presentation/navigation/BottomTabsNavigator';
 import { NavigationContainer } from '@react-navigation/native';
-import { useThemeMode } from './config/ThemeContext';
+import { useThemeMode } from './presentation/context/ThemeContext';
 
 export const App = () => {
 

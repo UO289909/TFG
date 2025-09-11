@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
-import { useThemeMode } from '../../../config/ThemeContext';
+import { useThemeMode } from '../../context/ThemeContext';
 
 interface Props {
   onClose: () => void;

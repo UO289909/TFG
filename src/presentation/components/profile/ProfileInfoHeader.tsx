@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAvatar = false, landscape = false }: Props) => {
-    const default_avatar = 'https://placehold.co/150x150.webp?text=No+Avatar&font=robot';
+    const default_avatar = `https://placehold.co/250x250.webp?text=${nickname}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 

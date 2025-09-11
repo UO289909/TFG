@@ -14,7 +14,7 @@ export const ResumeBookDetailsScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
 
-  const default_cover = 'https://placehold.co/400x640.webp?text=No+Cover&font=roboto';
+  const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
 
 
   return (

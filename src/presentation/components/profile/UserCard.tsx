@@ -15,7 +15,7 @@ interface Props {
 export type UserType = 'user' | 'friend' | 'requestSent' | 'requestReceived';
 
 export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => { } }: Props) => {
-    const default_avatar = 'https://placehold.co/100x100.webp?text=No+Avatar&font=roboto';
+    const default_avatar = `https://placehold.co/150x150.webp?text=${nickname}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 

@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, style }: Props) => {
-    const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
+    const default_cover = `https://placehold.co/160x256.webp?text=${title}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 

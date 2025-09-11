@@ -21,7 +21,7 @@ export const BookDetailsScreen = () => {
 
   const [showNotif, setShowNotif] = useState(false);
 
-  const default_cover = 'https://placehold.co/400x640.webp?text=No+Cover&font=roboto';
+  const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
 
   const handleRateBook = (rating: number) => {
     navigation.navigate('RateBook', { book, rating });

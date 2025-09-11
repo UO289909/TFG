@@ -2,14 +2,17 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
+import { AppRegistry } from 'react-native';
 import { App } from './src/App';
 import { ThemeProvider } from './src/presentation/context/ThemeContext';
-import {name as appName} from './app.json';
+import { name as appName } from './app.json';
+import { AuthProvider } from './src/presentation/context/AuthContext';
 
 const Root = () => (
     <ThemeProvider>
-        <App />
+        <AuthProvider>
+            <App />
+        </AuthProvider>
     </ThemeProvider>
 );
 

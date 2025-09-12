@@ -5,9 +5,10 @@ import { CustomTheme } from '../../../config/app-theme';
 interface Props {
     onPress: () => void;
     title: string;
+    disabled?: boolean;
 }
 
-export const CustomButton = ({ onPress, title }: Props) => {
+export const CustomButton = ({ onPress, title, disabled = false }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -17,15 +18,26 @@ export const CustomButton = ({ onPress, title }: Props) => {
             style={({ pressed }) => [
                 styles.button,
                 {
-                    backgroundColor: pressed
-                        ? colors.cardPressed
-                        : colors.card,
+                    backgroundColor: disabled
+                        ? colors.buttonDisabled
+                        : pressed
+                            ? colors.secondaryText
+                            : colors.primary,
                     elevation: pressed ? 2 : 4,
                     shadowColor: colors.shadow,
                 },
             ]}
+            disabled={disabled}
         >
-            <Text style={{ ...styles.text, color: colors.text }}>{title}</Text>
+            <Text
+                style={[
+                    styles.text,
+                    disabled && { color: colors.greyDark },
+                ]}
+            >
+                {title}
+            </Text>
+
         </Pressable>
     );
 };
@@ -43,6 +55,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Roboto-Bold',
         textAlign: 'center',
+        color: 'white',
         flex: 1,
     },
 });

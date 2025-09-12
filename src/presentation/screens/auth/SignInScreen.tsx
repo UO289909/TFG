@@ -1,19 +1,22 @@
-import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import { Text, StyleSheet, ScrollView, View, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { GoogleAuthButton } from '../../components/pressables';
-import { useTheme } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
 import { CustomNotification } from '../../components/feedback';
+import { RootStackParams } from '../../navigation/AuthStackNavigator';
 
 export const SignInScreen = () => {
 
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMessage, setNotifMessage] = useState('');
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const { colors } = useTheme() as CustomTheme;
+
+  const [showNotif, setShowNotif] = useState(false);
+  const [notifMessage, setNotifMessage] = useState('');
 
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
@@ -33,6 +36,10 @@ export const SignInScreen = () => {
       setNotifMessage('Error al iniciar sesión. Revisa tus credenciales.');
       setShowNotif(true);
     }
+  };
+
+  const handleForgotPassword = () => {
+    navigation.navigate('PasswordReset');
   };
 
   return (
@@ -69,17 +76,26 @@ export const SignInScreen = () => {
           secureTextEntry={true}
         />
 
-        <CustomButton title="Iniciar sesión" onPress={handleSignIn} />
-        <Text style={{ ...styles.forgot, color: colors.secondaryText }} onPress={() => {/* navega a PasswordResetScreen */ }}>
+        <CustomButton
+          title="Iniciar sesión"
+          onPress={handleSignIn}
+          disabled={!email || !password}
+        />
+
+        <Text style={{ ...styles.forgot, color: colors.text }} onPress={() => {/* navega a PasswordResetScreen */ }}>
           o también puedes...
         </Text>
-        <GoogleAuthButton onPress={handleGoogleSignIn} type="signIn" />
 
+        <GoogleAuthButton
+          onPress={handleGoogleSignIn}
+          type="signIn"
+        />
 
-        {/* Aquí puedes añadir el enlace para recuperar contraseña */}
-        <Text style={{ ...styles.forgot, color: colors.secondaryText }} onPress={() => {/* navega a PasswordResetScreen */ }}>
-          ¿Has olvidado tu contraseña?
-        </Text>
+        <TouchableOpacity style={styles.forgotContainer} onPress={handleForgotPassword}>
+          <Text style={{ ...styles.forgot, color: colors.secondaryText }} >
+            ¿Has olvidado tu contraseña?
+          </Text>
+        </TouchableOpacity>
 
       </ScrollView>
     </View>
@@ -108,8 +124,13 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 16,
   },
+  forgotContainer: {
+    paddingVertical: 20,
+  },
   forgot: {
     marginTop: 18,
+    fontSize: 14,
+    fontFamily: 'Roboto-Light',
     textAlign: 'center',
   },
 });

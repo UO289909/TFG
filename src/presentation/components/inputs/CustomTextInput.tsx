@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Roboto-Italic',
     fontSize: 16,
   },
   error: {

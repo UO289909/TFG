@@ -6,9 +6,10 @@ import { CustomTheme } from '../../../config/app-theme';
 interface Props {
     onPress: () => void;
     type: 'signIn' | 'signUp';
+    disabled?: boolean;
 }
 
-export const GoogleAuthButton = ({ onPress, type }: Props) => {
+export const GoogleAuthButton = ({ onPress, type, disabled = false }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -25,6 +26,7 @@ export const GoogleAuthButton = ({ onPress, type }: Props) => {
                     shadowColor: colors.shadow,
                 },
             ]}
+            disabled={disabled}
         >
             <IonIcon
                 name="logo-google"

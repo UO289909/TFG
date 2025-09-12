@@ -67,8 +67,12 @@ export const SignUpScreen = () => {
         secureTextEntry={true}
       />
 
-      <CustomButton title="Registrarse" onPress={handleSignUp} />
-      <Text style={{ ...styles.forgot, color: colors.secondaryText }}>
+      <CustomButton
+        title="Registrarse"
+        onPress={handleSignUp}
+        disabled={!email || !password || !fullName || !nickname}
+      />
+      <Text style={{ ...styles.forgot, color: colors.text }}>
         o también puedes...
       </Text>
       <GoogleAuthButton onPress={handleGoogleSignUp} type="signUp" />
@@ -97,6 +101,8 @@ const styles = StyleSheet.create({
   },
   forgot: {
     marginTop: 18,
+    fontSize: 14,
+    fontFamily: 'Roboto-Light',
     textAlign: 'center',
   },
 });

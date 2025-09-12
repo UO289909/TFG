@@ -6,7 +6,7 @@ import { NavigationProp, useNavigation, useTheme } from '@react-navigation/nativ
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification } from '../../components/feedback';
+import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { RootStackParams } from '../../navigation/AuthStackNavigator';
 
 export const SignInScreen = () => {
@@ -18,7 +18,7 @@ export const SignInScreen = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [notifMessage, setNotifMessage] = useState('');
 
-  const { signIn } = useAuth();
+  const { signIn, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -32,8 +32,9 @@ export const SignInScreen = () => {
     try {
       await signIn(email, password);
     } catch (error) {
-      console.log('Error al iniciar sesión:', error);
       setNotifMessage('Error al iniciar sesión. Revisa tus credenciales.');
+      setEmail('');
+      setPassword('');
       setShowNotif(true);
     }
   };
@@ -42,6 +43,10 @@ export const SignInScreen = () => {
     navigation.navigate('PasswordReset');
   };
 
+  if (loading) {
+    return <FullScreenLoader />;
+  }
+
   return (
     <View style={styles.container}>
 
@@ -49,7 +54,7 @@ export const SignInScreen = () => {
         <CustomNotification
           message={notifMessage}
           onClose={() => setShowNotif(false)}
-          position="bottom"
+          position="top"
         />
       }
 

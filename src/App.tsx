@@ -5,14 +5,13 @@ import { BottomTabsNavigator } from './presentation/navigation/BottomTabsNavigat
 import { NavigationContainer } from '@react-navigation/native';
 import { useThemeMode } from './presentation/context/ThemeContext';
 import { useAuth } from './presentation/context/AuthContext';
-import { FullScreenLoader } from './presentation/components/feedback';
 import { AuthStackNavigator } from './presentation/navigation/AuthStackNavigator';
 
 export const App = () => {
 
   const { themeMode } = useThemeMode();
   const systemScheme = useColorScheme();
-  const { currentUser, loading } = useAuth();
+  const { currentUser } = useAuth();
 
   const theme =
     themeMode === 'light'
@@ -25,12 +24,10 @@ export const App = () => {
 
   return (
     <NavigationContainer theme={theme}>
-      {loading
-        ? <FullScreenLoader />
-        : currentUser
-          ? <BottomTabsNavigator />
-          : <AuthStackNavigator />}
-          {/* <BottomTabsNavigator /> */}
+      {currentUser
+        ? <BottomTabsNavigator />
+        : <AuthStackNavigator />}
+      {/* <BottomTabsNavigator /> */}
     </NavigationContainer>
   );
 };

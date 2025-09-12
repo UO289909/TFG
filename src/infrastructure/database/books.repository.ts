@@ -1,7 +1,7 @@
 import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
 import { Book } from '../../core/entities/book.entity';
 import { DatabaseBook, UserBook } from '../interfaces/supabase.responses';
-import { getAccessToken, getUserId } from './auth.repository';
+import { getAccessToken, getCredentials } from './auth.repository';
 
 /**
  * Fetches the books associated with the current user from the database.
@@ -11,8 +11,7 @@ import { getAccessToken, getUserId } from './auth.repository';
  */
 export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}`, {
@@ -37,8 +36,7 @@ export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
  */
 export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
@@ -63,7 +61,7 @@ export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean
  */
 export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBook> => {
 
-    const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
 
     try {
         const data: DatabaseBook[] = await supabaseFetcher.get(`/rest/v1/books?isbn=eq.${isbn}`, {
@@ -87,8 +85,7 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
  */
 export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBook> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
@@ -113,7 +110,7 @@ export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBo
  */
 export const databaseAddBook = async (book: Book): Promise<void> => {
 
-    const accessToken = getAccessToken();
+    const accessToken = await getAccessToken();
 
     try {
         await supabaseFetcher.post(
@@ -149,8 +146,7 @@ export const databaseAddBook = async (book: Book): Promise<void> => {
  */
 export const databaseAddUserBook = async (book: Book): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.post(
@@ -188,8 +184,7 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
  */
 export const databaseRateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.patch(
@@ -220,8 +215,7 @@ export const databaseRateUserBook = async (isbn: string, rating: number, startDa
  */
 export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.delete(
@@ -256,8 +250,7 @@ export const databaseEditUserBook = async (
     rating: number | null
 ): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     const updatedFields: Record<string, any> = {};
     if (author !== null) { updatedFields.author = author; }

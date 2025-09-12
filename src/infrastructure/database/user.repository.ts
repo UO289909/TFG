@@ -1,7 +1,7 @@
 import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
 import { Friend } from '../../core/entities/friend.entity';
 import { DatabaseFriend, DatabaseUser } from '../interfaces/supabase.responses';
-import { getUserId, getAccessToken } from './auth.repository';
+import { getUserId, getAccessToken, getCredentials } from './auth.repository';
 import { SupabaseClient } from './supabaseClient';
 
 const AVATARS_BUCKET = 'avatars';
@@ -14,8 +14,8 @@ const AVATARS_BUCKET = 'avatars';
  */
 export const databaseGetUserInfo = async (id?: string): Promise<DatabaseUser> => {
 
-    const accessToken = getAccessToken();
-    const userId = id || getUserId();
+    const accessToken = await getAccessToken();
+    const userId = id || await getUserId();
 
     try {
         const data: DatabaseUser[] = await supabaseFetcher.get(
@@ -40,7 +40,7 @@ export const databaseGetUserInfo = async (id?: string): Promise<DatabaseUser> =>
  */
 export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> => {
 
-    const userId = getUserId();
+    const userId = await getUserId();
     const fileName = `${userId}.webp`;
 
     const formData = new FormData();
@@ -76,7 +76,7 @@ export const databaseCreateSignedAvatarUrl = async (
     id?: string
 ): Promise<string> => {
 
-    const userId = id || getUserId();
+    const userId = id || await getUserId();
     const avatarPath = `${userId}.webp`;
 
 
@@ -85,14 +85,14 @@ export const databaseCreateSignedAvatarUrl = async (
         .from(AVATARS_BUCKET)
         .createSignedUrl(avatarPath, expiresInSeconds);
 
-    if (error || !data?.signedURL) {
+    if (error || !data?.signedUrl) {
         if (error?.message === 'Object not found') {
             return '';
         }
         throw new Error('Error creating signed avatar URL');
     }
 
-    return data.signedURL;
+    return data.signedUrl;
 
 };
 
@@ -103,8 +103,7 @@ export const databaseCreateSignedAvatarUrl = async (
  */
 export const databaseSearchUsersByNickname = async (nickname: string): Promise<DatabaseUser[]> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
 
@@ -129,8 +128,7 @@ export const databaseSearchUsersByNickname = async (nickname: string): Promise<D
  */
 export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
 
@@ -156,11 +154,12 @@ export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => 
  */
 export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<{user: DatabaseUser, request: 'sent' | 'received', accepted: boolean}> => {
 
-    const id = friendRequest.sender === getUserId() ? friendRequest.receiver : friendRequest.sender;
+    const retreivedUserId = await getUserId();
+    const id = friendRequest.sender === retreivedUserId ? friendRequest.receiver : friendRequest.sender;
 
     try {
         const data: DatabaseUser = await databaseGetUserInfo(id);
-        return { user: data, request: friendRequest.sender === getUserId() ? 'sent' : 'received', accepted: friendRequest.accepted };
+        return { user: data, request: friendRequest.sender === retreivedUserId ? 'sent' : 'received', accepted: friendRequest.accepted };
 
     } catch (error) {
         throw new Error(`Error fetching friend info from database: ${error}`);
@@ -175,7 +174,8 @@ export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Pro
  */
 export const databaseGetFriendAvatarByRequest = async (expiresInSeconds = 3600, friendRequest: Friend): Promise<string> => {
 
-    const id = friendRequest.sender === getUserId() ? friendRequest.receiver : friendRequest.sender;
+    const retreivedUserId = await getUserId();
+    const id = friendRequest.sender === retreivedUserId ? friendRequest.receiver : friendRequest.sender;
 
     try {
         const avatarUrl = await databaseCreateSignedAvatarUrl(expiresInSeconds, id);
@@ -192,8 +192,7 @@ export const databaseGetFriendAvatarByRequest = async (expiresInSeconds = 3600, 
  */
 export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.delete(
@@ -216,8 +215,7 @@ export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
  */
 export const databaseSendRequest = async (friendId: string): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.post(
@@ -245,8 +243,7 @@ export const databaseSendRequest = async (friendId: string): Promise<void> => {
  */
 export const databaseAcceptRequest = async (friendId: string): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.patch(
@@ -272,8 +269,7 @@ export const databaseAcceptRequest = async (friendId: string): Promise<void> => 
  */
 export const databaseRejectRequest = async (friendId: string): Promise<void> => {
 
-    const accessToken = getAccessToken();
-    const userId = getUserId();
+    const { accessToken, userId } = await getCredentials();
 
     try {
         await supabaseFetcher.delete(

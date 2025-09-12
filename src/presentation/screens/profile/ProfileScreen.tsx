@@ -10,6 +10,7 @@ import { NavigationProp, useNavigation, useTheme } from '@react-navigation/nativ
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
 import { ThemeSelectorMenu } from './ThemeSelectorMenu';
+import { useAuth } from '../../context/AuthContext';
 
 export const ProfileScreen = () => {
 
@@ -26,6 +27,8 @@ export const ProfileScreen = () => {
     refetchProfile,
     changeAvatar,
   } = useProfile();
+
+  const { signOut, loading } = useAuth();
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
@@ -54,6 +57,10 @@ export const ProfileScreen = () => {
 
   const handleFriendRequests = () => {
     navigation.navigate('FriendRequests');
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   const handleChangeAvatar = async () => {
@@ -160,6 +167,14 @@ export const ProfileScreen = () => {
           icon="contrast"
           style={styles.button}
           disabled={showThemeSelector}
+        />
+
+        <CustomMenuButton
+          onPress={handleSignOut}
+          label="Cerrar sesión"
+          icon="log-out"
+          style={styles.button}
+          disabled={loading}
         />
 
       </ScrollView>

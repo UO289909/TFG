@@ -5,10 +5,10 @@ import { useTheme } from '@react-navigation/native';
 
 interface Props extends TextInputProps {
   label?: string;
-  error?: string;
+  info?: string;
 }
 
-export const CustomTextInput = ({ label, error, style, editable = true, ...props }: Props) => {
+export const CustomTextInput = ({ label, info, style, editable = true, ...props }: Props) => {
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -16,18 +16,16 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
 
   return (
     <View style={style}>
-      {label && <Text style={{...styles.label, color: colors.text}}>{label}</Text>}
+      {label && <Text style={{ ...styles.label, color: colors.text }}>{label}</Text>}
       <TextInput
         {...props}
         editable={editable}
         style={[
           styles.input,
           {
-            borderColor: error
-              ? colors.danger
-              : focused
-                ? colors.primary
-                : colors.grey,
+            borderColor: focused
+              ? colors.primary
+              : colors.grey,
             backgroundColor: editable ? colors.field : colors.fieldDisabled,
             color: editable ? colors.text : colors.greyDark,
           },
@@ -36,7 +34,7 @@ export const CustomTextInput = ({ label, error, style, editable = true, ...props
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      {error && <Text style={{...styles.error, color: colors.danger}}>{error}</Text>}
+      {info && <Text style={{ ...styles.info, color: colors.text }}>{info}</Text>}
     </View>
   );
 };
@@ -55,8 +53,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Italic',
     fontSize: 16,
   },
-  error: {
-    marginTop: 2,
+  info: {
+    marginTop: 4,
     fontSize: 12,
+    fontFamily: 'Roboto-Light',
+    textAlign: 'justify',
   },
 });

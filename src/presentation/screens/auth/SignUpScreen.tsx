@@ -107,6 +107,7 @@ export const SignUpScreen = () => {
           value={password}
           onChangeText={text => setPassword(text.replace(/\s/g, ''))}
           secureTextEntry={true}
+          info="Mínimo 6 caracteres, incluyendo minúsculas, mayúsculas, números y símbolos"
         />
 
         <CustomTextInput
@@ -150,11 +151,5 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-  },
-  forgot: {
-    marginTop: 18,
-    fontSize: 14,
-    fontFamily: 'Roboto-Light',
-    textAlign: 'center',
   },
 });

@@ -11,6 +11,7 @@ import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
 import { ThemeSelectorMenu } from './ThemeSelectorMenu';
 import { useAuth } from '../../context/AuthContext';
+import { CustomNotification } from '../../components/feedback';
 
 export const ProfileScreen = () => {
 
@@ -33,8 +34,12 @@ export const ProfileScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
 
+  const [showNotif, setShowNotif] = useState(false);
+  const [notifMessage, setNotifMessage] = useState('');
+
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
 
   useEffect(() => {
@@ -60,7 +65,9 @@ export const ProfileScreen = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    setSigningOut(true);
+    setNotifMessage('Estás seguro de que quieres cerrar sesión?');
+    setShowNotif(true);
   };
 
   const handleChangeAvatar = async () => {
@@ -112,6 +119,22 @@ export const ProfileScreen = () => {
       {showThemeSelector &&
         <ThemeSelectorMenu
           onClose={() => setShowThemeSelector(false)}
+        />
+      }
+
+      {showNotif &&
+        <CustomNotification
+          message={notifMessage}
+          onClose={() => {
+            setShowNotif(false);
+            setSigningOut(false);
+          }}
+          onAccept={() => {
+            setShowNotif(false);
+            setSigningOut(false);
+            signOut();
+          }}
+          position="bottom"
         />
       }
 
@@ -174,7 +197,7 @@ export const ProfileScreen = () => {
           label="Cerrar sesión"
           icon="log-out"
           style={styles.button}
-          disabled={loading}
+          disabled={loading || signingOut}
         />
 
       </ScrollView>

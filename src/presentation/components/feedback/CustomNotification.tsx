@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
 import { useTheme } from '@react-navigation/native';
 
@@ -44,29 +44,38 @@ export const CustomNotification = ({
     }, [duration, onClose, onAccept, slideAnim, position]);
 
     return (
-        <Animated.View
-            style={[
-                styles.container,
-                position === 'top' ? styles.top : styles.bottom,
-                {
-                    transform: [{ translateY: slideAnim }],
-                    backgroundColor: colors.notification,
-                },
-            ]}
-        >
-            <Text style={styles.text}>{message}</Text>
-
+        <>
             {onAccept && (
-                <TouchableOpacity onPress={onAccept} style={styles.acceptButton}>
-                    <Text style={styles.buttonText}>✓</Text>
-                </TouchableOpacity>
+                <Pressable
+                    style={styles.overlay}
+                    onPress={onClose}
+                />
             )}
 
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                <Text style={styles.buttonText}>✕</Text>
-            </TouchableOpacity>
+            <Animated.View
+                style={[
+                    styles.container,
+                    position === 'top' ? styles.top : styles.bottom,
+                    {
+                        transform: [{ translateY: slideAnim }],
+                        backgroundColor: colors.notification,
+                    },
+                ]}
+            >
+                <Text style={styles.text}>{message}</Text>
 
-        </Animated.View>
+                {onAccept && (
+                    <TouchableOpacity onPress={onAccept} style={styles.acceptButton}>
+                        <Text style={styles.buttonText}>✓</Text>
+                    </TouchableOpacity>
+                )}
+
+                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                    <Text style={styles.buttonText}>✕</Text>
+                </TouchableOpacity>
+
+            </Animated.View>
+        </>
     );
 };
 
@@ -82,6 +91,15 @@ const styles = StyleSheet.create({
         elevation: 10,
         position: 'absolute',
         borderRadius: 10,
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999, // menor que la notificación para que no la tape
+        backgroundColor: 'transparent',
     },
     top: {
         top: 5,

@@ -4,8 +4,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
 
-export interface RootStackParams {
-  AuthTabs: undefined;
+export type RootStackParams = {
+  SignIn: undefined;
+  SignUp: undefined;
   PasswordReset: undefined;
 }
 

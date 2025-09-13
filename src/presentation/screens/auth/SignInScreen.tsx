@@ -43,10 +43,8 @@ export const SignInScreen = () => {
 
     try {
       await signIn(email, password);
-    } catch (error) {
-      setNotifMessage('Error al iniciar sesión. Revisa tus credenciales.');
-      setEmail('');
-      setPassword('');
+    } catch (error: any) {
+      setNotifMessage(error.message);
       setShowNotif(true);
     }
   };

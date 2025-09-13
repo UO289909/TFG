@@ -9,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import { isValidEmail } from '../../../utils/isValidEmail';
 
 export const SignUpScreen = () => {
+
   const { colors } = useTheme() as CustomTheme;
   const { signUp, loading } = useAuth();
 
@@ -36,7 +37,16 @@ export const SignUpScreen = () => {
     }
 
     try {
-      await signUp(email, password, fullName.trim(), nickname);
+      const success = await signUp(email, password, fullName.trim(), nickname);
+      if (success) {
+        setNotifMessage('¡Registro exitoso! Confirma tu email y podrás iniciar sesión');
+        setShowNotif(true);
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setFullName('');
+        setNickname('');
+      }
     } catch (error: any) {
       setNotifMessage(error.message);
       setShowNotif(true);

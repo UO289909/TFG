@@ -2,14 +2,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
 import { checkNicknameExists } from '../../core/use-cases/auth/check-nickname-exists.use-case';
-import { AuthWeakPasswordError } from '@supabase/supabase-js';
+import { AuthApiError, AuthWeakPasswordError } from '@supabase/supabase-js';
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 interface AuthContextProps {
   currentUser: any;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<void>;
+  signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
   signOut: () => Promise<void>;
 }
 
@@ -17,7 +17,7 @@ const AuthContext = createContext<AuthContextProps>({
   currentUser: null,
   loading: true,
   signIn: async () => { },
-  signUp: async () => { },
+  signUp: async () => { return false; },
   signOut: async () => { },
 });
 
@@ -44,13 +44,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
+    try {
     const { data, error } = await SupabaseClient.auth.signInWithPassword({ email, password });
     if (error) {
-      setLoading(false);
       throw error;
     }
     setUser(data.user);
+  } catch (error: any) {
+    if (error.message === 'Email not confirmed') {
+      throw new Error('Por favor, confirma tu correo electrónico antes de iniciar sesión');
+    }
+    if (error.message === 'Invalid login credentials') {
+      throw new Error('Credenciales inválidas. Revisa tu email y contraseña');
+    }
+    throw error;
+  } finally {
     setLoading(false);
+  }
   };
 
   // const signInWithGoogle = async () => {
@@ -68,11 +78,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   //   }
   // };
 
-  const signUp = async (email: string, password: string, full_name: string, nickname: string) => {
+  const signUp = async (email: string, password: string, full_name: string, nickname: string): Promise<boolean> => {
     setLoading(true);
     try {
       await checkNicknameExists(nickname);
-      const { data, error } = await SupabaseClient.auth.signUp({
+      const { error } = await SupabaseClient.auth.signUp({
         email,
         password,
         options: {
@@ -80,15 +90,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
       if (error) {
-        setLoading(false);
         throw error;
       }
-      setUser(data.user);
-      setLoading(false);
+      return true;
     } catch (error) {
       if (error instanceof AuthWeakPasswordError) {
         throw new Error(
           'La contraseña debe tener mínimo 6 caracteres, incluyendo minúsculas, mayúsculas, números y símbolos'
+        );
+      }
+      if (error instanceof AuthApiError) {
+        throw new Error(
+          'El email ya está registrado en la aplicación'
         );
       }
       throw error;

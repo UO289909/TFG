@@ -72,8 +72,8 @@ export const SignInScreen = () => {
 
         <Text style={{ ...styles.title, color: colors.text }}>Iniciar Sesión</Text>
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Correo electrónico</Text>
         <CustomTextInput
+          label="Correo Electrónico"
           style={styles.input}
           placeholder="something@provider.com"
           value={email}
@@ -82,8 +82,8 @@ export const SignInScreen = () => {
           autoCapitalize="none"
         />
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Contraseña</Text>
         <CustomTextInput
+          label="Contraseña"
           style={styles.input}
           placeholder="1234abcd"
           value={password}
@@ -129,11 +129,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     marginBottom: 24,
     textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    fontFamily: 'Roboto-Medium',
-    marginBottom: 8,
   },
   input: {
     marginBottom: 16,

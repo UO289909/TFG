@@ -49,7 +49,13 @@ export const RateBookScreen = () => {
             startDate,
             finishDate
         );
-        navigation.navigate('MyBooksList', { doRefetch: true });
+
+        navigation.reset({
+            index: 0,
+            routes: [
+                { name: 'MyBooksList', params: { doRefetch: true } },
+            ],
+        });
     };
 
     const handleCancel = () => {
@@ -88,7 +94,7 @@ export const RateBookScreen = () => {
                 <Text style={{ ...styles.label, color: colors.text }}>Fecha de inicio de lectura:</Text>
                 <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
                     ...styles.dateInput,
-                    borderColor: colors.border,
+                    borderColor: colors.grey,
                     backgroundColor: colors.field,
                 }}>
                     <Text style={{ ...styles.dateLabel, color: colors.text }}>
@@ -101,7 +107,7 @@ export const RateBookScreen = () => {
                 <Text style={{ ...styles.label, color: colors.text }}>Fecha de fin de lectura:</Text>
                 <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
                     ...styles.dateInput,
-                    borderColor: colors.border,
+                    borderColor: colors.grey,
                     backgroundColor: colors.field,
                 }}>
                     <Text style={{ ...styles.dateLabel, color: colors.text }}>
@@ -109,7 +115,7 @@ export const RateBookScreen = () => {
                     </Text>
                 </TouchableOpacity>
 
-                <Text style={{ ...styles.label, color: colors.text }}>Valoración:</Text>
+                <Text style={{ ...styles.ratingLabel, color: colors.text }}>Valoración:</Text>
                 <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
             </ScrollView>
 
@@ -148,9 +154,15 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     label: {
+        fontSize: 16,
+        fontFamily: 'Roboto-Medium',
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    ratingLabel: {
         textAlign: 'center',
         fontSize: 16,
-        fontFamily: 'Roboto-Regular',
+        fontFamily: 'Roboto-Medium',
         marginTop: 16,
         marginBottom: 8,
     },

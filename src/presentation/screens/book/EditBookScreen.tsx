@@ -128,7 +128,12 @@ export const EditBookScreen = () => {
                 fieldsEnabled.includes('rating') ? rating : null,
             );
 
-            navigation.navigate('MyBooksList', { doRefetch: true });
+            navigation.reset({
+                index: 0,
+                routes: [
+                    { name: 'MyBooksList', params: { doRefetch: true } },
+                ],
+            });
         }
     };
 
@@ -223,7 +228,7 @@ export const EditBookScreen = () => {
                         <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
                             ...styles.dateInput,
                             backgroundColor: colors.field,
-                            borderColor: colors.border,
+                            borderColor: colors.grey,
                         }}>
                             <Text style={{ ...styles.dateLabel, color: colors.text }}>
                                 {startDate
@@ -236,7 +241,7 @@ export const EditBookScreen = () => {
                         <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
                             ...styles.dateInput,
                             backgroundColor: colors.field,
-                            borderColor: colors.border,
+                            borderColor: colors.grey,
                         }}>
                             <Text style={{ ...styles.dateLabel, color: colors.text }}>
                                 {finishDate ? new Date(finishDate).toLocaleDateString() : today.toLocaleDateString()}
@@ -300,8 +305,8 @@ const styles = StyleSheet.create({
     },
     label: {
         fontFamily: 'Roboto-Medium',
-        fontSize: 18,
-        marginBottom: 4,
+        fontSize: 16,
+        marginBottom: 8,
     },
     textInput: {
         marginBottom: 18,

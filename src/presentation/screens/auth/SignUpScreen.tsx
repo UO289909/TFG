@@ -72,8 +72,8 @@ export const SignUpScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={{ ...styles.title, color: colors.text }}>Registrarse</Text>
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Nombre completo</Text>
         <CustomTextInput
+          label="Nombre completo"
           style={styles.input}
           placeholder="Nombre y apellidos"
           value={fullName}
@@ -81,8 +81,8 @@ export const SignUpScreen = () => {
           autoCapitalize="words"
         />
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Nickname</Text>
         <CustomTextInput
+          label="Nickname"
           style={styles.input}
           placeholder="Tu apodo"
           value={nickname}
@@ -90,8 +90,8 @@ export const SignUpScreen = () => {
           autoCapitalize="none"
         />
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Correo electrónico</Text>
         <CustomTextInput
+          label="Correo Electrónico"
           style={styles.input}
           placeholder="something@provider.com"
           value={email}
@@ -100,8 +100,8 @@ export const SignUpScreen = () => {
           autoCapitalize="none"
         />
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Contraseña</Text>
         <CustomTextInput
+          label="Contraseña"
           style={styles.input}
           placeholder="1234abcd"
           value={password}
@@ -109,8 +109,8 @@ export const SignUpScreen = () => {
           secureTextEntry={true}
         />
 
-        <Text style={{ ...styles.subtitle, color: colors.text }}>Repetir contraseña</Text>
         <CustomTextInput
+          label="Repetir contraseña"
           style={styles.input}
           placeholder="1234abcd"
           value={confirmPassword}

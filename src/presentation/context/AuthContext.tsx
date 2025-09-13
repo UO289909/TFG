@@ -1,6 +1,7 @@
 // src/presentation/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 interface AuthContextProps {
   currentUser: any;
@@ -26,6 +27,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentUser, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  GoogleSignin.configure({
+    scopes: [],
+    webClientId: '844618426591-u5cr6iksscb8uta6qlf67785evubdols.apps.googleusercontent.com',
+  });
+
   useEffect(() => {
     const checkSession = async () => {
       const { data: { user } } = await SupabaseClient.auth.getUser();
@@ -48,19 +54,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInWithGoogle = async () => {
-    setLoading(true);
-    const { data, error } = await SupabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: 'com.tfg://auth/callback',
-      },
-    });
-    if (error) {
-      console.log('Data', data);
-      setLoading(false);
-      throw error;
+    const userInfo = await GoogleSignin.signIn();
+    if (userInfo.data?.idToken) {
+      const { data, error } = await SupabaseClient.auth.signInWithIdToken({
+        provider: 'google',
+        token: userInfo.data.idToken,
+      });
+      if (error) {
+        console.log(error, data);
+        throw error;
+      }
     }
-    setLoading(false);
   };
 
   const signUp = async (email: string, password: string) => {

@@ -26,6 +26,7 @@ export const SignInScreen = () => {
     try {
       await signInWithGoogle();
     } catch (error) {
+      console.log(error);
       setNotifMessage('Error al iniciar sesión con Google.');
       setShowNotif(true);
     }

@@ -8,6 +8,7 @@ import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { RootStackParams } from '../../navigation/AuthStackNavigator';
+import { isValidEmail } from '../../../utils/isValidEmail';
 
 export const SignInScreen = () => {
 
@@ -18,21 +19,28 @@ export const SignInScreen = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [notifMessage, setNotifMessage] = useState('');
 
-  const { signIn, signInWithGoogle, loading } = useAuth();
+  const { signIn, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.log(error);
-      setNotifMessage('Error al iniciar sesión con Google.');
-      setShowNotif(true);
-    }
+    // try {
+    //   await signInWithGoogle();
+    // } catch (error) {
+    //   console.log(error);
+    //   setNotifMessage('Error al iniciar sesión con Google.');
+    //   setShowNotif(true);
+    // }
   };
 
   const handleSignIn = async () => {
+
+    if (!isValidEmail(email)) {
+      setNotifMessage('El correo electrónico no es válido');
+      setShowNotif(true);
+      return;
+    }
+
     try {
       await signIn(email, password);
     } catch (error) {
@@ -71,7 +79,7 @@ export const SignInScreen = () => {
           style={styles.input}
           placeholder="something@provider.com"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={text => setEmail(text.replace(/\s/g, ''))}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -81,7 +89,7 @@ export const SignInScreen = () => {
           style={styles.input}
           placeholder="1234abcd"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={text => setPassword(text.replace(/\s/g, ''))}
           secureTextEntry={true}
         />
 
@@ -97,7 +105,6 @@ export const SignInScreen = () => {
 
         <GoogleAuthButton
           onPress={handleGoogleSignIn}
-          type="signIn"
         />
 
         <TouchableOpacity style={styles.forgotContainer} onPress={handleForgotPassword}>

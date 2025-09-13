@@ -5,11 +5,10 @@ import { CustomTheme } from '../../../config/app-theme';
 
 interface Props {
     onPress: () => void;
-    type: 'signIn' | 'signUp';
     disabled?: boolean;
 }
 
-export const GoogleAuthButton = ({ onPress, type, disabled = false }: Props) => {
+export const GoogleAuthButton = ({ onPress, disabled = false }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -35,7 +34,7 @@ export const GoogleAuthButton = ({ onPress, type, disabled = false }: Props) => 
                 style={styles.icon}
             />
             <Text style={{ ...styles.text, color: colors.text }}>
-                {type === 'signIn' ? 'Iniciar sesión con Google' : 'Registrarse con Google'}
+                Entrar con Google
             </Text>
 
         </Pressable>

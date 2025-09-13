@@ -1,14 +1,15 @@
 // src/presentation/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { checkNicknameExists } from '../../core/use-cases/auth/check-nickname-exists.use-case';
+import { AuthWeakPasswordError } from '@supabase/supabase-js';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 interface AuthContextProps {
   currentUser: any;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -16,7 +17,6 @@ const AuthContext = createContext<AuthContextProps>({
   currentUser: null,
   loading: true,
   signIn: async () => { },
-  signInWithGoogle: async () => { },
   signUp: async () => { },
   signOut: async () => { },
 });
@@ -27,10 +27,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentUser, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  GoogleSignin.configure({
-    scopes: [],
-    webClientId: '844618426591-u5cr6iksscb8uta6qlf67785evubdols.apps.googleusercontent.com',
-  });
+  // GoogleSignin.configure({
+  //   scopes: [],
+  //   webClientId: '844618426591-tjrv5acfqjcj69hr8fqnu9lt793t8bm5.apps.googleusercontent.com',
+  // });
 
   useEffect(() => {
     const checkSession = async () => {
@@ -53,30 +53,63 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   };
 
-  const signInWithGoogle = async () => {
-    const userInfo = await GoogleSignin.signIn();
-    if (userInfo.data?.idToken) {
-      const { data, error } = await SupabaseClient.auth.signInWithIdToken({
-        provider: 'google',
-        token: userInfo.data.idToken,
+  // const signInWithGoogle = async () => {
+  //   const userInfo = await GoogleSignin.signIn();
+  //   console.log(userInfo);
+  //   if (userInfo.data?.idToken) {
+  //     const { data, error } = await SupabaseClient.auth.signInWithIdToken({
+  //       provider: 'google',
+  //       token: userInfo.data.idToken,
+  //     });
+  //     if (error) {
+  //       console.log(error, data);
+  //       throw error;
+  //     }
+  //   }
+  // };
+
+  const signUp = async (email: string, password: string, full_name: string, nickname: string) => {
+    setLoading(true);
+    try {
+      await checkNicknameExists(nickname);
+      const { data, error } = await SupabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { nickname, full_name },
+        },
       });
       if (error) {
-        console.log(error, data);
+        setLoading(false);
         throw error;
       }
+      setUser(data.user);
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof AuthWeakPasswordError) {
+        throw new Error(
+          'La contraseña debe tener mínimo 6 caracteres, incluyendo minúsculas, mayúsculas, números y símbolos'
+        );
+      }
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string) => {
-    setLoading(true);
-    const { data, error } = await SupabaseClient.auth.signUp({ email, password });
-    if (error) {
-      setLoading(false);
-      throw error;
-    }
-    setUser(data.user);
-    setLoading(false);
-  };
+  // const signUpWithGoogle = async () => {
+  //   const userInfo = await GoogleSignin.signIn();
+  //   if (userInfo.data?.idToken) {
+  //     const { data, error } = await SupabaseClient.auth.signUp({
+  //       provider: 'google',
+  //       token: userInfo.data.idToken,
+  //     });
+  //     if (error) {
+  //       console.log(error, data);
+  //       throw error;
+  //     }
+  //   }
+  // };
 
   const signOut = async () => {
     setLoading(true);
@@ -86,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signInWithGoogle, signUp, signOut }}>
+    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );

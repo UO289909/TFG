@@ -67,3 +67,22 @@ export const signIn = async (email: string, password: string) => {
 
     return { user: data.user, session: data.session };
 };
+
+/**
+ * Check if a nickname exists in the database
+ * @param nickname The nickname to check
+ * @returns True if the nickname exists, false otherwise
+ */
+export const databaseCheckNicknameExists = async (nickname: string): Promise<boolean> => {
+
+    const { data, error } = await SupabaseClient
+        .from('users')
+        .select()
+        .eq('nickname', nickname);
+
+    if (error) {
+        throw error;
+    }
+
+    return data.length > 0;
+};

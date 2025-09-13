@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { User } from '../../core/entities/user.entity';
-import { signIn } from '../../infrastructure/database/auth.repository';
 import { changeUserAvatar } from '../../core/use-cases/user/change-user-avatar.use-case';
 import { getFriendRequests } from '../../core/use-cases/user/get-friend-requests.use-case';
 import { Friend } from '../../core/entities/friend.entity';
@@ -19,8 +18,6 @@ export const useProfile = () => {
     const loadMyProfile = async () => {
 
         setIsLoading(true);
-
-        await signIn('dev@test.es', 'test');
 
         const userPromise = getUser();
         const friendRequestsPromise = getFriendRequests();

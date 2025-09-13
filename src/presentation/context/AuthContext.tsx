@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const checkSession = async () => {
-      const user = await SupabaseClient.auth.getUser();
+      const { data: { user } } = await SupabaseClient.auth.getUser();
       setUser(user ?? null);
       setLoading(false);
     };
@@ -49,7 +49,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     setLoading(true);
-    const { data, error } = await SupabaseClient.auth.signInWithOAuth({ provider: 'google' });
+    const { data, error } = await SupabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'com.tfg://auth/callback',
+      },
+    });
     if (error) {
       console.log('Data', data);
       setLoading(false);

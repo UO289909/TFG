@@ -18,14 +18,17 @@ export const SignInScreen = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [notifMessage, setNotifMessage] = useState('');
 
-  const { signIn, loading } = useAuth();
+  const { signIn, signInWithGoogle, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Aquí iría la lógica de Google Sign-In con Supabase
   const handleGoogleSignIn = async () => {
-    // Implementa aquí la integración con Supabase y Google
-    // Ejemplo: await supabase.auth.signInWithOAuth({ provider: 'google' });
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      setNotifMessage('Error al iniciar sesión con Google.');
+      setShowNotif(true);
+    }
   };
 
   const handleSignIn = async () => {

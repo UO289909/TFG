@@ -22,12 +22,13 @@ export const App = () => {
           ? CustomDarkTheme
           : CustomLightTheme;
 
+  console.log('Current User in App.tsx:', currentUser);
+
   return (
     <NavigationContainer theme={theme}>
       {currentUser
         ? <BottomTabsNavigator />
         : <AuthStackNavigator />}
-      {/* <BottomTabsNavigator /> */}
     </NavigationContainer>
   );
 };

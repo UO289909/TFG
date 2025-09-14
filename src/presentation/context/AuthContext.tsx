@@ -10,6 +10,7 @@ interface AuthContextProps {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
+  resetPassword: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextProps>({
   loading: true,
   signIn: async () => { },
   signUp: async () => { return false; },
+  resetPassword: async () => { },
   signOut: async () => { },
 });
 
@@ -124,6 +126,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   //   }
   // };
 
+  const resetPassword = async (email: string) => {
+    setLoading(true);
+    try {
+      const { error } = await SupabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: 'com.tfg://auth-callback',
+      });
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error al enviar el email de recuperación, revisa el correo e inténtalo de nuevo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     setLoading(true);
     await SupabaseClient.auth.signOut();
@@ -132,7 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, signOut }}>
       {children}
     </AuthContext.Provider>
   );

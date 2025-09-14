@@ -29,7 +29,7 @@ export const ProfileScreen = () => {
     changeAvatar,
   } = useProfile();
 
-  const { signOut, loading } = useAuth();
+  const { signOut, sendNonceCode, loading } = useAuth();
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
@@ -62,6 +62,16 @@ export const ProfileScreen = () => {
 
   const handleFriendRequests = () => {
     navigation.navigate('FriendRequests');
+  };
+
+  const handleChangePassword = async () => {
+    try {
+    await sendNonceCode();
+    } catch (error: any) {
+      navigation.navigate('PasswordChange', { alreadySentCode: true, notifPosition: 'bottom' });
+      return;
+    }
+    navigation.navigate('PasswordChange', { alreadySentCode: false, notifPosition: 'bottom' });
   };
 
   const handleSignOut = async () => {
@@ -109,7 +119,7 @@ export const ProfileScreen = () => {
   );
 
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <FullScreenLoader />;
   }
 
@@ -159,7 +169,7 @@ export const ProfileScreen = () => {
           label="Amigos"
           icon="people"
           style={styles.button}
-          disabled={isLoadingFriendRequests}
+          disabled={loading || isLoadingFriendRequests}
         />
 
         <CustomMenuButton
@@ -167,7 +177,7 @@ export const ProfileScreen = () => {
           label="Buscar usuarios"
           icon="search"
           style={styles.button}
-          disabled={isLoadingFriendRequests}
+          disabled={loading || isLoadingFriendRequests}
         />
 
         <CustomMenuButton
@@ -175,7 +185,7 @@ export const ProfileScreen = () => {
           label="Solicitudes de amistad"
           icon="person-add"
           style={[styles.button, styles.bottomButton]}
-          disabled={isLoadingFriendRequests}
+          disabled={loading || isLoadingFriendRequests}
         />
 
         <Text style={{ ...styles.title, color: colors.text }}>Ajustes</Text>
@@ -185,7 +195,7 @@ export const ProfileScreen = () => {
           label="Cambiar foto de avatar"
           icon="images"
           style={styles.button}
-          disabled={changingAvatar || isLoadingProfile}
+          disabled={loading || changingAvatar || isLoadingProfile}
         />
 
         <CustomMenuButton
@@ -193,7 +203,15 @@ export const ProfileScreen = () => {
           label="Cambiar esquema de color"
           icon="contrast"
           style={styles.button}
-          disabled={showThemeSelector}
+          disabled={loading || showThemeSelector}
+        />
+
+        <CustomMenuButton
+          onPress={handleChangePassword}
+          label="Cambiar contraseña"
+          icon="lock-open"
+          style={styles.button}
+          disabled={loading || showThemeSelector}
         />
 
         <CustomMenuButton
@@ -201,7 +219,7 @@ export const ProfileScreen = () => {
           label="Cerrar sesión"
           icon="log-out"
           style={styles.button}
-          disabled={loading || signingOut}
+          disabled={loading || signingOut || showThemeSelector}
         />
 
       </ScrollView>

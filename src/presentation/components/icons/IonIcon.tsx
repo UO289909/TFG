@@ -32,6 +32,8 @@ export type IonIconNames =
     | 'phone-portrait-outline'
     | 'log-out'
     | 'log-out-outline'
+    | 'lock-open'
+    | 'lock-open-outline'
     | 'search'
     | 'archive'
     | 'send'

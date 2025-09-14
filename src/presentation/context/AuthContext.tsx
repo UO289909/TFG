@@ -11,7 +11,8 @@ interface AuthContextProps {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
-  changePassword: (newPassword: string, nonce: string) => Promise<void>;
+  changePassword: (newPassword: string, nonce: string) => Promise<boolean>;
+  sendNonceCode: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -21,7 +22,8 @@ const AuthContext = createContext<AuthContextProps>({
   signIn: async () => { },
   signUp: async () => { return false; },
   resetPassword: async () => { },
-  changePassword: async () => { },
+  changePassword: async () => { return false; },
+  sendNonceCode: async () => { },
   signOut: async () => { },
 });
 
@@ -146,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const changePassword = async (newPassword: string, nonce: string) => {
+  const changePassword = async (newPassword: string, nonce: string): Promise<boolean> => {
     setLoading(true);
     try {
       const { data, error } = await SupabaseClient.auth.updateUser({
@@ -157,9 +159,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
       setUser(data.user);
+      return true;
     } catch (error) {
       console.log(error);
       throw new Error('Error al cambiar la contraseña, inténtalo de nuevo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendNonceCode = async () => {
+    setLoading(true);
+    try {
+      const { error } = await SupabaseClient.auth.reauthenticate();
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error al enviar el código de verificación, inténtalo de nuevo');
     } finally {
       setLoading(false);
     }
@@ -173,7 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, changePassword, signOut }}>
+    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, changePassword, sendNonceCode, signOut }}>
       {children}
     </AuthContext.Provider>
   );

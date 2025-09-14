@@ -9,7 +9,7 @@ export type RootStackParams = {
   SignIn: undefined;
   SignUp: undefined;
   PasswordReset: undefined;
-  PasswordChange: undefined;
+  PasswordChange: { alreadySentCode: boolean, notifPosition: 'top' | 'bottom' } | undefined;
 }
 
 const Tab = createMaterialTopTabNavigator();

@@ -1,11 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { navigation } from '../../../App';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 
 export const PasswordChangeScreen = () => {
+
+    const { params } = useRoute<RouteProp<RootStackParams>>();
+    const alreadySentCode = params?.alreadySentCode ?? false;
+    const notifPosition = params?.notifPosition ?? 'top';
 
     const [showNotif, setShowNotif] = useState(false);
     const [notifMessage, setNotifMessage] = useState('');
@@ -14,6 +22,13 @@ export const PasswordChangeScreen = () => {
     const [code, setCode] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    useEffect(() => {
+        if (alreadySentCode) {
+            setNotifMessage('Utiliza el código de verifiación que solicitaste hace menos de 1 minuto');
+            setShowNotif(true);
+        }
+    }, []);
 
     const handleChangePassword = async () => {
 
@@ -24,7 +39,10 @@ export const PasswordChangeScreen = () => {
         }
 
         try {
-            await changePassword(password, code);
+            const success = await changePassword(password, code);
+            if (success) {
+                navigation.goBack();
+            }
         } catch (error: any) {
             setNotifMessage(error.message);
             setShowNotif(true);
@@ -42,7 +60,7 @@ export const PasswordChangeScreen = () => {
                 <CustomNotification
                     message={notifMessage}
                     onClose={() => setShowNotif(false)}
-                    position="top"
+                    position={notifPosition}
                 />
             }
 

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { View, StyleSheet, ScrollView, RefreshControl, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, useWindowDimensions, Text } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
@@ -142,7 +142,7 @@ export const ProfileScreen = () => {
         nickname={myProfile!.nickname}
         name={myProfile!.full_name}
         avatarUrl={myProfile!.avatarUrl}
-        style={styles.profileHeader}
+        style={isLandscape ? styles.profileHeaderLandscape : styles.profileHeader}
         loadingAvatar={isLoadingProfile}
         landscape={isLandscape}
       />
@@ -152,13 +152,7 @@ export const ProfileScreen = () => {
         refreshControl={refreshControl}
       >
 
-        <CustomMenuButton
-          onPress={handleChangeAvatar}
-          label="Cambiar foto de avatar"
-          icon="images"
-          style={styles.button}
-          disabled={changingAvatar || isLoadingProfile}
-        />
+        <Text style={{ ...styles.title, color: colors.text }}>Social</Text>
 
         <CustomMenuButton
           onPress={handleFriends}
@@ -180,8 +174,18 @@ export const ProfileScreen = () => {
           onPress={handleFriendRequests}
           label="Solicitudes de amistad"
           icon="person-add"
-          style={styles.button}
+          style={[styles.button, styles.bottomButton]}
           disabled={isLoadingFriendRequests}
+        />
+
+        <Text style={{ ...styles.title, color: colors.text }}>Ajustes</Text>
+
+        <CustomMenuButton
+          onPress={handleChangeAvatar}
+          label="Cambiar foto de avatar"
+          icon="images"
+          style={styles.button}
+          disabled={changingAvatar || isLoadingProfile}
         />
 
         <CustomMenuButton
@@ -223,8 +227,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 36,
   },
   profileHeader: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    marginBottom: 0,
+  },
+  profileHeaderLandscape: {
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontFamily: 'Roboto-Italic',
     marginBottom: 10,
   },
   avatar: {
@@ -236,5 +246,8 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
+  },
+  bottomButton: {
+    marginBottom: 20,
   },
 });

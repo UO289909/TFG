@@ -211,7 +211,7 @@ export const ProfileScreen = () => {
           label="Cambiar contraseña"
           icon="lock-open"
           style={styles.button}
-          disabled={loading || showThemeSelector}
+          disabled={loading}
         />
 
         <CustomMenuButton
@@ -219,7 +219,7 @@ export const ProfileScreen = () => {
           label="Cerrar sesión"
           icon="log-out"
           style={styles.button}
-          disabled={loading || signingOut || showThemeSelector}
+          disabled={loading || signingOut}
         />
 
       </ScrollView>

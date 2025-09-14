@@ -51,7 +51,7 @@ export const PasswordResetScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
         <CustomTextInput
-          label="Correo Electrónico"
+          label="Correo electrónico"
           style={styles.input}
           placeholder="something@provider.com"
           value={email}

@@ -3,11 +3,13 @@ import { SignInScreen, SignUpScreen, PasswordResetScreen } from '../screens/auth
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
+import { PasswordChangeScreen } from '../screens/auth/PasswordChangeScreen';
 
 export type RootStackParams = {
   SignIn: undefined;
   SignUp: undefined;
   PasswordReset: undefined;
+  PasswordChange: undefined;
 }
 
 const Tab = createMaterialTopTabNavigator();
@@ -48,6 +50,7 @@ export const AuthStackNavigator = () => {
     >
       <Stack.Screen name="AuthTabs" component={AuthTabs} options={{ title: 'Bookshelf' }} />
       <Stack.Screen name="PasswordReset" component={PasswordResetScreen} options={{ title: 'Recuperar contraseña' }} />
+      <Stack.Screen name="PasswordChange" component={PasswordChangeScreen} options={{ title: 'Cambiar contraseña' }} />
     </Stack.Navigator>
   );
 };

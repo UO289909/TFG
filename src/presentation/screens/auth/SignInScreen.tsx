@@ -73,7 +73,7 @@ export const SignInScreen = () => {
         <Text style={{ ...styles.title, color: colors.text }}>Iniciar Sesión</Text>
 
         <CustomTextInput
-          label="Correo Electrónico"
+          label="Correo electrónico"
           style={styles.input}
           placeholder="something@provider.com"
           value={email}
@@ -85,7 +85,7 @@ export const SignInScreen = () => {
         <CustomTextInput
           label="Contraseña"
           style={styles.input}
-          placeholder="1234abcd"
+          placeholder="abcD5*"
           value={password}
           onChangeText={text => setPassword(text.replace(/\s/g, ''))}
           secureTextEntry={true}

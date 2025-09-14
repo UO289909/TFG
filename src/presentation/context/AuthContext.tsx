@@ -11,6 +11,7 @@ interface AuthContextProps {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
+  changePassword: (newPassword: string, nonce: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextProps>({
   signIn: async () => { },
   signUp: async () => { return false; },
   resetPassword: async () => { },
+  changePassword: async () => { },
   signOut: async () => { },
 });
 
@@ -89,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         options: {
           data: { nickname, full_name },
+          emailRedirectTo: 'com.tfg://auth-callback/confirm',
         },
       });
       if (error) {
@@ -130,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const { error } = await SupabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: 'com.tfg://auth-callback',
+        redirectTo: 'com.tfg://auth-callback/reset',
       });
       if (error) {
         throw error;
@@ -138,6 +141,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.log(error);
       throw new Error('Error al enviar el email de recuperación, revisa el correo e inténtalo de nuevo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const changePassword = async (newPassword: string, nonce: string) => {
+    setLoading(true);
+    try {
+      const { data, error } = await SupabaseClient.auth.updateUser({
+        password: newPassword,
+        nonce: nonce,
+      });
+      if (error) {
+        throw error;
+      }
+      setUser(data.user);
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error al cambiar la contraseña, inténtalo de nuevo');
     } finally {
       setLoading(false);
     }
@@ -151,7 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, signOut }}>
+    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, changePassword, signOut }}>
       {children}
     </AuthContext.Provider>
   );

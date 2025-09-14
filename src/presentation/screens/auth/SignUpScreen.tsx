@@ -91,7 +91,7 @@ export const SignUpScreen = () => {
         />
 
         <CustomTextInput
-          label="Correo Electrónico"
+          label="Correo electrónico"
           style={styles.input}
           placeholder="something@provider.com"
           value={email}
@@ -103,7 +103,7 @@ export const SignUpScreen = () => {
         <CustomTextInput
           label="Contraseña"
           style={styles.input}
-          placeholder="1234abcd"
+          placeholder="abcD5*"
           value={password}
           onChangeText={text => setPassword(text.replace(/\s/g, ''))}
           secureTextEntry={true}
@@ -113,7 +113,7 @@ export const SignUpScreen = () => {
         <CustomTextInput
           label="Repetir contraseña"
           style={styles.input}
-          placeholder="1234abcd"
+          placeholder="abcD5*"
           value={confirmPassword}
           onChangeText={text => setConfirmPassword(text.replace(/\s/g, ''))}
           secureTextEntry={true}

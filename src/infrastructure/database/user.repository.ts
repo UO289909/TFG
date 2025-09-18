@@ -1,7 +1,6 @@
-import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
 import { Friend } from '../../core/entities/friend.entity';
 import { DatabaseFriend, DatabaseUser } from '../interfaces/supabase.responses';
-import { getUserId, getAccessToken, getCredentials } from './auth.repository';
+import { getUserId } from './auth.repository';
 import { SupabaseClient } from './supabaseClient';
 
 const AVATARS_BUCKET = 'avatars';
@@ -14,19 +13,21 @@ const AVATARS_BUCKET = 'avatars';
  */
 export const databaseGetUserInfo = async (id?: string): Promise<DatabaseUser> => {
 
-    const accessToken = await getAccessToken();
     const userId = id || await getUserId();
 
     try {
-        const data: DatabaseUser[] = await supabaseFetcher.get(
-            `/rest/v1/users?id=eq.${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
-        return data[0];
+
+        const { data, error } = await SupabaseClient
+            .from('users')
+            .select()
+            .eq('id', userId)
+            .single();
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
 
     } catch (error) {
         throw new Error(`Error fetching user info from database: ${error}`);
@@ -103,18 +104,20 @@ export const databaseCreateSignedAvatarUrl = async (
  */
 export const databaseSearchUsersByNickname = async (nickname: string): Promise<DatabaseUser[]> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
 
-        const data: DatabaseUser[] = await supabaseFetcher.get(
-            `/rest/v1/users?nickname=ilike.*${nickname}*&id=neq.${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+        const { data, error } = await SupabaseClient
+            .from('users')
+            .select()
+            .ilike('nickname', `%${nickname}%`)
+            .neq('id', userId);
+
+        if (error) {
+            throw error;
+        }
+
         return data;
 
     } catch (error) {
@@ -128,18 +131,19 @@ export const databaseSearchUsersByNickname = async (nickname: string): Promise<D
  */
 export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
 
-        const data: DatabaseFriend[] = await supabaseFetcher.get(
-            `/rest/v1/friends?or=(sender.eq.${userId},receiver.eq.${userId})`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+        const { data, error } = await SupabaseClient
+            .from('friends')
+            .select()
+            .or(`sender.eq.${userId}, receiver.eq.${userId}`);
+
+        if (error) {
+            throw error;
+        }
+
         return data;
 
     } catch (error) {
@@ -152,7 +156,7 @@ export const databaseGetFriendRequests = async (): Promise<DatabaseFriend[]> => 
  * @param friendRequest The friend request object.
  * @returns A promise that resolves to the user information of the friend, the type of request and if it's accepted.
  */
-export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<{user: DatabaseUser, request: 'sent' | 'received', accepted: boolean}> => {
+export const databaseGetFriendInfoByRequest = async (friendRequest: Friend): Promise<{ user: DatabaseUser, request: 'sent' | 'received', accepted: boolean }> => {
 
     const retreivedUserId = await getUserId();
     const id = friendRequest.sender === retreivedUserId ? friendRequest.receiver : friendRequest.sender;
@@ -192,17 +196,20 @@ export const databaseGetFriendAvatarByRequest = async (expiresInSeconds = 3600, 
  */
 export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.delete(
-            `/rest/v1/friends?or=(and(sender.eq.${userId},receiver.eq.${friendId}),and(sender.eq.${friendId},receiver.eq.${userId}))`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+
+        const { error } = await SupabaseClient
+            .from('friends')
+            .delete()
+            .or(`and(sender.eq.${userId},receiver.eq.${friendId}), and(sender.eq.${friendId},receiver.eq.${userId})`);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
 
     } catch (error) {
         throw new Error(`Error deleting friend from database: ${error}`);
@@ -215,22 +222,23 @@ export const databaseDeleteFriend = async (friendId: string): Promise<void> => {
  */
 export const databaseSendRequest = async (friendId: string): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.post(
-            '/rest/v1/friends',
-            {
+
+        const { error } = await SupabaseClient
+            .from('friends')
+            .insert({
                 sender: userId,
                 receiver: friendId,
                 accepted: false,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        return;
 
     } catch (error) {
         throw new Error(`Error sending friend request: ${error}`);
@@ -243,20 +251,21 @@ export const databaseSendRequest = async (friendId: string): Promise<void> => {
  */
 export const databaseAcceptRequest = async (friendId: string): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.patch(
-            `/rest/v1/friends?sender=eq.${friendId}&receiver=eq.${userId}`,
-            {
-                accepted: true,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+
+        const { error } = await SupabaseClient
+            .from('friends')
+            .update({ accepted: true })
+            .eq('sender', friendId)
+            .eq('receiver', userId);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
 
     } catch (error) {
         throw new Error(`Error accepting friend request: ${error}`);
@@ -269,17 +278,21 @@ export const databaseAcceptRequest = async (friendId: string): Promise<void> => 
  */
 export const databaseRejectRequest = async (friendId: string): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.delete(
-            `/rest/v1/friends?sender=eq.${friendId}&receiver=eq.${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            }
-        );
+
+        const { error } = await SupabaseClient
+            .from('friends')
+            .delete()
+            .eq('sender', friendId)
+            .eq('receiver', userId);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
 
     } catch (error) {
         throw new Error(`Error rejecting friend request: ${error}`);

@@ -1,7 +1,7 @@
-import { supabaseFetcher } from '../../config/adapters/supabase.adapter';
 import { Book } from '../../core/entities/book.entity';
 import { DatabaseBook, UserBook } from '../interfaces/supabase.responses';
-import { getAccessToken, getCredentials } from './auth.repository';
+import { getUserId } from './auth.repository';
+import { SupabaseClient } from './supabaseClient';
 
 /**
  * Fetches the books associated with the current user from the database.
@@ -11,14 +11,19 @@ import { getAccessToken, getCredentials } from './auth.repository';
  */
 export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+
+        const { data, error } = await SupabaseClient
+            .from('user_books')
+            .select()
+            .eq('user_id', userId);
+
+        if (error) {
+            throw error;
+        }
+
         return data;
 
     } catch (error) {
@@ -36,14 +41,19 @@ export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
  */
 export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+
+        const { data, error } = await SupabaseClient
+            .from('user_books')
+            .select()
+            .eq('user_id', userId)
+            .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
 
         return data.length > 0;
 
@@ -61,14 +71,17 @@ export const databaseCheckUserBookExists = async (isbn: string): Promise<boolean
  */
 export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBook> => {
 
-    const accessToken = await getAccessToken();
-
     try {
-        const data: DatabaseBook[] = await supabaseFetcher.get(`/rest/v1/books?isbn=eq.${isbn}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+
+        const { data, error } = await SupabaseClient
+            .from('books')
+            .select()
+            .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
+
         return data[0];
 
     } catch (error) {
@@ -85,14 +98,20 @@ export const databaseSearchBookByIsbn = async (isbn: string): Promise<DatabaseBo
  */
 export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBook> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        const data: UserBook[] = await supabaseFetcher.get(`/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+
+        const { data, error } = await SupabaseClient
+            .from('user_books')
+            .select()
+            .eq('user_id', userId)
+            .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
+
         return data[0];
 
     } catch (error) {
@@ -110,28 +129,25 @@ export const databaseSearchUserBookByIsbn = async (isbn: string): Promise<UserBo
  */
 export const databaseAddBook = async (book: Book): Promise<void> => {
 
-    const accessToken = await getAccessToken();
-
     try {
-        await supabaseFetcher.post(
-            '/rest/v1/books',
-            {
+
+        const { error } = await SupabaseClient
+            .from('books')
+            .insert({
                 'title': book.title,
                 'isbn': book.isbn,
                 'author': book.author,
                 'pages': Number(book.pages),
                 'cover_url': book.cover_url,
                 'release_year': Number(book.release_year),
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    Prefer: 'return=minimal',
-                },
             });
-        console.log('sale del post del addbook');
+
+        if (error) {
+            throw error;
+        }
+
         return;
+
     } catch (error) {
         throw new Error(`Error adding book to database: ${error}`);
     }
@@ -146,29 +162,27 @@ export const databaseAddBook = async (book: Book): Promise<void> => {
  */
 export const databaseAddUserBook = async (book: Book): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.post(
-            '/rest/v1/user_books',
-            {
+
+        const { error } = await SupabaseClient
+            .from('user_books')
+            .insert({
                 'user_id': userId,
                 'isbn': book.isbn,
                 'author': book.author,
                 'pages': Number(book.pages),
                 'cover_url': book.cover_url,
                 'release_year': Number(book.release_year),
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    Prefer: 'return=minimal',
-                },
-            }
-        );
-        console.log('Sale del add user book');
+            });
+
+        if (error) {
+            throw error;
+        }
+
         return;
+
     } catch (error) {
         throw new Error(`Error adding user book to database: ${error}`);
     }
@@ -184,24 +198,26 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
  */
 export const databaseRateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.patch(
-            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
-            {
+
+        const { error } = await SupabaseClient
+            .from('user_books')
+            .update({
                 rating,
                 start_date: startDate.toISOString().slice(0, 10),
                 finish_date: finishDate.toISOString().slice(0, 10),
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    Prefer: 'return=minimal',
-                },
-            }
-        );
+            })
+            .eq('user_id', userId)
+            .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
+
     } catch (error) {
         throw new Error(`Error rating user book: ${error}`);
     }
@@ -215,19 +231,22 @@ export const databaseRateUserBook = async (isbn: string, rating: number, startDa
  */
 export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     try {
-        await supabaseFetcher.delete(
-            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    Prefer: 'return=minimal',
-                },
-            }
-        );
+
+        const { error } = await SupabaseClient
+        .from('user_books')
+        .delete()
+        .eq('user_id', userId)
+        .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
+
     } catch (error) {
         throw new Error(`Error deleting user book: ${error}`);
     }
@@ -250,7 +269,7 @@ export const databaseEditUserBook = async (
     rating: number | null
 ): Promise<void> => {
 
-    const { accessToken, userId } = await getCredentials();
+    const userId = await getUserId();
 
     const updatedFields: Record<string, any> = {};
     if (author !== null) { updatedFields.author = author; }
@@ -262,19 +281,19 @@ export const databaseEditUserBook = async (
     if (rating !== null) { updatedFields.rating = rating; }
 
     try {
-        console.log('Updating user book with fields:', updatedFields);
-        await supabaseFetcher.patch(
-            `/rest/v1/user_books?user_id=eq.${userId}&isbn=eq.${isbn}`,
-            updatedFields,
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                    Prefer: 'return=minimal',
-                },
-            }
-        );
-        console.log('User book updated successfully');
+
+        const { error } = await SupabaseClient
+        .from('user_books')
+        .update(updatedFields)
+        .eq('user_id', userId)
+        .eq('isbn', isbn);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
+
     } catch (error) {
         throw new Error(`Error editing user book: ${error}`);
     }

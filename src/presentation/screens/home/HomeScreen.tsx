@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
-import { FriendBooks } from '../../components/home/FriendBooks';
 import { RootTabParams } from '../../navigation/BottomTabsNavigator';
 import { RootStackParams } from '../../navigation/HomeStackNavigator';
+import { CustomButton } from '../../components/pressables';
+import { useRecommendations } from '../../hooks/useRecomendations';
+import { RecommendationBox } from '../../components/recommendations/RecommendationsBox';
 
 export const HomeScreen = () => {
 
@@ -23,6 +25,7 @@ export const HomeScreen = () => {
 
   const { isLoading, myBooks, refetch } = useBooks();
 
+  const { recommendations, refetchRecommendations, loadingRecommendations } = useRecommendations();
 
   const [refreshing, setRefreshing] = useState(true);
   const [pagesThisMonth, setPagesThisMonth] = useState(0);
@@ -156,9 +159,23 @@ export const HomeScreen = () => {
 
       <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
-      <FriendBooks />
+      <CustomButton
+        title="Pedir 4 recomendaciones a la IA"
+        onPress={refetchRecommendations}
+        style={styles.button}
+        disabled={loadingRecommendations || recommendations.length > 0}
+      />
 
-      <FriendBooks />
+      {(loadingRecommendations || recommendations.length > 0) &&
+        <RecommendationBox
+          recommendations={recommendations}
+          loading={loadingRecommendations}
+        />
+      }
+
+      {/* <FriendBooks />
+
+      <FriendBooks /> */}
 
     </ScrollView>
 
@@ -193,5 +210,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontFamily: 'Roboto-Thin',
+  },
+  button: {
+    width: '95%',
   },
 });

@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, StyleProp, ViewStyle } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 
@@ -6,9 +6,10 @@ interface Props {
     onPress: () => void;
     title: string;
     disabled?: boolean;
+    style?: StyleProp<ViewStyle>;
 }
 
-export const CustomButton = ({ onPress, title, disabled = false }: Props) => {
+export const CustomButton = ({ onPress, title, disabled = false, style }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -26,6 +27,7 @@ export const CustomButton = ({ onPress, title, disabled = false }: Props) => {
                     elevation: pressed ? 2 : 4,
                     shadowColor: colors.shadow,
                 },
+                style,
             ]}
             disabled={disabled}
         >
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderRadius: 8,
+        borderRadius: 16,
         padding: 12,
         elevation: 2,
         marginTop: 16,

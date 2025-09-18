@@ -157,7 +157,7 @@ export const HomeScreen = () => {
         </>
       }
 
-      <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
+      <View style={{ ...styles.separator, shadowColor: colors.shadow, backgroundColor: colors.card }} />
 
       <CustomButton
         title="Pedir 4 recomendaciones a la IA"
@@ -194,11 +194,13 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
+    width: '100%',
     borderRadius: 1,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
+    marginTop: 16,
   },
   noStats: {
     width: '100%',

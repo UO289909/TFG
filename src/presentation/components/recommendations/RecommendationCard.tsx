@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         alignSelf: 'center',
         marginHorizontal: 6,
+        marginBottom: 6,
         padding: 12,
     },
     dataContainer: {

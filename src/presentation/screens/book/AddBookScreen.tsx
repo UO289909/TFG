@@ -106,6 +106,7 @@ export const AddBookScreen = () => {
       isbn: isbn,
       author: author,
       pages: pages,
+      actual_page: null,
       release_year: year,
       cover_url: cover,
       rating: null,
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 20,
+    paddingBottom: 84,
   },
   searchContainer: {
     flexDirection: 'row',

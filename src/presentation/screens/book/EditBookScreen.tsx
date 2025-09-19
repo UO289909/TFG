@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         padding: 20,
+        paddingBottom: 84,
     },
     titleText: {
         fontSize: 24,

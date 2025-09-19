@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
-    marginTop: 16,
+    marginTop: 10,
   },
   noStats: {
     width: '100%',

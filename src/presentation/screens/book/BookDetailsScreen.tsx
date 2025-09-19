@@ -7,6 +7,7 @@ import { CustomTheme } from '../../../config/app-theme';
 import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.use-case';
 import { useState } from 'react';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
+import { CustomButton } from '../../components/pressables';
 
 export const BookDetailsScreen = () => {
 
@@ -73,20 +74,25 @@ export const BookDetailsScreen = () => {
             : 'No has terminado este libro aún'}
         </Text>
 
+        <View style={styles.buttonsContainer}>
+          <CustomButton
+            title="Eliminar libro"
+            onPress={() => setShowNotif(true)}
+            style={{ ...styles.button, backgroundColor: colors.danger }}
+          />
+          <CustomButton
+            title="Editar libro"
+            onPress={handleEditBook}
+            style={styles.button}
+          />
+        </View>
+
       </ScrollView>
 
       <FloatingButton
-        onPress={() => setShowNotif(true)}
-        position={'bottom-left'}
-        icon="trash-outline"
-        color={colors.danger}
-        colorPressed={colors.dangerDark}
-      />
-
-      <FloatingButton
-        onPress={handleEditBook}
+        onPress={() => {}}
         position={'bottom-right'}
-        icon="pencil-outline"
+        icon="bookmark-outline"
         color={colors.primary}
         colorPressed={colors.primaryDark}
       />
@@ -106,10 +112,12 @@ const styles = StyleSheet.create({
   scrollContainer: {
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 84,
   },
   scrollContainerLandscape: {
     alignItems: 'flex-start',
     padding: 20,
+    paddingBottom: 84,
   },
   cover: {
     width: 200,
@@ -150,5 +158,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     marginTop: 5,
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-around',
+    marginTop: 4,
+  },
+  button: {
+    width: '45%',
   },
 });

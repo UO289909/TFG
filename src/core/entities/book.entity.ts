@@ -3,7 +3,7 @@ export interface Book {
     isbn: string;
     title: string;
     pages: string | null;
-    actual_page: string | null;
+    current_page: string | null;
     cover_url: string | null;
     release_year: string | null;
     author: string | null;

@@ -13,7 +13,7 @@ export class BookMapper {
             pages: response.number_of_pages !== null && response.number_of_pages !== undefined
                 ? response.number_of_pages.toString()
                 : null,
-            actual_page: null,
+            current_page: null,
             release_year: response.publish_date,
             cover_url: response.cover?.medium || null,
             rating: null,
@@ -29,7 +29,7 @@ export class BookMapper {
             title: databaseBook.title,
             author: databaseBook.author,
             pages: databaseBook.pages,
-            actual_page: null,
+            current_page: null,
             release_year: databaseBook.release_year,
             cover_url: databaseBook.cover_url || null,
             rating: null,

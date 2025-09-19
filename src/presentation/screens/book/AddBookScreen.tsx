@@ -106,7 +106,7 @@ export const AddBookScreen = () => {
       isbn: isbn,
       author: author,
       pages: pages,
-      actual_page: null,
+      current_page: null,
       release_year: year,
       cover_url: cover,
       rating: null,

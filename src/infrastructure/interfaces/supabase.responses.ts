@@ -4,7 +4,7 @@ export interface UserBook {
     isbn: string;
     rating: 1 | 2 | 3 | 4 | 5 | null;
     pages: number | string | null;
-    actual_page: number | string;
+    current_page: number | string;
     cover_url: string | null;
     release_year: number | null;
     created_at: string;

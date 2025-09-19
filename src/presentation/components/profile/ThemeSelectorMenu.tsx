@@ -1,6 +1,6 @@
 import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { useEffect, useRef } from 'react';
-import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
+import { CustomMenuButton } from '../pressables/CustomMenuButton';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { useThemeMode } from '../../context/ThemeContext';

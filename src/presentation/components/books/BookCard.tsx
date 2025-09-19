@@ -7,13 +7,14 @@ interface Props {
     title: string;
     author: string | null;
     pages: string | null;
+    current_page: string | null;
     rating: 1 | 2 | 3 | 4 | 5 | null;
     imageUrl: string | null;
     onPress: () => void;
     style?: StyleProp<any>;
 }
 
-export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, style }: Props) => {
+export const BookCard = ({ title, author, pages, current_page, rating, imageUrl, onPress, style }: Props) => {
     const default_cover = `https://placehold.co/160x256.webp?text=${title}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
@@ -40,7 +41,7 @@ export const BookCard = ({ title, author, pages, rating, imageUrl, onPress, styl
                 <View style={styles.infoContainer}>
                     <Text style={{...styles.titleText, color: colors.text}}>{title}</Text>
                     <Text style={{...styles.authorText, color: colors.secondaryText}}>{author}</Text>
-                    <Text style={{...styles.pagesText, color: colors.text}}>{pages} páginas</Text>
+                    <Text style={{...styles.pagesText, color: colors.text}}>{!rating && `${current_page} / `}{pages} páginas</Text>
                 </View>
                 <View style={styles.ratingContainer}>
                     {rating
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
     },
     pagesText: {
         fontSize: 14,
-        fontFamily: 'Roboto-Thin',
+        fontFamily: 'Roboto-Light',
         marginBottom: 10,
     },
     ratingText: {

@@ -27,7 +27,7 @@ export const getMyBooks = async (): Promise<Book[]> => {
                 isbn: userBook.isbn,
                 title: dbBook.title,
                 pages: userBook.pages !== null && userBook.pages !== '0' && userBook.pages !== 0 ? userBook.pages.toString() : dbBook.pages,
-                actual_page: userBook.actual_page.toString(),
+                current_page: userBook.current_page.toString(),
                 cover_url: userBook.cover_url !== null ? userBook.cover_url : dbBook.cover_url,
                 release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
                 author: userBook.author !== null ? userBook.author : dbBook.author,

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
-import { ThemeSelectorMenu } from './ThemeSelectorMenu';
+import { ThemeSelectorMenu } from '../../components/profile/ThemeSelectorMenu';
 import { useAuth } from '../../context/AuthContext';
 import { CustomNotification } from '../../components/feedback';
 

@@ -262,6 +262,7 @@ export const databaseEditUserBook = async (
     isbn: string,
     author: string | null,
     pages: number | null,
+    current_page: number | null,
     cover_url: string | null,
     release_year: number | null,
     start_date: string | null,
@@ -274,6 +275,7 @@ export const databaseEditUserBook = async (
     const updatedFields: Record<string, any> = {};
     if (author !== null) { updatedFields.author = author; }
     if (pages !== null) { updatedFields.pages = pages; }
+    if (current_page !== null) { updatedFields.current_page = current_page; }
     if (cover_url !== null) { updatedFields.cover_url = cover_url; }
     if (release_year !== null) { updatedFields.release_year = release_year; }
     if (start_date !== null) { updatedFields.start_date = start_date; }
@@ -298,4 +300,42 @@ export const databaseEditUserBook = async (
         throw new Error(`Error editing user book: ${error}`);
     }
 
+};
+
+/**
+ * Adds a reading log for a user and a book.
+ *
+ * @param isbn The ISBN of the book being read.
+ * @param date The date of the reading session.
+ * @param pages_read The number of pages read in the session.
+ */
+export const databaseAddReadingLog = async (
+    isbn: string,
+    date: string,
+    pages_read: number,
+): Promise<void> => {
+
+    const userId = await getUserId();
+
+    try {
+
+        const { error } = await SupabaseClient
+        .from('reading_logs')
+        .insert({
+            user_id: userId,
+            isbn,
+            pages_read,
+            reading_date: date,
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        return;
+
+    } catch (error) {
+        console.log(error);
+        throw new Error(`Error adding reading log: ${error}`);
+    }
 };

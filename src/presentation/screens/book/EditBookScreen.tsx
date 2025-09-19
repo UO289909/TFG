@@ -121,6 +121,7 @@ export const EditBookScreen = () => {
                 userBook.isbn,
                 fieldsEnabled.includes('author') ? author : null,
                 fieldsEnabled.includes('pages') ? Number(pages) : null,
+                null,
                 fieldsEnabled.includes('cover_url') ? cover : null,
                 fieldsEnabled.includes('release_year') ? Number(year) : null,
                 fieldsEnabled.includes('dates') ? new Date(startDate).toISOString() : null,
@@ -197,7 +198,7 @@ export const EditBookScreen = () => {
                     <CustomTextInput
                         label="Número de páginas:"
                         value={pages}
-                        onChangeText={setPages}
+                        onChangeText={text => setPages(text.replace(/[^0-9]/g, ''))}
                         keyboardType="numeric"
                         style={styles.textInput}
                     />
@@ -207,7 +208,7 @@ export const EditBookScreen = () => {
                     <CustomTextInput
                         label="Año de publicación:"
                         value={year}
-                        onChangeText={setYear}
+                        onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
                         keyboardType="numeric"
                         style={styles.textInput}
                     />
@@ -217,7 +218,7 @@ export const EditBookScreen = () => {
                     <CustomTextInput
                         label="URL de la portada (opcional):"
                         value={cover}
-                        onChangeText={setCover}
+                        onChangeText={text => setCover(text.replace(/\s/g, ''))}
                         style={styles.textInput}
                     />
                 }

@@ -8,6 +8,7 @@ import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.u
 import { useState } from 'react';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 import { CustomButton } from '../../components/pressables';
+import { ReadingLogMenu } from '../../components/inputs/ReadingLogMenu';
 
 export const BookDetailsScreen = () => {
 
@@ -21,6 +22,7 @@ export const BookDetailsScreen = () => {
   const isLandscape = width > height || width >= 768;
 
   const [showNotif, setShowNotif] = useState(false);
+  const [showReadLog, setShowReadLog] = useState(false);
 
   const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
 
@@ -45,6 +47,15 @@ export const BookDetailsScreen = () => {
   return (
     <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
+      {showReadLog &&
+        <ReadingLogMenu
+          isbn={book.isbn}
+          current_page={Number(book.current_page)}
+          total_pages={Number(book.pages)}
+          onClose={() => setShowReadLog(false)}
+        />
+      }
+
       {showNotif &&
         <CustomNotification
           message="Seguro que quieres eliminar este libro?"
@@ -64,7 +75,7 @@ export const BookDetailsScreen = () => {
         }
         <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
         <Text style={{ ...styles.authorText, color: colors.text }}>{book.author}</Text>
-        <Text style={{ ...styles.pagesText, color: colors.text }}>{book.pages} páginas</Text>
+        <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
         <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
         <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
@@ -74,7 +85,7 @@ export const BookDetailsScreen = () => {
             : 'No has terminado este libro aún'}
         </Text>
 
-        <View style={styles.buttonsContainer}>
+        <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
           <CustomButton
             title="Eliminar libro"
             onPress={() => setShowNotif(true)}
@@ -90,11 +101,16 @@ export const BookDetailsScreen = () => {
       </ScrollView>
 
       <FloatingButton
-        onPress={() => {}}
+        onPress={() => setShowReadLog(true)}
         position={'bottom-right'}
         icon="bookmark-outline"
         color={colors.primary}
         colorPressed={colors.primaryDark}
+        disabled={
+          book.rating !== null
+          && book.start_date !== null
+          && book.finish_date !== null
+        }
       />
 
     </View>
@@ -162,6 +178,12 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     width: '100%',
+    justifyContent: 'space-around',
+    marginTop: 4,
+  },
+  buttonsContainerLandscape: {
+    flexDirection: 'row',
+    width: '70%',
     justifyContent: 'space-around',
     marginTop: 4,
   },

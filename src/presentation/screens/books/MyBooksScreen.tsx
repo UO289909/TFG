@@ -91,6 +91,7 @@ export const MyBooksScreen = () => {
       title={item.title}
       author={item.author}
       pages={item.pages}
+      current_page={item.current_page}
       rating={item.rating}
       imageUrl={item.cover_url}
       style={isLandscape ? styles.bookCardLandscape : undefined}

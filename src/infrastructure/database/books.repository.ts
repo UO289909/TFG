@@ -6,19 +6,28 @@ import { SupabaseClient } from './supabaseClient';
 /**
  * Fetches the books associated with the current user from the database.
  *
- * @returns {Promise<UserBook[]>} A promise that resolves to the user's books data.
+ * @param {number} [limit] The maximum number of books to fetch.
+ * @param {number} [offset] The number of books to skip before starting to fetch.
+ * @returns {Promise<UserBook[]>} A promise that resolves to the user's books data in descending order.
  * @throws {Error} If there is an error fetching the data from the database.
  */
-export const databaseGetMyBooks = async (): Promise<UserBook[]> => {
+export const databaseGetMyBooks = async (limit?: number, offset?: number): Promise<UserBook[]> => {
 
     const userId = await getUserId();
 
+    let query = SupabaseClient
+        .from('user_books')
+        .select()
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+    if (typeof limit === 'number' && typeof offset === 'number') {
+        query = query.range(offset, offset + limit - 1);
+    }
+
     try {
 
-        const { data, error } = await SupabaseClient
-            .from('user_books')
-            .select()
-            .eq('user_id', userId);
+        const { data, error } = await query;
 
         if (error) {
             throw error;
@@ -236,10 +245,10 @@ export const databaseDeleteUserBook = async (isbn: string): Promise<void> => {
     try {
 
         const { error } = await SupabaseClient
-        .from('user_books')
-        .delete()
-        .eq('user_id', userId)
-        .eq('isbn', isbn);
+            .from('user_books')
+            .delete()
+            .eq('user_id', userId)
+            .eq('isbn', isbn);
 
         if (error) {
             throw error;
@@ -285,10 +294,10 @@ export const databaseEditUserBook = async (
     try {
 
         const { error } = await SupabaseClient
-        .from('user_books')
-        .update(updatedFields)
-        .eq('user_id', userId)
-        .eq('isbn', isbn);
+            .from('user_books')
+            .update(updatedFields)
+            .eq('user_id', userId)
+            .eq('isbn', isbn);
 
         if (error) {
             throw error;
@@ -320,13 +329,13 @@ export const databaseAddReadingLog = async (
     try {
 
         const { error } = await SupabaseClient
-        .from('reading_logs')
-        .insert({
-            user_id: userId,
-            isbn,
-            pages_read,
-            reading_date: date,
-        });
+            .from('reading_logs')
+            .insert({
+                user_id: userId,
+                isbn,
+                pages_read,
+                reading_date: date,
+            });
 
         if (error) {
             throw error;

@@ -186,7 +186,7 @@ export const MyBooksScreen = () => {
 
       }
 
-      {showScrollToTop &&
+      {showScrollToTop && !isScrollingToTop &&
         <FloatingButton
           onPress={handleScrollToTop}
           icon="arrow-up-outline"

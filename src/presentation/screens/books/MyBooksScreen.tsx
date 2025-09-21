@@ -8,7 +8,7 @@ import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
 import { CustomNotification } from '../../components/feedback';
 import { normalizeText } from '../../../utils/normalizeText';
@@ -33,6 +33,11 @@ export const MyBooksScreen = () => {
   const [notifMsg, setNotifMsg] = useState('');
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [isScrollingToTop, setIsScrollingToTop] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
+  const lastOffset = useRef(0);
 
   useEffect(() => {
     setFilteredBooks(myBooks);
@@ -83,6 +88,30 @@ export const MyBooksScreen = () => {
 
     setFilteredBooks(filtered);
 
+  };
+
+  const handleScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+
+    if (offsetY > 300 && offsetY < lastOffset.current) {
+      setShowScrollToTop(true);
+    } else {
+      setShowScrollToTop(false);
+    }
+
+    lastOffset.current = offsetY;
+  };
+
+  const handleScrollToTop = () => {
+    setIsScrollingToTop(true);
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
+
+  const handleMomentumScrollEnd = () => {
+    if (isScrollingToTop) {
+      setIsScrollingToTop(false);
+      setShowScrollToTop(false);
+    }
   };
 
   const renderBookCard = ({ item }: { item: Book }) => (
@@ -142,6 +171,7 @@ export const MyBooksScreen = () => {
       {filteredBooks.length > 0 && !refreshing && !isLoading &&
 
         <FlatList
+          ref={flatListRef}
           data={filteredBooks}
           key={isLandscape ? 'h' : 'v'}
           renderItem={renderBookCard}
@@ -149,8 +179,22 @@ export const MyBooksScreen = () => {
           numColumns={isLandscape ? 2 : 1}
           refreshControl={refreshControl}
           contentContainerStyle={styles.scrollContainer}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          onMomentumScrollEnd={handleMomentumScrollEnd}
         />
 
+      }
+
+      {showScrollToTop &&
+        <FloatingButton
+          onPress={handleScrollToTop}
+          icon="arrow-up-outline"
+          shape="round"
+          position="bottom-center"
+          color={colors.primary}
+          colorPressed={colors.primaryDark}
+        />
       }
 
       <FloatingButton

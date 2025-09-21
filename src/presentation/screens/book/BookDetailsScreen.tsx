@@ -48,6 +48,10 @@ export const BookDetailsScreen = () => {
     navigation.navigate('EditBook', { book });
   };
 
+  const handleReadingLogs = () => {
+    navigation.navigate('ReadingLogs');
+  };
+
 
   if (deletingBook) {
     return <FullScreenLoader message="Eliminando libro..." />;
@@ -93,16 +97,25 @@ export const BookDetailsScreen = () => {
         </Text>
 
         <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
+
           <CustomButton
-            title="Eliminar libro"
-            onPress={() => setShowNotif(true)}
-            style={{ ...styles.button, backgroundColor: colors.danger }}
+            title="Registros de lectura"
+            onPress={handleReadingLogs}
+            style={styles.largeButton}
           />
-          <CustomButton
-            title="Editar libro"
-            onPress={handleEditBook}
-            style={styles.button}
-          />
+
+          <View style={styles.buttonRow}>
+            <CustomButton
+              title="Eliminar libro"
+              onPress={() => setShowNotif(true)}
+              style={{ ...styles.button, backgroundColor: colors.danger }}
+            />
+            <CustomButton
+              title="Editar libro"
+              onPress={handleEditBook}
+              style={styles.button}
+            />
+          </View>
         </View>
 
       </ScrollView>
@@ -183,18 +196,28 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: '100%',
+    alignItems: 'center',
     justifyContent: 'space-around',
     marginTop: 4,
   },
   buttonsContainerLandscape: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     width: '70%',
+    alignItems: 'center',
     justifyContent: 'space-around',
     marginTop: 4,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
   button: {
     width: '45%',
+  },
+  largeButton: {
+    width: '95%',
   },
 });

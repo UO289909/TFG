@@ -50,19 +50,35 @@ export const HomeScreen = () => {
     const currentYear = now.getUTCFullYear();
 
     const readingLogs = await databaseGetReadingLogs();
-    const pagesReadThisMonth = readingLogs
-      .filter(log => {
+
+    const logsThisMonth = readingLogs.filter(log => {
       const logDate = new Date(log.reading_date);
       return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
-      })
-      .reduce((sum, log) => sum + (log.pages_read || 0), 0);
+    });
+
+    const logsByIsbn: { [isbn: string]: typeof readingLogs } = {};
+    logsThisMonth.forEach(log => {
+      if (!logsByIsbn[log.isbn]) {
+        logsByIsbn[log.isbn] = [];
+      }
+      logsByIsbn[log.isbn].push(log);
+    });
+
+    let pagesReadThisMonth = 0;
+    Object.values(logsByIsbn).forEach(logs => {
+      const sortedLogs = logs.sort((a, b) => new Date(a.reading_date).getTime() - new Date(b.reading_date).getTime());
+      const fromPage = sortedLogs[0].from_page ?? 0;
+      const toPage = sortedLogs[sortedLogs.length - 1].to_page ?? 0;
+      const diff = Math.max(0, toPage - fromPage);
+      pagesReadThisMonth += diff;
+    });
 
     const lastReadBook = myBooks
       .slice()
       .sort((a, b) => {
-      const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
-      const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
-      return bDate.getTime() - aDate.getTime();
+        const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
+        const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
+        return bDate.getTime() - aDate.getTime();
       })[0];
 
     setPagesThisMonth(pagesReadThisMonth);

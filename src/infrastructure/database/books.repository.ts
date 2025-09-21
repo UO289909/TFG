@@ -316,12 +316,15 @@ export const databaseEditUserBook = async (
  *
  * @param isbn The ISBN of the book being read.
  * @param date The date of the reading session.
- * @param pages_read The number of pages read in the session.
+ * @param from_page The page number where the reading session started.
+ * @param to_page The page number where the reading session ended.
+ * @throws {Error} If there is an error adding the reading log to the database.
  */
 export const databaseAddReadingLog = async (
     isbn: string,
-    date: string,
-    pages_read: number,
+    reading_date: string,
+    from_page: number,
+    to_page: number,
 ): Promise<void> => {
 
     const userId = await getUserId();
@@ -333,8 +336,9 @@ export const databaseAddReadingLog = async (
             .insert({
                 user_id: userId,
                 isbn,
-                pages_read,
-                reading_date: date,
+                from_page,
+                to_page,
+                reading_date,
             });
 
         if (error) {
@@ -345,6 +349,47 @@ export const databaseAddReadingLog = async (
 
     } catch (error) {
         throw new Error(`Error adding reading log: ${error}`);
+    }
+};
+
+/**
+ * Edits a reading log for a user and a book from a certain date.
+ *
+ * @param isbn The ISBN of the book being read.
+ * @param reading_date The date of the reading session.
+ * @param from_page The page number where the reading session started.
+ * @param to_page The page number where the reading session ended.
+ * @throws {Error} If there is an error adding the reading log to the database.
+ */
+export const databaseEditReadingLog = async (
+    isbn: string,
+    reading_date: string,
+    from_page: number | null,
+    to_page: number | null,
+): Promise<void> => {
+
+    const userId = await getUserId();
+
+    const updatedFields: Record<string, any> = {};
+    if (from_page !== null) { updatedFields.from_page = from_page; }
+    if (to_page !== null) { updatedFields.to_page = to_page; }
+
+    try {
+
+        const { error } = await SupabaseClient
+            .from('reading_logs')
+            .update(updatedFields)
+            .eq('user_id', userId)
+            .eq('isbn', isbn)
+            .eq('reading_date', reading_date);
+
+        if (error) {
+            throw error;
+        }
+
+        return;
+    } catch (error) {
+        throw new Error(`Error editing reading log: ${error}`);
     }
 };
 
@@ -382,5 +427,34 @@ export const databaseGetReadingLogs = async (
 
     } catch (error) {
         throw new Error(`Error fetching reading logs from database: ${error}`);
+    }
+};
+
+/**
+ * Checks if a reading log for selected date already exists for a given book ISBN.
+ * @param isbn ISBN of the book to check.
+ * @returns True if a reading log exists for selected day, false otherwise.
+ */
+export const databaseAlreadyLogged = async (isbn: string, reading_date: string): Promise<boolean> => {
+
+    const userId = await getUserId();
+
+    try {
+
+        const { data, error } = await SupabaseClient
+            .from('reading_logs')
+            .select()
+            .eq('user_id', userId)
+            .eq('isbn', isbn)
+            .eq('reading_date', reading_date);
+
+        if (error) {
+            throw error;
+        }
+
+        return data.length > 0;
+
+    } catch (error) {
+        throw new Error(`Error checking existing reading log in database for selected date: ${error}`);
     }
 };

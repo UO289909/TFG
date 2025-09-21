@@ -1,4 +1,4 @@
-import { databaseAddReadingLog, databaseEditUserBook } from '../../../infrastructure/database/books.repository';
+import { databaseAddReadingLog, databaseAlreadyLogged, databaseEditReadingLog, databaseEditUserBook } from '../../../infrastructure/database/books.repository';
 
 /**
  * Adds a reading log entry for a book.
@@ -11,12 +11,16 @@ import { databaseAddReadingLog, databaseEditUserBook } from '../../../infrastruc
 export const addReadingLog = async (isbn: string, current_page: string, new_page: string, date?: Date): Promise<void> => {
 
     const logDate = date?.toISOString().slice(0, 10) ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
-    const pageNum = Number(new_page) - Number(current_page);
 
-    const logPromise = databaseAddReadingLog(isbn, logDate, pageNum);
-    const updateCurrentPagePromise = databaseEditUserBook(isbn, null, null, Number(new_page), null, null, null, null, null);
+    const alreadyLogged = await databaseAlreadyLogged(isbn, logDate);
 
-    await Promise.all([logPromise, updateCurrentPagePromise]);
+    if (alreadyLogged) {
+        await databaseEditReadingLog(isbn, logDate, null, Number(new_page));
+    } else {
+        await databaseAddReadingLog(isbn, logDate, Number(current_page), Number(new_page));
+    }
+
+    await databaseEditUserBook(isbn, null, null, Number(new_page), null, null, null, null, null);
 
     return;
 

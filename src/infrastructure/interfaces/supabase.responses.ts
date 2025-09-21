@@ -41,7 +41,8 @@ export interface DatabaseReadingLog {
     id: number;
     user_id: string;
     isbn: string;
+    from_page: number;
+    to_page: number;
     reading_date: string;
-    pages_read: number;
     created_at: string;
 }

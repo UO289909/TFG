@@ -12,6 +12,7 @@ import { RootStackParams } from '../../navigation/HomeStackNavigator';
 import { CustomButton } from '../../components/pressables';
 import { useRecommendations } from '../../hooks/useRecomendations';
 import { RecommendationBox } from '../../components/recommendations/RecommendationsBox';
+import { databaseGetReadingLogs } from '../../../infrastructure/database/books.repository';
 
 export const HomeScreen = () => {
 
@@ -40,33 +41,28 @@ export const HomeScreen = () => {
     calculateStats();
   }, [myBooks]);
 
-  const calculateStats = () => {
+  const calculateStats = async () => {
 
     setRefreshing(true);
 
     const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+    const currentMonth = now.getUTCMonth();
+    const currentYear = now.getUTCFullYear();
 
-    const finishedReadingThisMonth = myBooks.filter(book => {
-      if (!book.finish_date) {
-      return false;
-      }
-      const finishedDate = new Date(book.finish_date);
-      return (
-      finishedDate.getMonth() === currentMonth &&
-      finishedDate.getFullYear() === currentYear
-      );
-    });
-
-    const pagesReadThisMonth = finishedReadingThisMonth.reduce((sum, book) => sum + (Number(book.pages) || 0), 0);
+    const readingLogs = await databaseGetReadingLogs();
+    const pagesReadThisMonth = readingLogs
+      .filter(log => {
+      const logDate = new Date(log.reading_date);
+      return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
+      })
+      .reduce((sum, log) => sum + (log.pages_read || 0), 0);
 
     const lastReadBook = myBooks
       .slice()
       .sort((a, b) => {
-        const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
-        const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
-        return bDate.getTime() - aDate.getTime();
+      const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
+      const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
+      return bDate.getTime() - aDate.getTime();
       })[0];
 
     setPagesThisMonth(pagesReadThisMonth);

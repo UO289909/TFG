@@ -36,3 +36,12 @@ export interface DatabaseFriend {
     accepted: boolean;
     created_at: string;
 }
+
+export interface DatabaseReadingLog {
+    id: number;
+    user_id: string;
+    isbn: string;
+    reading_date: string;
+    pages_read: number;
+    created_at: string;
+}

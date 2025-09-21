@@ -1,5 +1,5 @@
 import { Book } from '../../core/entities/book.entity';
-import { DatabaseBook, UserBook } from '../interfaces/supabase.responses';
+import { DatabaseBook, DatabaseReadingLog, UserBook } from '../interfaces/supabase.responses';
 import { getUserId } from './auth.repository';
 import { SupabaseClient } from './supabaseClient';
 
@@ -344,7 +344,43 @@ export const databaseAddReadingLog = async (
         return;
 
     } catch (error) {
-        console.log(error);
         throw new Error(`Error adding reading log: ${error}`);
+    }
+};
+
+/**
+ * Fetches reading logs from the database, optionally filtered by user and/or book ISBN.
+ * @param user ID of the user whose logs to fetch. If not provided, fetches logs for the current user.
+ * @param isbn ISBN of the book to filter logs by. If not provided, fetches logs for all books.
+ * @returns A list of reading logs matching the specified criteria.
+ */
+export const databaseGetReadingLogs = async (
+    user?: string,
+    isbn?: string,
+): Promise<DatabaseReadingLog[]> => {
+
+    const userId = user || await getUserId();
+
+    try {
+
+        const query = SupabaseClient
+            .from('reading_logs')
+            .select()
+            .eq('user_id', userId);
+
+        if (isbn) {
+            query.eq('isbn', isbn);
+        }
+
+        const { data, error } = await query.order('reading_date', { ascending: false });
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching reading logs from database: ${error}`);
     }
 };

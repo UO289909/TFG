@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
 import { CustomButton } from '../../components/pressables';
 import { ReadingLogMenu } from '../../components/inputs/ReadingLogMenu';
+import { FullScreenLoader } from '../../components/feedback';
 
 export const BookDetailsScreen = () => {
 
@@ -23,6 +24,7 @@ export const BookDetailsScreen = () => {
 
   const [showNotif, setShowNotif] = useState(false);
   const [showReadLog, setShowReadLog] = useState(false);
+  const [deletingBook, setDeletingBook] = useState(false);
 
   const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
 
@@ -31,7 +33,9 @@ export const BookDetailsScreen = () => {
   };
 
   const handleDeleteBook = async () => {
+    setDeletingBook(true);
     await deleteUserBook(book.isbn);
+    setDeletingBook(false);
     navigation.reset({
       index: 0,
       routes: [
@@ -44,14 +48,17 @@ export const BookDetailsScreen = () => {
     navigation.navigate('EditBook', { book });
   };
 
+
+  if (deletingBook) {
+    return <FullScreenLoader message="Eliminando libro..." />;
+  }
+
   return (
     <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
       {showReadLog &&
         <ReadingLogMenu
-          isbn={book.isbn}
-          current_page={Number(book.current_page)}
-          total_pages={Number(book.pages)}
+          book={book}
           onClose={() => setShowReadLog(false)}
         />
       }

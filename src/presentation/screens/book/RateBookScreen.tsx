@@ -8,6 +8,7 @@ import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
+import { addReadingLog } from '../../../core/use-cases/books/add-reading-log.use-case';
 
 
 export const RateBookScreen = () => {
@@ -43,12 +44,16 @@ export const RateBookScreen = () => {
             return;
         }
 
-        await rateUserBook(
+        const lastLogPromise = addReadingLog(book.isbn, book.current_page || '0', book.pages!);
+
+        const ratePromise = rateUserBook(
             book.isbn,
             currentRating,
             startDate,
             finishDate
         );
+
+        await Promise.all([lastLogPromise, ratePromise]);
 
         navigation.reset({
             index: 0,

@@ -102,16 +102,13 @@ export const BookDetailsScreen = () => {
 
         <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
 
-          <CustomButton
-            title="Registrar lectura diaria"
-            onPress={() => setShowReadLog(true)}
-            style={styles.largeButton}
-            disabled={
-              book.rating !== null
-              && book.start_date !== null
-              && book.finish_date !== null
-            }
-          />
+          {book.rating === null &&
+            <CustomButton
+              title="Registrar lectura diaria"
+              onPress={() => setShowReadLog(true)}
+              style={styles.largeButton}
+            />
+          }
 
           <View style={styles.buttonRow}>
             <CustomButton

@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { DateType } from 'react-native-ui-datepicker';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
-import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
 import { addReadingLog } from '../../../core/use-cases/books/add-reading-log.use-case';
 import { getReadingLogs } from '../../../core/use-cases/books/get-reading-logs.use-case';
+import { FullScreenLoader } from '../../components/feedback';
 
 
 export const RateBookScreen = () => {
@@ -24,57 +23,40 @@ export const RateBookScreen = () => {
 
     const today = new Date();
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-    const [finishDate, setFinishDate] = useState<Date | undefined>(today);
-    const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showFinishPicker, setShowFinishPicker] = useState(false);
+    const [startDatePages, setStartDatePages] = useState<number>();
+    const [finishDatePages, setFinishDatePages] = useState<number>();
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
     useEffect(() => {
         loadBookLogs();
     }, []);
 
-    const onChangeStart = (selectedDate?: DateType) => {
-        if (selectedDate) {
-            setStartDate(new Date(selectedDate.toString()));
-        }
-        setShowStartPicker(false);
-    };
-
-    const onChangeFinish = (selectedDate?: DateType) => {
-        if (selectedDate) {
-            setFinishDate(new Date(selectedDate.toString()));
-        }
-        setShowFinishPicker(false);
-    };
-
     const loadBookLogs = async () => {
-        const logs = await getReadingLogs(book.isbn);
-        if (logs.length === 1) {
-            setStartDate(new Date(logs[0].reading_date));
-            setFinishDate(new Date(logs[0].reading_date));
-            return;
-        } else if (logs.length > 1) {
+        const logs = await getReadingLogs(undefined, book.isbn);
+
+        if (logs.length === 0) {
+            setStartDate(today);
+        } else {
             setStartDate(new Date(logs[logs.length - 1].reading_date));
-            setFinishDate(new Date(logs[0].reading_date));
-            return;
+            setStartDatePages(logs[logs.length - 1].to_page);
+            setFinishDatePages(Number(book.pages) - logs[0].to_page);
         }
-        setStartDate(today);
-        setFinishDate(today);
+
         return;
     };
 
     const handleSubmit = async () => {
-        if (!startDate || !finishDate || currentRating === 0) {
+        if (!startDate || currentRating === 0) {
             return;
         }
 
-        const lastLogPromise = addReadingLog(book.isbn, book.current_page || '0', book.pages!);
+        const lastLogPromise = addReadingLog(book.isbn, book.current_page || '0', book.pages!, today);
 
         const ratePromise = rateUserBook(
             book.isbn,
             currentRating,
             startDate,
-            finishDate
+            today
         );
 
         await Promise.all([lastLogPromise, ratePromise]);
@@ -89,60 +71,51 @@ export const RateBookScreen = () => {
 
     const handleCancel = () => {
         setStartDate(undefined);
-        setFinishDate(undefined);
         setCurrentRating(0);
         navigation.goBack();
     };
 
+
+    if (!startDate) {
+        return (
+            <FullScreenLoader
+                message={`Valorar '${book.title}'...`}
+            />
+        );
+    }
+
     return (
         <View style={styles.container}>
 
-            {showStartPicker && (
-                <CustomDatePicker
-                    minDate={undefined}
-                    maxDate={finishDate}
-                    defaultDate={startDate || today}
-                    onChange={onChangeStart}
-                    onTouchOutside={() => setShowStartPicker(false)}
-                />
-            )}
-            {showFinishPicker && (
-                <CustomDatePicker
-                    minDate={startDate}
-                    maxDate={today}
-                    defaultDate={finishDate}
-                    onChange={onChangeFinish}
-                    onTouchOutside={() => setShowFinishPicker(false)}
-                />
-            )}
-
-            <Text style={{ ...styles.title, color: colors.text }}>Valorar "{book.title}"</Text>
+            <Text style={{ ...styles.title, color: colors.text }}>Valorar '{book.title}'</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-                <Text style={{ ...styles.label, color: colors.text }}>Fecha de inicio de lectura:</Text>
-                <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
-                    ...styles.dateInput,
-                    borderColor: colors.grey,
-                    backgroundColor: colors.field,
-                }}>
-                    <Text style={{ ...styles.dateLabel, color: colors.text }}>
-                        {startDate
-                            ? startDate.toLocaleDateString()
-                            : 'Selecciona la fecha de inicio'}
+                <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                    <Text style={{ ...styles.label, color: colors.text }}>
+                        Empezaste a leer el libro el día {startDate?.toLocaleDateString()}
                     </Text>
-                </TouchableOpacity>
+                    <Text style={{ ...styles.label, color: colors.text }}>
+                        Leiste {startDatePages} páginas ese día
+                    </Text>
+                </View>
 
-                <Text style={{ ...styles.label, color: colors.text }}>Fecha de fin de lectura:</Text>
-                <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
-                    ...styles.dateInput,
-                    borderColor: colors.grey,
-                    backgroundColor: colors.field,
-                }}>
-                    <Text style={{ ...styles.dateLabel, color: colors.text }}>
-                        {finishDate ? finishDate.toLocaleDateString() : today.toLocaleDateString()}
+                <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                    <Text style={{ ...styles.label, color: colors.text }}>
+                        Terminaste el libro hoy {today.toLocaleDateString()}
                     </Text>
-                </TouchableOpacity>
+                    <Text style={{ ...styles.label, color: colors.text }}>
+                        Hoy leíste {finishDatePages} páginas
+                    </Text>
+                </View>
+
+                {startDate === today &&
+                    <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                        <Text style={{ ...styles.label, color: colors.text }}>
+                            ¡Has terminado el libro en un solo día! ¡Impresionante!
+                        </Text>
+                    </View>
+                }
 
                 <Text style={{ ...styles.ratingLabel, color: colors.text }}>Valoración:</Text>
                 <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
@@ -154,7 +127,7 @@ export const RateBookScreen = () => {
                 position="bottom-right"
                 color={colors.primary}
                 colorPressed={colors.primaryDark}
-                disabled={!startDate || !finishDate || currentRating === 0}
+                disabled={!startDate || currentRating === 0}
             />
 
             <FloatingButton
@@ -176,18 +149,32 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 84,
     },
+    infoContainer: {
+        flexDirection: 'column',
+        width: '95%',
+        minHeight: 40,
+        borderRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        alignSelf: 'center',
+        alignItems: 'center',
+        marginBottom: 8,
+        padding: 12,
+        elevation: 4,
+    },
     title: {
         fontSize: 22,
         fontFamily: 'Roboto-Bold',
         marginBottom: 10,
         marginTop: 20,
-        marginLeft: 20,
+        textAlign: 'center',
     },
     label: {
         fontSize: 16,
-        fontFamily: 'Roboto-Medium',
-        marginTop: 16,
-        marginBottom: 8,
+        fontFamily: 'Roboto-Regular',
+        marginVertical: 4,
+        textAlign: 'left',
     },
     ratingLabel: {
         textAlign: 'center',

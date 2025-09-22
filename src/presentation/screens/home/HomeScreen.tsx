@@ -137,7 +137,7 @@ export const HomeScreen = () => {
         <>
           <View style={styles.statsRow}>
             <StatsCard
-              topLabel="Has leido aprox."
+              topLabel="Has leido"
               bottomLabel="páginas este mes"
               value={pagesThisMonth}
               type="small"

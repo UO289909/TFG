@@ -17,6 +17,8 @@ export const AddBookScreen = () => {
 
   const { colors } = useTheme() as CustomTheme;
 
+  const today = new Date();
+
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -139,7 +141,7 @@ export const AddBookScreen = () => {
         onSearch={handleSearchISBN}
       />
 
-      <View style={{...styles.separator, shadowColor: colors.shadow}} />
+      <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
@@ -172,6 +174,7 @@ export const AddBookScreen = () => {
           onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
           editable={fieldsEnabled.includes('year')}
           style={styles.textInput}
+          info={`No puedes leer libros del futuro (estamos en ${today.getFullYear()})`}
         />
         <CustomTextInput
           label="URL de la portada (opcional):"
@@ -193,7 +196,11 @@ export const AddBookScreen = () => {
         position="bottom-right"
         color={colors.primary}
         colorPressed={colors.primaryDark}
-        disabled={!isbn || !title || !author || !pages || !year}
+        disabled={
+          (!isbn || !title || !author || !pages || !year)
+          || year.length !== 4
+          || Number(year) > today.getFullYear()
+        }
       />
     </View>
   );

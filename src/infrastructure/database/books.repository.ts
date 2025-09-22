@@ -404,6 +404,9 @@ export const databaseGetReadingLogs = async (
     isbn?: string,
 ): Promise<DatabaseReadingLog[]> => {
 
+    console.log('User:', user);
+    console.log('ISBN:', isbn);
+
     const userId = user || await getUserId();
 
     try {

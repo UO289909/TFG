@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
-import { UserBook } from '../../../infrastructure/interfaces/supabase.responses';
+import { DatabaseReadingLog, UserBook } from '../../../infrastructure/interfaces/supabase.responses';
 import { getUserBookByIsbn } from '../../../core/use-cases/books/get-user-book-by-isbn.use-case';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
-import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
-import { DateType } from 'react-native-ui-datepicker';
 import { editUserBook } from '../../../core/use-cases/books/edit-user-book.use-case';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
+import { getReadingLogs } from '../../../core/use-cases/books/get-reading-logs.use-case';
+import { editReadingLog } from '../../../core/use-cases/books/edit-reading-log.use-case';
 
 export const EditBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
@@ -26,7 +26,8 @@ export const EditBookScreen = () => {
     const [notifMsg, setNotifMsg] = useState('');
 
     const [userBook, setUserBook] = useState<UserBook>();
-    const [isLoading, setIsLoading] = useState(true);
+    const [bookLogs, setBookLogs] = useState<DatabaseReadingLog[]>([]);
+    const today = new Date();
     const [fieldsEnabled, setFieldsEnabled] = useState<string[]>([]);
 
 
@@ -36,19 +37,11 @@ export const EditBookScreen = () => {
     const [cover, setCover] = useState('');
     const [rating, setRating] = useState(0);
 
-    const today = new Date();
-    const [startDate, setStartDate] = useState('');
-    const [finishDate, setFinishDate] = useState('');
-    const [showStartPicker, setShowStartPicker] = useState(false);
-    const [showFinishPicker, setShowFinishPicker] = useState(false);
 
     const fetchUserBook = async () => {
-        setIsLoading(true);
-
-        const fetchedBook = await getUserBookByIsbn(book.isbn);
+        const [fetchedBook, fetchedLogs] = await Promise.all([getUserBookByIsbn(book.isbn), getReadingLogs(undefined, book.isbn)]);
         setUserBook(fetchedBook);
-
-        setIsLoading(false);
+        setBookLogs(fetchedLogs);
     };
 
     useEffect(() => {
@@ -62,8 +55,6 @@ export const EditBookScreen = () => {
             setYear(userBook.release_year?.toString() ?? '');
             setCover(userBook.cover_url ?? '');
             setRating(Number(userBook.rating) || 0);
-            setStartDate(userBook.start_date ?? '');
-            setFinishDate(userBook.finish_date ?? '');
 
             if (userBook.author) {
                 setFieldsEnabled((prev) => [...prev, 'author']);
@@ -76,9 +67,6 @@ export const EditBookScreen = () => {
             }
             if (userBook.cover_url) {
                 setFieldsEnabled((prev) => [...prev, 'cover_url']);
-            }
-            if (userBook.start_date) {
-                setFieldsEnabled((prev) => [...prev, 'dates']);
             }
             if (userBook.rating) {
                 setFieldsEnabled((prev) => [...prev, 'rating']);
@@ -96,20 +84,6 @@ export const EditBookScreen = () => {
         setShowNotif(true);
     }, [fieldsEnabled]);
 
-    const onChangeStart = (selectedDate?: DateType) => {
-        if (selectedDate) {
-            setStartDate(selectedDate.toString());
-        }
-        setShowStartPicker(false);
-    };
-
-    const onChangeFinish = (selectedDate?: DateType) => {
-        if (selectedDate) {
-            setFinishDate(selectedDate.toString());
-        }
-        setShowFinishPicker(false);
-    };
-
     const handleGoBack = () => {
         navigation.goBack();
     };
@@ -117,15 +91,27 @@ export const EditBookScreen = () => {
     const handleEditBook = async () => {
 
         if (userBook) {
+
+            let currentPage = null;
+            if (fieldsEnabled.includes('pages')) {
+                if (book.rating !== null) {
+                    currentPage = Number(pages);
+                    await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
+                } else if (bookLogs.length > 0 && bookLogs[0].to_page > Number(pages)) {
+                    currentPage = Number(pages);
+                    await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
+                }
+            }
+
             await editUserBook(
                 userBook.isbn,
                 fieldsEnabled.includes('author') ? author : null,
                 fieldsEnabled.includes('pages') ? Number(pages) : null,
-                null,
+                currentPage,
                 fieldsEnabled.includes('cover_url') ? cover : null,
                 fieldsEnabled.includes('release_year') ? Number(year) : null,
-                fieldsEnabled.includes('dates') ? new Date(startDate).toISOString() : null,
-                fieldsEnabled.includes('dates') ? new Date(finishDate).toISOString() : null,
+                null,
+                null,
                 fieldsEnabled.includes('rating') ? rating : null,
             );
 
@@ -138,16 +124,14 @@ export const EditBookScreen = () => {
         }
     };
 
-    if (isLoading) {
-        return <FullScreenLoader />;
+    if (!userBook) {
+        return <FullScreenLoader message="Cargando información del libro..." />;
     }
 
     const isAnyEditableFieldEmpty =
         (fieldsEnabled.includes('author') && author.trim() === '') ||
         (fieldsEnabled.includes('pages') && pages.trim() === '') ||
         (fieldsEnabled.includes('release_year') && year.trim() === '') ||
-        (fieldsEnabled.includes('dates') && startDate.trim() === '') ||
-        (fieldsEnabled.includes('dates') && finishDate.trim() === '') ||
         (fieldsEnabled.includes('rating') && (rating === 0 || rating === null));
 
     return (
@@ -161,26 +145,11 @@ export const EditBookScreen = () => {
                 />
             }
 
-            {showStartPicker && (
-                <CustomDatePicker
-                    minDate={undefined}
-                    maxDate={new Date(finishDate ? new Date(finishDate) : '')}
-                    defaultDate={startDate ? new Date(startDate) : today}
-                    onChange={onChangeStart}
-                    onTouchOutside={() => setShowStartPicker(false)}
-                />
-            )}
-            {showFinishPicker && (
-                <CustomDatePicker
-                    minDate={startDate ? new Date(startDate) : undefined}
-                    maxDate={today}
-                    defaultDate={finishDate ? new Date(finishDate) : today}
-                    onChange={onChangeFinish}
-                    onTouchOutside={() => setShowFinishPicker(false)}
-                />
-            )}
+            <Text style={{ ...styles.titleText, color: colors.text }}>Editar '{book.title}'</Text>
 
-            <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
+            {fieldsEnabled.length === 0 &&
+                <Text style={styles.subtitleText}>No hay información modificable por el usuario</Text>
+            }
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
@@ -201,6 +170,12 @@ export const EditBookScreen = () => {
                         onChangeText={text => setPages(text.replace(/[^0-9]/g, ''))}
                         keyboardType="numeric"
                         style={styles.textInput}
+                        info={bookLogs.length > 1
+                            ? book.rating === null
+                                ? `No puedes indicar un número menor al que indica tu último registro de lectura (${bookLogs[0].to_page})`
+                                : `No puedes indicar un número menor al que indica tu penúltimo registro de lectura (${bookLogs[1].to_page})`
+                            : 'No pudedes indicar un número menor al que indica tu último registro de lectura si lo hubiera'
+                        }
                     />
                 }
 
@@ -211,6 +186,7 @@ export const EditBookScreen = () => {
                         onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
                         keyboardType="numeric"
                         style={styles.textInput}
+                        info={`No puedes leer libros del futuro (estamos en ${today.getFullYear()})`}
                     />
                 }
 
@@ -221,34 +197,6 @@ export const EditBookScreen = () => {
                         onChangeText={text => setCover(text.replace(/\s/g, ''))}
                         style={styles.textInput}
                     />
-                }
-
-                {fieldsEnabled.includes('dates') &&
-                    <View>
-                        <Text style={{ ...styles.label, color: colors.text }}>Fecha de inicio de lectura:</Text>
-                        <TouchableOpacity onPress={() => setShowStartPicker(true)} style={{
-                            ...styles.dateInput,
-                            backgroundColor: colors.field,
-                            borderColor: colors.grey,
-                        }}>
-                            <Text style={{ ...styles.dateLabel, color: colors.text }}>
-                                {startDate
-                                    ? new Date(startDate).toLocaleDateString()
-                                    : 'Selecciona la fecha de inicio'}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <Text style={{ ...styles.label, color: colors.text }}>Fecha de fin de lectura:</Text>
-                        <TouchableOpacity onPress={() => setShowFinishPicker(true)} style={{
-                            ...styles.dateInput,
-                            backgroundColor: colors.field,
-                            borderColor: colors.grey,
-                        }}>
-                            <Text style={{ ...styles.dateLabel, color: colors.text }}>
-                                {finishDate ? new Date(finishDate).toLocaleDateString() : today.toLocaleDateString()}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
                 }
 
                 {fieldsEnabled.includes('rating') &&
@@ -262,6 +210,7 @@ export const EditBookScreen = () => {
                 }
 
             </ScrollView>
+
             <FloatingButton
                 onPress={handleGoBack}
                 icon="close-outline"
@@ -269,6 +218,7 @@ export const EditBookScreen = () => {
                 color={colors.danger}
                 colorPressed={colors.dangerDark}
             />
+
             <FloatingButton
                 onPress={handleEditBook}
                 icon="checkmark-outline"
@@ -277,9 +227,15 @@ export const EditBookScreen = () => {
                 colorPressed={colors.primaryDark}
                 disabled={
                     fieldsEnabled.length === 0 ||
-                    isAnyEditableFieldEmpty
+                    isAnyEditableFieldEmpty ||
+                    (fieldsEnabled.includes('pages') && pages === '0') ||
+                    (bookLogs.length > 1 && fieldsEnabled.includes('pages') && book.rating !== null && Number(pages) <= bookLogs[1].to_page) ||
+                    (bookLogs.length > 1 && fieldsEnabled.includes('pages') && book.rating === null && Number(pages) <= bookLogs[0].to_page) ||
+                    (bookLogs.length === 1 && fieldsEnabled.includes('pages') && Number(pages) <= bookLogs[0].to_page) ||
+                    (fieldsEnabled.includes('release_year') && (Number(year) > today.getFullYear() || year.length !== 4))
                 }
             />
+
         </View>
     );
 };
@@ -298,12 +254,13 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Bold',
         marginBottom: 10,
         marginTop: 20,
-        marginLeft: 20,
+        textAlign: 'center',
     },
     subtitleText: {
         fontSize: 16,
         fontFamily: 'Roboto-Italic',
         marginBottom: 24,
+        textAlign: 'center',
     },
     label: {
         fontFamily: 'Roboto-Medium',

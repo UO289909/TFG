@@ -21,7 +21,7 @@ export const BookCard = ({ title, author, pages, current_page, rating, imageUrl,
 
     return (
         <Pressable
-            style={({pressed}) => [
+            style={({ pressed }) => [
                 styles.cardContainer,
                 {
                     backgroundColor: pressed ? colors.cardPressed : colors.card,
@@ -33,20 +33,20 @@ export const BookCard = ({ title, author, pages, current_page, rating, imageUrl,
             onPress={onPress}
         >
             <Image
-                style={{...styles.image, backgroundColor: colors.background}}
+                style={{ ...styles.image, backgroundColor: colors.background, shadowColor: colors.shadow }}
                 source={{ uri: imageUrl || default_cover }}
                 resizeMode="cover"
             />
             <View style={styles.dataContainer}>
                 <View style={styles.infoContainer}>
-                    <Text style={{...styles.titleText, color: colors.text}}>{title}</Text>
-                    <Text style={{...styles.authorText, color: colors.secondaryText}}>{author}</Text>
-                    <Text style={{...styles.pagesText, color: colors.text}}>{!rating && `${current_page} / `}{pages} páginas</Text>
+                    <Text style={{ ...styles.titleText, color: colors.text }}>{title}</Text>
+                    <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{author}</Text>
+                    <Text style={{ ...styles.pagesText, color: colors.text }}>{!rating && `${current_page} / `}{pages} páginas</Text>
                 </View>
                 <View style={styles.ratingContainer}>
                     {rating
                         ? <FiveStarsInput value={rating} editable={false} size="small" onPress={() => { }} />
-                        : <Text style={{...styles.ratingText, color: colors.text}}>Lectura en curso</Text>
+                        : <Text style={{ ...styles.ratingText, color: colors.text }}>Lectura en curso</Text>
                     }
                 </View>
             </View>
@@ -73,6 +73,10 @@ const styles = StyleSheet.create({
         height: 128,
         borderRadius: 10,
         marginRight: 16,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
     },
     dataContainer: {
         flex: 1,

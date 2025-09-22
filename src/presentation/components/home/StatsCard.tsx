@@ -38,7 +38,7 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
         >
 
             {type === 'cover' &&
-                <Image source={{ uri: cover_url || default_cover }} style={styles.coverImage} />
+                <Image source={{ uri: cover_url || default_cover }} style={{ ...styles.coverImage, shadowColor: colors.shadow }} />
             }
 
             <View style={[
@@ -127,6 +127,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignSelf: 'flex-start',
         margin: 4,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
     },
     text: {
         fontSize: 24,

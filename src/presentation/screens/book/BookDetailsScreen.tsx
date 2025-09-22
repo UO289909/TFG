@@ -2,7 +2,6 @@ import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@r
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
-import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
 import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.use-case';
 import { useState } from 'react';
@@ -48,10 +47,6 @@ export const BookDetailsScreen = () => {
     navigation.navigate('EditBook', { book });
   };
 
-  const handleReadingLogs = () => {
-    navigation.navigate('ReadingLogs');
-  };
-
 
   if (deletingBook) {
     return <FullScreenLoader message="Eliminando libro..." />;
@@ -90,18 +85,23 @@ export const BookDetailsScreen = () => {
         <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
         <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
-        <Text style={{ ...styles.datesText, color: colors.text }}>
-          {book.rating !== null && book.start_date && book.finish_date
-            ? `Leido entre el ${new Date(book.start_date).toLocaleDateString()} y ${new Date(book.finish_date).toLocaleDateString()}`
-            : 'No has terminado este libro aún'}
-        </Text>
+        {book.rating !== null && book.start_date && book.finish_date &&
+          <Text style={{ ...styles.datesText, color: colors.text }}>
+            Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
+          </Text>
+        }
 
         <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
 
           <CustomButton
-            title="Registros de lectura"
-            onPress={handleReadingLogs}
+            title="Registrar lectura diaria"
+            onPress={() => setShowReadLog(true)}
             style={styles.largeButton}
+            disabled={
+              book.rating !== null
+              && book.start_date !== null
+              && book.finish_date !== null
+            }
           />
 
           <View style={styles.buttonRow}>
@@ -120,19 +120,6 @@ export const BookDetailsScreen = () => {
 
       </ScrollView>
 
-      <FloatingButton
-        onPress={() => setShowReadLog(true)}
-        position={'bottom-right'}
-        icon="bookmark-outline"
-        color={colors.primary}
-        colorPressed={colors.primaryDark}
-        disabled={
-          book.rating !== null
-          && book.start_date !== null
-          && book.finish_date !== null
-        }
-      />
-
     </View>
   );
 };
@@ -148,12 +135,10 @@ const styles = StyleSheet.create({
   scrollContainer: {
     alignItems: 'center',
     padding: 20,
-    paddingBottom: 84,
   },
   scrollContainerLandscape: {
     alignItems: 'flex-start',
     padding: 20,
-    paddingBottom: 84,
   },
   cover: {
     width: 200,
@@ -200,14 +185,14 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 4,
+    marginTop: 6,
   },
   buttonsContainerLandscape: {
     flexDirection: 'column',
     width: '70%',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 4,
+    marginTop: 6,
   },
   buttonRow: {
     flexDirection: 'row',

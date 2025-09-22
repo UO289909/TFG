@@ -72,24 +72,33 @@ export const BookDetailsScreen = () => {
       }
 
       {isLandscape &&
-        <Image source={{ uri: book.cover_url || default_cover }} style={styles.coverLandscape} />
+        <Image source={{ uri: book.cover_url || default_cover }} style={{ ...styles.coverLandscape, shadowColor: colors.shadow }} />
       }
 
       <ScrollView contentContainerStyle={isLandscape ? styles.scrollContainerLandscape : styles.scrollContainer}>
         {!isLandscape &&
-          <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+          <Image source={{ uri: book.cover_url || default_cover }} style={{ ...styles.cover, shadowColor: colors.shadow }} />
         }
-        <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
-        <Text style={{ ...styles.authorText, color: colors.text }}>{book.author}</Text>
-        <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
-        <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
-        <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
-        {book.rating !== null && book.start_date && book.finish_date &&
-          <Text style={{ ...styles.datesText, color: colors.text }}>
-            Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
-          </Text>
-        }
+        <View style={[
+          isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
+          {
+            backgroundColor: colors.card,
+            shadowColor: colors.shadow,
+          },
+        ]}>
+          <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
+          <Text style={{ ...styles.authorText, color: colors.text }}>{book.author}</Text>
+          <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
+          <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
+
+          <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
+          {book.rating !== null && book.start_date && book.finish_date &&
+            <Text style={{ ...styles.datesText, color: colors.text }}>
+              Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
+            </Text>
+          }
+        </View>
 
         <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
 
@@ -140,11 +149,38 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 20,
   },
+  infoContainer: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '100%',
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    alignSelf: 'center',
+    padding: 12,
+    elevation: 4,
+  },
+  infoContainerLandscape: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    width: '70%',
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    padding: 12,
+    elevation: 4,
+  },
   cover: {
     width: 200,
     height: 320,
-    borderRadius: 12,
-    marginBottom: 20,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
   coverLandscape: {
     width: undefined,
@@ -152,8 +188,12 @@ const styles = StyleSheet.create({
     aspectRatio: 0.625,
     marginVertical: 5,
     marginLeft: '20%',
-    borderRadius: 12,
+    borderRadius: 10,
     marginBottom: 20,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
   titleText: {
     fontSize: 30,

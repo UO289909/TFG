@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { DateType } from 'react-native-ui-datepicker';
@@ -9,11 +10,14 @@ import { CustomTheme } from '../../../config/app-theme';
 import { CustomDatePicker } from '../../components/inputs/CustomDatePicker';
 import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
 import { addReadingLog } from '../../../core/use-cases/books/add-reading-log.use-case';
+import { getReadingLogs } from '../../../core/use-cases/books/get-reading-logs.use-case';
 
 
 export const RateBookScreen = () => {
+
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { params } = useRoute<RouteProp<RootStackParams, 'RateBook'>>();
+
     const { book, rating } = params;
 
     const { colors } = useTheme() as CustomTheme;
@@ -24,6 +28,10 @@ export const RateBookScreen = () => {
     const [showStartPicker, setShowStartPicker] = useState(false);
     const [showFinishPicker, setShowFinishPicker] = useState(false);
     const [currentRating, setCurrentRating] = useState<number>(rating);
+
+    useEffect(() => {
+        loadBookLogs();
+    }, []);
 
     const onChangeStart = (selectedDate?: DateType) => {
         if (selectedDate) {
@@ -37,6 +45,22 @@ export const RateBookScreen = () => {
             setFinishDate(new Date(selectedDate.toString()));
         }
         setShowFinishPicker(false);
+    };
+
+    const loadBookLogs = async () => {
+        const logs = await getReadingLogs(book.isbn);
+        if (logs.length === 1) {
+            setStartDate(new Date(logs[0].reading_date));
+            setFinishDate(new Date(logs[0].reading_date));
+            return;
+        } else if (logs.length > 1) {
+            setStartDate(new Date(logs[logs.length - 1].reading_date));
+            setFinishDate(new Date(logs[0].reading_date));
+            return;
+        }
+        setStartDate(today);
+        setFinishDate(today);
+        return;
     };
 
     const handleSubmit = async () => {

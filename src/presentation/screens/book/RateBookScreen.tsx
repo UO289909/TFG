@@ -24,6 +24,7 @@ export const RateBookScreen = () => {
     const today = new Date();
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
     const [startDatePages, setStartDatePages] = useState<number>();
+    const [daysRead, setDaysRead] = useState<number>(0);
     const [finishDatePages, setFinishDatePages] = useState<number>();
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
@@ -36,10 +37,13 @@ export const RateBookScreen = () => {
 
         if (logs.length === 0) {
             setStartDate(today);
+            setStartDatePages(Number(book.pages));
+            setFinishDatePages(Number(book.pages));
         } else {
             setStartDate(new Date(logs[logs.length - 1].reading_date));
             setStartDatePages(logs[logs.length - 1].to_page);
             setFinishDatePages(Number(book.pages) - logs[0].to_page);
+            setDaysRead(logs.length + 1);
         }
 
         return;
@@ -77,11 +81,7 @@ export const RateBookScreen = () => {
 
 
     if (!startDate) {
-        return (
-            <FullScreenLoader
-                message={`Valorar '${book.title}'...`}
-            />
-        );
+        return <FullScreenLoader message="Cargando información del libro..." />;
     }
 
     return (
@@ -91,25 +91,32 @@ export const RateBookScreen = () => {
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
-                <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
-                    <Text style={{ ...styles.label, color: colors.text }}>
-                        Empezaste a leer el libro el día {startDate?.toLocaleDateString()}
-                    </Text>
-                    <Text style={{ ...styles.label, color: colors.text }}>
-                        Leiste {startDatePages} páginas ese día
-                    </Text>
-                </View>
+                {startDate.toDateString() !== today.toDateString() &&
+                    <>
+                        <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                            <Text style={{ ...styles.label, color: colors.text }}>
+                                Empezaste a leer el libro el día {startDate?.toLocaleDateString()}
+                            </Text>
+                            <Text style={{ ...styles.label, color: colors.text }}>
+                                Leiste {startDatePages} páginas ese día
+                            </Text>
+                        </View>
+
+                        <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                            <Text style={{ ...styles.label, color: colors.text }}>
+                                Has leido este libro un total de {daysRead} días
+                            </Text>
+                        </View>
+                    </>
+                }
 
                 <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
                     <Text style={{ ...styles.label, color: colors.text }}>
-                        Terminaste el libro hoy {today.toLocaleDateString()}
-                    </Text>
-                    <Text style={{ ...styles.label, color: colors.text }}>
-                        Hoy leíste {finishDatePages} páginas
+                        Terminaste el libro hoy leyendo {finishDatePages} páginas
                     </Text>
                 </View>
 
-                {startDate === today &&
+                {startDate.toDateString() === today.toDateString() &&
                     <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
                         <Text style={{ ...styles.label, color: colors.text }}>
                             ¡Has terminado el libro en un solo día! ¡Impresionante!
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Roboto-Regular',
         marginVertical: 4,
-        textAlign: 'left',
+        textAlign: 'center',
     },
     ratingLabel: {
         textAlign: 'center',

@@ -1,14 +1,14 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { HomeScreen } from '../screens/home';
+import { HomeScreen, ResumeBookDetailsScreen, MonthReadingLogs } from '../screens/home';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
-import { ResumeBookDetailsScreen } from '../screens/home/ResumeBookDetailsScreen';
 import { Book } from '../../core/entities/book.entity';
 
 
 export type RootStackParams = {
     HomeScreen: undefined;
     BookDetails: { book: Book };
+    MonthLogs: undefined;
 }
 
 const Stack = createNativeStackNavigator();
@@ -34,6 +34,7 @@ export const HomeStackNavigator = () => {
         >
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Inicio' }} />
             <Stack.Screen name="BookDetails" component={ResumeBookDetailsScreen} options={{ title: 'Detalles del libro' }} />
+            <Stack.Screen name="MonthLogs" component={MonthReadingLogs} options={{ title: 'Registros del mes' }} />
         </Stack.Navigator>
     );
 

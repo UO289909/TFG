@@ -33,6 +33,13 @@ export const HomeScreen = () => {
     refetchUserStats();
   }, []);
 
+  const handleGoToMonthLogs = () => {
+    if (pagesThisMonth === 0) {
+      return;
+    }
+    navigation.navigate('MonthLogs');
+  };
+
   const handleGoToMyBooks = () => {
     bottomTabsNavigation.navigate('MyBooks');
   };
@@ -86,6 +93,7 @@ export const HomeScreen = () => {
               value={pagesThisMonth}
               type="small"
               landscape={isLandscape}
+              onPress={handleGoToMonthLogs}
             />
 
             <StatsCard

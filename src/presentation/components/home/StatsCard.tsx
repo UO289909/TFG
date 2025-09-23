@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover_url, onPress }: Props) => {
-    const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
+    const default_cover = `https://placehold.co/160x256.webp?text=${value}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 

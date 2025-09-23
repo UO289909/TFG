@@ -1,18 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { StatsCard } from '../../components/home';
-import { useBooks } from '../../hooks/useBooks';
 import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
-import { Book } from '../../../core/entities/book.entity';
 import { RootTabParams } from '../../navigation/BottomTabsNavigator';
 import { RootStackParams } from '../../navigation/HomeStackNavigator';
 import { CustomButton } from '../../components/pressables';
 import { useRecommendations } from '../../hooks/useRecomendations';
 import { RecommendationBox } from '../../components/recommendations/RecommendationsBox';
-import { databaseGetReadingLogs } from '../../../infrastructure/database/books.repository';
+import { useStats } from '../../hooks/useStats';
 
 export const HomeScreen = () => {
 
@@ -24,70 +22,16 @@ export const HomeScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
-  const { isLoading, myBooks, refetch } = useBooks();
+  const { loadingUserStats, pagesThisMonth, lastBook, totalBooks, refetchUserStats } = useStats();
 
   const { recommendations, refetchRecommendations, loadingRecommendations } = useRecommendations();
 
-  const [refreshing, setRefreshing] = useState(true);
-  const [pagesThisMonth, setPagesThisMonth] = useState(0);
-  const [lastBook, setLastBook] = useState<Book>();
-  const [totalBooks, setTotalBooks] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
 
   useEffect(() => {
-    calculateStats();
+    refetchUserStats();
   }, []);
-
-  useEffect(() => {
-    calculateStats();
-  }, [myBooks]);
-
-  const calculateStats = async () => {
-
-    setRefreshing(true);
-
-    const now = new Date();
-    const currentMonth = now.getUTCMonth();
-    const currentYear = now.getUTCFullYear();
-
-    const readingLogs = await databaseGetReadingLogs();
-
-    const logsThisMonth = readingLogs.filter(log => {
-      const logDate = new Date(log.reading_date);
-      return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
-    });
-
-    const logsByIsbn: { [isbn: string]: typeof readingLogs } = {};
-    logsThisMonth.forEach(log => {
-      if (!logsByIsbn[log.isbn]) {
-        logsByIsbn[log.isbn] = [];
-      }
-      logsByIsbn[log.isbn].push(log);
-    });
-
-    let pagesReadThisMonth = 0;
-    Object.values(logsByIsbn).forEach(logs => {
-      const sortedLogs = logs.sort((a, b) => new Date(a.reading_date).getTime() - new Date(b.reading_date).getTime());
-      const fromPage = sortedLogs[0].from_page ?? 0;
-      const toPage = sortedLogs[sortedLogs.length - 1].to_page ?? 0;
-      const diff = Math.max(0, toPage - fromPage);
-      pagesReadThisMonth += diff;
-    });
-
-    const lastReadBook = myBooks
-      .slice()
-      .sort((a, b) => {
-        const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
-        const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
-        return bDate.getTime() - aDate.getTime();
-      })[0];
-
-    setPagesThisMonth(pagesReadThisMonth);
-    setLastBook(lastReadBook);
-    setTotalBooks(myBooks.length);
-
-    setRefreshing(false);
-
-  };
 
   const handleGoToMyBooks = () => {
     bottomTabsNavigation.navigate('MyBooks');
@@ -102,8 +46,7 @@ export const HomeScreen = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
-    await calculateStats();
+    await refetchUserStats();
     setRefreshing(false);
   };
 
@@ -116,7 +59,8 @@ export const HomeScreen = () => {
   );
 
 
-  if (isLoading || refreshing) {
+  if (loadingUserStats || refreshing) {
+    console.log('LoadingUserStats:', loadingUserStats, 'Refreshing:', refreshing);
     return <FullScreenLoader />;
   }
 
@@ -127,13 +71,13 @@ export const HomeScreen = () => {
       refreshControl={refreshControl}
     >
 
-      {(!isLoading && !refreshing && myBooks.length === 0) &&
+      {(!loadingUserStats && !refreshing && totalBooks === 0) &&
         <View style={styles.noStats}>
           <Text style={{ ...styles.noStatsText, color: colors.text }}>No tienes libros de los que generar estadísticas</Text>
         </View>
       }
 
-      {myBooks.length !== 0 &&
+      {totalBooks !== 0 &&
         <>
           <View style={styles.statsRow}>
             <StatsCard

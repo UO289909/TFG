@@ -1,0 +1,108 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
+import { useBooks } from './useBooks';
+import { Book } from '../../core/entities/book.entity';
+import { getReadingLogs } from '../../core/use-cases/books/get-reading-logs.use-case';
+import { useProfile } from './useProfile';
+
+
+export const useStats = () => {
+
+    const { myBooks, refetch } = useBooks();
+    const { friends, refetchFriends } = useProfile();
+
+    const [loadingUserStats, setLoadingUserStats] = useState(false);
+    const [pagesThisMonth, setPagesThisMonth] = useState(0);
+    const [lastBook, setLastBook] = useState<Book>();
+    const [totalBooks, setTotalBooks] = useState(0);
+
+    const [loadingFriendsStats, setLoadingFriendsStats] = useState(false);
+    const [friendsRecentReads, setFriendsRecentReads] = useState<{ friendName: string; book: Book; }[]>([]);
+
+
+    useEffect(() => {
+        calculateUserStats();
+    }, [myBooks]);
+
+    useEffect(() => {
+        calculateFriendsStats();
+    }, [friends]);
+
+    const refetchUserStats = async () => {
+        setLoadingUserStats(true);
+        await refetch();
+    };
+
+    const refetchFriendsStats = async () => {
+        setLoadingFriendsStats(true);
+        await refetchFriends();
+    };
+
+    const calculateUserStats = async () => {
+
+        setLoadingUserStats(true);
+
+        const now = new Date();
+        const currentMonth = now.getUTCMonth();
+        const currentYear = now.getUTCFullYear();
+
+        const readingLogs = await getReadingLogs();
+
+        const logsThisMonth = readingLogs.filter(log => {
+            const logDate = new Date(log.reading_date);
+            return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
+        });
+
+        const logsByIsbn: { [isbn: string]: typeof readingLogs } = {};
+        logsThisMonth.forEach(log => {
+            if (!logsByIsbn[log.isbn]) {
+                logsByIsbn[log.isbn] = [];
+            }
+            logsByIsbn[log.isbn].push(log);
+        });
+
+        let pagesReadThisMonth = 0;
+        Object.values(logsByIsbn).forEach(logs => {
+            const sortedLogs = logs.sort((a, b) => new Date(a.reading_date).getTime() - new Date(b.reading_date).getTime());
+            const fromPage = sortedLogs[0].from_page ?? 0;
+            const toPage = sortedLogs[sortedLogs.length - 1].to_page ?? 0;
+            const diff = Math.max(0, toPage - fromPage);
+            pagesReadThisMonth += diff;
+        });
+
+        const lastReadBook = myBooks
+            .slice()
+            .sort((a, b) => {
+                const aDate = a.finish_date ? new Date(a.finish_date) : new Date(a.created_at!);
+                const bDate = b.finish_date ? new Date(b.finish_date) : new Date(b.created_at!);
+                return bDate.getTime() - aDate.getTime();
+            })[0];
+
+        setPagesThisMonth(pagesReadThisMonth);
+        setLastBook(lastReadBook);
+        setTotalBooks(myBooks.length);
+
+        setLoadingUserStats(false);
+
+    };
+
+    const calculateFriendsStats = async () => {
+
+        setLoadingFriendsStats(true);
+
+        setLoadingFriendsStats(false);
+
+    };
+
+    return {
+        loadingUserStats,
+        loadingFriendsStats,
+        pagesThisMonth,
+        lastBook,
+        totalBooks,
+        friendsRecentReads,
+        refetchUserStats,
+        refetchFriendsStats,
+    };
+
+};

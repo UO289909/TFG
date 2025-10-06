@@ -17,7 +17,7 @@ export const useStats = () => {
     const [totalBooks, setTotalBooks] = useState(0);
 
     const [loadingFriendsStats, setLoadingFriendsStats] = useState(false);
-    const [friendsRecentReads, setFriendsRecentReads] = useState<{ friendName: string; book: Book; }[]>([]);
+    const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; book: Book; }[]>([]);
 
 
     useEffect(() => {
@@ -89,6 +89,8 @@ export const useStats = () => {
     const calculateFriendsStats = async () => {
 
         setLoadingFriendsStats(true);
+
+        const recentReads: { nickname: string; book: Book; }[] = [];
 
         setLoadingFriendsStats(false);
 

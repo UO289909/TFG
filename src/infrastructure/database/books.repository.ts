@@ -404,9 +404,6 @@ export const databaseGetReadingLogs = async (
     isbn?: string,
 ): Promise<DatabaseReadingLog[]> => {
 
-    console.log('User:', user);
-    console.log('ISBN:', isbn);
-
     const userId = user || await getUserId();
 
     try {
@@ -459,5 +456,44 @@ export const databaseAlreadyLogged = async (isbn: string, reading_date: string):
 
     } catch (error) {
         throw new Error(`Error checking existing reading log in database for selected date: ${error}`);
+    }
+};
+
+
+export const databaseGetUserReadBooks = async (
+    user: string,
+    offset?: number,
+    limit?: number
+): Promise<UserBook[] | null> => {
+
+    const userId = user || await getUserId();
+
+    try {
+
+        let query = SupabaseClient
+            .from('user_books')
+            .select()
+            .eq('user_id', userId)
+            .not('finish_date', 'is', null)
+            .order('finish_date', { ascending: false });
+
+        if (typeof limit === 'number' && typeof offset === 'number') {
+            query = query.range(offset, offset + limit - 1);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+            throw error;
+        }
+
+        if (data.length === 0) {
+            return null;
+        }
+
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching user's read books from database: ${error}`);
     }
 };

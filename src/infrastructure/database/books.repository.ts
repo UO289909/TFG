@@ -459,21 +459,25 @@ export const databaseAlreadyLogged = async (isbn: string, reading_date: string):
     }
 };
 
-
-export const databaseGetUserReadBooks = async (
-    user: string,
+/**
+ * Fetches the books read by a list of users from the database.
+ * @param users Array of user IDs
+ * @param offset The starting point for fetching records (for pagination)
+ * @param limit The maximum number of records to fetch
+ * @returns A list of books read by the specified users
+ */
+export const databaseGetUsersReadBooks = async (
+    users: string[],
     offset?: number,
     limit?: number
 ): Promise<UserBook[] | null> => {
-
-    const userId = user || await getUserId();
 
     try {
 
         let query = SupabaseClient
             .from('user_books')
             .select()
-            .eq('user_id', userId)
+            .in('user_id', users)
             .not('finish_date', 'is', null)
             .order('finish_date', { ascending: false });
 
@@ -494,6 +498,6 @@ export const databaseGetUserReadBooks = async (
         return data;
 
     } catch (error) {
-        throw new Error(`Error fetching user's read books from database: ${error}`);
+        throw new Error(`Error fetching users' read books from database: ${error}`);
     }
 };

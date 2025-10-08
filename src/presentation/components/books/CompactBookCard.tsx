@@ -5,6 +5,7 @@ import { FiveStarsInput } from '../inputs';
 
 
 interface Props {
+    title: string;
     cover_url: string | null;
     rating: 1 | 2 | 3 | 4 | 5 | null;
     nickname: string;
@@ -12,8 +13,8 @@ interface Props {
     style?: StyleProp<any>;
 }
 
-export const CompactBookCard = ({ cover_url, rating, nickname, onPress, style }: Props) => {
-    const default_cover = 'https://placehold.co/160x256.webp?text=No+Cover&font=roboto';
+export const CompactBookCard = ({ title, cover_url, rating, nickname, onPress, style }: Props) => {
+    const default_cover = `https://placehold.co/160x256.webp?text=${title}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -23,7 +24,7 @@ export const CompactBookCard = ({ cover_url, rating, nickname, onPress, style }:
             style={({ pressed }) => [
                 styles.cardContainer,
                 {
-                    backgroundColor: pressed ? colors.cardPressed : colors.card,
+                    backgroundColor: pressed ? colors.card : colors.cardPressed,
                     elevation: pressed ? 2 : 4,
                     shadowColor: colors.shadow,
                 },
@@ -72,10 +73,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     infoContainer: {
-        position: 'absolute',
-        bottom: 15,
-        left: 14,
-        right: 14,
+
     },
     text: {
         fontSize: 16,

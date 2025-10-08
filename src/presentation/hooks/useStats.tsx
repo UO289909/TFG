@@ -4,6 +4,7 @@ import { useBooks } from './useBooks';
 import { Book } from '../../core/entities/book.entity';
 import { getReadingLogs } from '../../core/use-cases/books/get-reading-logs.use-case';
 import { useProfile } from './useProfile';
+import { getUsersLatestReads } from '../../core/use-cases/books/get-users-latest-reads.use-case';
 
 
 export const useStats = () => {
@@ -90,7 +91,9 @@ export const useStats = () => {
 
         setLoadingFriendsStats(true);
 
-        const recentReads: { nickname: string; book: Book; }[] = [];
+        const recentReads: { nickname: string; book: Book; }[] = await getUsersLatestReads(friends);
+
+        setFriendsRecentReads(recentReads);
 
         setLoadingFriendsStats(false);
 

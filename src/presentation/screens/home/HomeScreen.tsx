@@ -11,6 +11,7 @@ import { CustomButton } from '../../components/pressables';
 import { useRecommendations } from '../../hooks/useRecomendations';
 import { RecommendationBox } from '../../components/recommendations/RecommendationsBox';
 import { useStats } from '../../hooks/useStats';
+import { RecentReadsBox } from '../../components/home/RecentReadsBox';
 
 export const HomeScreen = () => {
 
@@ -22,7 +23,16 @@ export const HomeScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height;
 
-  const { loadingUserStats, pagesThisMonth, lastBook, totalBooks, refetchUserStats } = useStats();
+  const {
+    loadingUserStats,
+    loadingFriendsStats,
+    pagesThisMonth,
+    lastBook,
+    totalBooks,
+    friendsRecentReads,
+    refetchUserStats,
+    refetchFriendsStats,
+  } = useStats();
 
   const { recommendations, refetchRecommendations, loadingRecommendations } = useRecommendations();
 
@@ -31,6 +41,7 @@ export const HomeScreen = () => {
 
   useEffect(() => {
     refetchUserStats();
+    refetchFriendsStats();
   }, []);
 
   const handleGoToMonthLogs = () => {
@@ -54,6 +65,7 @@ export const HomeScreen = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     await refetchUserStats();
+    await refetchFriendsStats();
     setRefreshing(false);
   };
 
@@ -67,7 +79,6 @@ export const HomeScreen = () => {
 
 
   if (loadingUserStats || refreshing) {
-    console.log('LoadingUserStats:', loadingUserStats, 'Refreshing:', refreshing);
     return <FullScreenLoader />;
   }
 
@@ -137,9 +148,13 @@ export const HomeScreen = () => {
         />
       }
 
-      {/* <FriendBooks />
+      <View style={{ ...styles.separator, shadowColor: colors.shadow, backgroundColor: colors.card }} />
 
-      <FriendBooks /> */}
+        <RecentReadsBox
+          recentReads={friendsRecentReads}
+          loading={loadingFriendsStats}
+          error={friendsRecentReads.length === 0}
+        />
 
     </ScrollView>
 

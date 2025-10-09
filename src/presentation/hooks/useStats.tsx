@@ -22,25 +22,29 @@ export const useStats = () => {
 
 
     useEffect(() => {
-        calculateUserStats();
+        if (myBooks.length > 0) {
+            calculateUserStats();
+        }
     }, [myBooks]);
 
     useEffect(() => {
-        calculateFriendsStats();
+        if (friends.length > 0) {
+            setLoadingFriendsStats(true);
+            calculateFriendsStats();
+        }
     }, [friends]);
 
     const refetchUserStats = async () => {
-        setLoadingUserStats(true);
         await refetch();
     };
 
     const refetchFriendsStats = async () => {
-        setLoadingFriendsStats(true);
         await refetchFriends();
     };
 
     const calculateUserStats = async () => {
 
+        console.log('Calculating user stats...');
         setLoadingUserStats(true);
 
         const now = new Date();
@@ -84,11 +88,13 @@ export const useStats = () => {
         setTotalBooks(myBooks.length);
 
         setLoadingUserStats(false);
+        console.log('Finished calculating user stats.');
 
     };
 
     const calculateFriendsStats = async () => {
 
+        console.log('Calculating friends stats...');
         setLoadingFriendsStats(true);
 
         const recentReads: { nickname: string; book: Book; }[] = await getUsersLatestReads(friends);
@@ -96,6 +102,7 @@ export const useStats = () => {
         setFriendsRecentReads(recentReads);
 
         setLoadingFriendsStats(false);
+        console.log('Finished calculating friends stats.');
 
     };
 

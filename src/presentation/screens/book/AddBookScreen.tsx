@@ -12,12 +12,16 @@ import { CustomNotification } from '../../components/feedback/CustomNotification
 import { SearchBar } from '../../components/inputs';
 import { normalizeDateToYear } from '../../../utils/normalizeDateToYear';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
+import { FullScreenLoader } from '../../components/feedback';
 
 export const AddBookScreen = () => {
 
   const { colors } = useTheme() as CustomTheme;
 
   const today = new Date();
+
+  const [loadingBook, setLoadingBook] = useState(false);
+  const [addingBook, setAddingBook] = useState(false);
 
   const [isbn, setIsbn] = useState('');
   const [title, setTitle] = useState('');
@@ -40,6 +44,7 @@ export const AddBookScreen = () => {
 
   const handleSearchISBN = async (text: string) => {
 
+    setLoadingBook(true);
     setFieldsEnabled([]);
 
     if (text.length === 0) {
@@ -99,10 +104,15 @@ export const AddBookScreen = () => {
       }
     } catch (error) {
       throw new Error(`Error searching book by ISBN: ${error}`);
+    } finally {
+      setLoadingBook(false);
     }
   };
 
   const handleAddBook = async () => {
+
+    setAddingBook(true);
+
     const book: Book = {
       title,
       isbn: isbn,
@@ -118,6 +128,8 @@ export const AddBookScreen = () => {
     };
 
     await postNewBook(book, fieldsEnabled, isNewBook);
+
+    setAddingBook(false);
 
     navigation.reset({
       index: 0,
@@ -148,21 +160,32 @@ export const AddBookScreen = () => {
 
       <View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
+
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 
+        {(loadingBook || addingBook) &&
+          <FullScreenLoader
+            message={
+              loadingBook
+                ? 'Buscando información del libro...'
+                : 'Añadiendo libro a tu colección...'
+            }
+            style={styles.loader}
+          />
+        }
 
         <CustomTextInput
           label="Título:"
           value={title}
           onChangeText={setTitle}
-          editable={fieldsEnabled.includes('title')}
+          editable={fieldsEnabled.includes('title') && !addingBook}
           style={styles.textInput}
         />
         <CustomTextInput
           label="Autor:"
           value={author}
           onChangeText={setAuthor}
-          editable={fieldsEnabled.includes('author')}
+          editable={fieldsEnabled.includes('author') && !addingBook}
           style={styles.textInput}
         />
         <CustomTextInput
@@ -170,14 +193,14 @@ export const AddBookScreen = () => {
           value={pages}
           onChangeText={text => setPages(text.replace(/[^0-9]/g, ''))}
           keyboardType="numeric"
-          editable={fieldsEnabled.includes('pages')}
+          editable={fieldsEnabled.includes('pages') && !addingBook}
           style={styles.textInput}
         />
         <CustomTextInput
           label="Año de publicación:"
           value={year}
           onChangeText={text => setYear(text.replace(/[^0-9]/g, ''))}
-          editable={fieldsEnabled.includes('year')}
+          editable={fieldsEnabled.includes('year') && !addingBook}
           style={styles.textInput}
           info={`No puedes leer libros del futuro (estamos en ${today.getFullYear()})`}
         />
@@ -185,7 +208,7 @@ export const AddBookScreen = () => {
           label="URL de la portada (opcional):"
           value={cover}
           onChangeText={setCover}
-          editable={fieldsEnabled.includes('cover')}
+          editable={fieldsEnabled.includes('cover') && !addingBook}
         />
       </ScrollView>
       <FloatingButton
@@ -194,6 +217,7 @@ export const AddBookScreen = () => {
         position="bottom-left"
         color={colors.danger}
         colorPressed={colors.dangerDark}
+        disabled={addingBook}
       />
       <FloatingButton
         onPress={handleAddBook}
@@ -205,6 +229,7 @@ export const AddBookScreen = () => {
           (!isbn || !title || !author || !pages || !year)
           || year.length !== 4
           || Number(year) > today.getFullYear()
+          || addingBook
         }
       />
     </View>
@@ -226,6 +251,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     paddingHorizontal: 10,
     paddingTop: 10,
+  },
+  loader: {
+    marginVertical: 10,
   },
   button: {
     marginLeft: 10,

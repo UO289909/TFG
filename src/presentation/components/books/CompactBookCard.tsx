@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 6,
         alignSelf: 'center',
-        marginTop: 10,
+        margin: 5,
+        marginVertical: 10,
         padding: 5,
     },
     cover: {

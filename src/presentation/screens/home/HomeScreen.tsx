@@ -78,7 +78,7 @@ export const HomeScreen = () => {
   );
 
 
-  if (loadingUserStats || loadingFriendsStats || refreshing) {
+  if (loadingUserStats || refreshing) {
     return <FullScreenLoader />;
   }
 

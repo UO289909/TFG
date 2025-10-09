@@ -41,7 +41,7 @@ export const useProfile = () => {
         await refetchFriendRequests();
 
         const fetchedFriends = await getFriendsByRequests(3600, friendRequests, true);
-        setFriends(fetchedFriends.map(friend => friend.user));
+        setFriends([...fetchedFriends.map(friend => friend.user)]);
 
         setIsLoadingFriends(false);
 

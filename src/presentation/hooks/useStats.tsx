@@ -17,8 +17,11 @@ export const useStats = () => {
     const [lastBook, setLastBook] = useState<Book>();
     const [totalBooks, setTotalBooks] = useState(0);
 
-    const [loadingFriendsStats, setLoadingFriendsStats] = useState(false);
+    const [loadingFriendsRecentReads, setLoadingFriendsRecentReads] = useState(false);
     const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; book: Book; }[]>([]);
+
+    const [loadingFriendsPagesRead, setLoadingFriendsPagesRead] = useState(false);
+    const [friendsPagesRead, setFriendsPagesRead] = useState<{ nickname: string, pages: number }[]>([]);
 
 
     useEffect(() => {
@@ -29,8 +32,8 @@ export const useStats = () => {
 
     useEffect(() => {
         if (friends.length > 0) {
-            setLoadingFriendsStats(true);
-            calculateFriendsStats();
+            setLoadingFriendsRecentReads(true);
+            calculateFriendsRecentReads();
         }
     }, [friends]);
 
@@ -92,23 +95,23 @@ export const useStats = () => {
 
     };
 
-    const calculateFriendsStats = async () => {
+    const calculateFriendsRecentReads = async () => {
 
-        console.log('Calculating friends stats...');
-        setLoadingFriendsStats(true);
+        console.log('Calculating friends recent reads...');
+        setLoadingFriendsRecentReads(true);
 
         const recentReads: { nickname: string; book: Book; }[] = await getUsersLatestReads(friends);
 
         setFriendsRecentReads(recentReads);
 
-        setLoadingFriendsStats(false);
-        console.log('Finished calculating friends stats.');
+        setLoadingFriendsRecentReads(false);
+        console.log('Finished calculating friends recent reads.');
 
     };
 
     return {
         loadingUserStats,
-        loadingFriendsStats,
+        loadingFriendsRecentReads,
         pagesThisMonth,
         lastBook,
         totalBooks,

@@ -25,7 +25,7 @@ export const HomeScreen = () => {
 
   const {
     loadingUserStats,
-    loadingFriendsStats,
+    loadingFriendsRecentReads,
     pagesThisMonth,
     lastBook,
     totalBooks,
@@ -152,7 +152,7 @@ export const HomeScreen = () => {
 
         <RecentReadsBox
           recentReads={friendsRecentReads}
-          loading={loadingFriendsStats}
+          loading={loadingFriendsRecentReads}
           error={friendsRecentReads.length === 0}
         />
 

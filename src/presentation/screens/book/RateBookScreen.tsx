@@ -28,6 +28,8 @@ export const RateBookScreen = () => {
     const [finishDatePages, setFinishDatePages] = useState<number>();
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
+    const [ratingBook, setRatingBook] = useState(false);
+
     useEffect(() => {
         loadBookLogs();
     }, []);
@@ -54,6 +56,8 @@ export const RateBookScreen = () => {
             return;
         }
 
+        setRatingBook(true);
+
         const lastLogPromise = addReadingLog(book.isbn, book.current_page || '0', book.pages!, today);
 
         const ratePromise = rateUserBook(
@@ -64,6 +68,8 @@ export const RateBookScreen = () => {
         );
 
         await Promise.all([lastLogPromise, ratePromise]);
+
+        setRatingBook(false);
 
         navigation.reset({
             index: 0,
@@ -90,6 +96,13 @@ export const RateBookScreen = () => {
             <Text style={{ ...styles.title, color: colors.text }}>Valorar '{book.title}'</Text>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
+
+                {ratingBook &&
+                    <FullScreenLoader
+                        message="Añadiendo valoración al libro..."
+                        style={{ ...styles.loader, backgroundColor: colors.card}}
+                    />
+                }
 
                 {startDate.toDateString() !== today.toDateString() &&
                     <>
@@ -125,7 +138,7 @@ export const RateBookScreen = () => {
                 }
 
                 <Text style={{ ...styles.ratingLabel, color: colors.text }}>Valoración:</Text>
-                <FiveStarsInput value={currentRating} onPress={setCurrentRating} />
+                <FiveStarsInput value={currentRating} onPress={setCurrentRating} editable={!ratingBook} />
             </ScrollView>
 
             <FloatingButton
@@ -134,7 +147,7 @@ export const RateBookScreen = () => {
                 position="bottom-right"
                 color={colors.primary}
                 colorPressed={colors.primaryDark}
-                disabled={!startDate || currentRating === 0}
+                disabled={!startDate || currentRating === 0 || ratingBook}
             />
 
             <FloatingButton
@@ -143,6 +156,7 @@ export const RateBookScreen = () => {
                 position="bottom-left"
                 color={colors.danger}
                 colorPressed={colors.dangerDark}
+                disabled={ratingBook}
             />
         </View>
     );
@@ -169,6 +183,18 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         padding: 12,
         elevation: 4,
+    },
+    loader: {
+        borderRadius: 16,
+        width: '100%',
+        minHeight: 120,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
+        alignSelf: 'center',
+        margin: 10,
+        padding: 4,
     },
     title: {
         fontSize: 22,

@@ -170,7 +170,7 @@ export const AddBookScreen = () => {
                 ? 'Buscando información del libro...'
                 : 'Añadiendo libro a tu colección...'
             }
-            style={styles.loader}
+            style={{ ...styles.loader, backgroundColor: colors.card}}
           />
         }
 
@@ -253,7 +253,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   loader: {
-    marginVertical: 10,
+    borderRadius: 16,
+    width: '100%',
+    minHeight: 120,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+    alignSelf: 'center',
+    margin: 10,
+    padding: 4,
   },
   button: {
     marginLeft: 10,

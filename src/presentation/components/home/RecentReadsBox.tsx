@@ -1,9 +1,10 @@
 import { FlatList, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { CompactBookCard } from '../books/CompactBookCard';
-import { useTheme } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
 import { FullScreenLoader } from '../feedback';
+import { RootStackParams } from '../../navigation/HomeStackNavigator';
 
 interface Props {
     recentReads: { nickname: string, book: Book }[];
@@ -13,10 +14,16 @@ interface Props {
 
 export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
 
+    const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
     const { colors } = useTheme() as CustomTheme;
 
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height;
+
+    const handleGoToReadInfo = (book: Book, nickname: string) => {
+        navigation.navigate('ReadDetails', { book, nickname });
+    };
 
     const renderReadInfo = ({ item }: { item: { nickname: string, book: Book } }) => (
         <CompactBookCard
@@ -24,7 +31,7 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
             cover_url={item.book.cover_url}
             rating={item.book.rating}
             nickname={item.nickname}
-            onPress={() => {}}
+            onPress={() => handleGoToReadInfo(item.book, item.nickname)}
         />
     );
 
@@ -85,6 +92,7 @@ const styles = StyleSheet.create({
     loadingContainer: {
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         width: '95%',
         minHeight: 148,
         borderRadius: 16,
@@ -98,7 +106,7 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '95%',
-        height: 260,
+        height: 295,
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,

@@ -33,7 +33,7 @@ export const CompactBookCard = ({ title, cover_url, rating, nickname, onPress, s
             onPress={onPress}
         >
             <Image
-                style={{ ...styles.cover, backgroundColor: colors.background }}
+                style={{ ...styles.cover, backgroundColor: colors.background, shadowColor: colors.shadow }}
                 source={{ uri: cover_url || default_cover }}
             />
 
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     cardContainer: {
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: 200,
-        aspectRatio: 0.625,
+        justifyContent: 'space-between',
+        height: '95%',
+        aspectRatio: 0.520,
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
@@ -68,12 +68,17 @@ const styles = StyleSheet.create({
         padding: 5,
     },
     cover: {
-        height: '95%',
+        width: '95%',
         aspectRatio: 0.625,
         borderRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
     },
     infoContainer: {
-
+        flex: 1,
+        justifyContent: 'center',
     },
     text: {
         fontSize: 16,

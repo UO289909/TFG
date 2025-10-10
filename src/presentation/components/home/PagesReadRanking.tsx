@@ -55,7 +55,7 @@ export const PagesReadRanking = ({ pagesRanking, loading, error }: Props) => {
                 shadowColor: colors.shadow,
             },
         ]}>
-            <Text style={{ ...styles.title, color: colors.text }}>Ranking de páginas leídas este mes</Text>
+            <Text style={{ ...styles.title, color: colors.text }}>Páginas leídas este mes</Text>
             {pagesRanking.map((item, index) => (
                 <View
                     key={item.nickname + index}

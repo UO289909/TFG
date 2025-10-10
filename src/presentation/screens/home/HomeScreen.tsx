@@ -161,7 +161,7 @@ export const HomeScreen = () => {
         <PagesReadRanking
           pagesRanking={friendsPagesRead}
           loading={loadingFriendsPagesRead}
-          error={!loadingFriendsPagesRead && friendsPagesRead.length === 0}
+          error={!loadingFriendsPagesRead && friendsPagesRead.length <= 1}
         />
 
     </ScrollView>

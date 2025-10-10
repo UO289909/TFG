@@ -38,16 +38,16 @@ export const useProfile = () => {
 
         setIsLoadingFriends(true);
 
-        await refetchFriendRequests();
+        const fetchedFriendRequests = await refetchFriendRequests();
 
-        const fetchedFriends = await getFriendsByRequests(3600, friendRequests, true);
+        const fetchedFriends = await getFriendsByRequests(3600, fetchedFriendRequests, true);
         setFriends([...fetchedFriends.map(friend => friend.user)]);
 
         setIsLoadingFriends(false);
 
     };
 
-    const refetchFriendRequests = async () => {
+    const refetchFriendRequests = async (): Promise<Friend[]> => {
 
         setIsLoadingFriendRequests(true);
 
@@ -55,6 +55,7 @@ export const useProfile = () => {
         setFriendRequests(friendRequestsFetched);
 
         setIsLoadingFriendRequests(false);
+        return friendRequestsFetched;
 
     };
 

@@ -153,7 +153,7 @@ export const HomeScreen = () => {
         <RecentReadsBox
           recentReads={friendsRecentReads}
           loading={loadingFriendsRecentReads}
-          error={friendsRecentReads.length === 0}
+          error={!loadingFriendsRecentReads && friendsRecentReads.length === 0}
         />
 
     </ScrollView>

@@ -17,7 +17,7 @@ export const useStats = () => {
     const [lastBook, setLastBook] = useState<Book>();
     const [totalBooks, setTotalBooks] = useState(0);
 
-    const [loadingFriendsRecentReads, setLoadingFriendsRecentReads] = useState(false);
+    const [loadingFriendsRecentReads, setLoadingFriendsRecentReads] = useState(true);
     const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; book: Book; }[]>([]);
 
     const [loadingFriendsPagesRead, setLoadingFriendsPagesRead] = useState(false);
@@ -34,6 +34,9 @@ export const useStats = () => {
         if (friends.length > 0) {
             setLoadingFriendsRecentReads(true);
             calculateFriendsRecentReads();
+        } else {
+            setFriendsRecentReads([]);
+            setLoadingFriendsRecentReads(false);
         }
     }, [friends]);
 

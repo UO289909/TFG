@@ -5,11 +5,12 @@ import { useAuth } from '../../context/AuthContext';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
-import { navigation } from '../../../App';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 
 export const PasswordChangeScreen = () => {
+
+    const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
     const { params } = useRoute<RouteProp<RootStackParams>>();
     const alreadySentCode = params?.alreadySentCode ?? false;

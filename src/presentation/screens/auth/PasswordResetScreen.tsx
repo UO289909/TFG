@@ -5,8 +5,12 @@ import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
 import { CustomNotification, FullScreenLoader } from '../../components/feedback';
 import { isValidEmail } from '../../../utils/isValidEmail';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/AuthStackNavigator';
 
 export const PasswordResetScreen = () => {
+
+  const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
   const [showNotif, setShowNotif] = useState(false);
   const [notifMessage, setNotifMessage] = useState('');
@@ -27,6 +31,7 @@ export const PasswordResetScreen = () => {
       setNotifMessage('Revisa tu correo para las instrucciones de reseteo');
       setShowNotif(true);
       setEmail('');
+      navigation.navigate('PasswordChange', { alreadySentCode: true, notifPosition: 'top' });
     } catch (error: any) {
       setNotifMessage(error.message);
       setShowNotif(true);

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { StatsCard } from '../../components/home';
+import { PagesReadRanking, StatsCard } from '../../components/home';
 import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
@@ -26,10 +26,12 @@ export const HomeScreen = () => {
   const {
     loadingUserStats,
     loadingFriendsRecentReads,
+    loadingFriendsPagesRead,
     pagesThisMonth,
     lastBook,
     totalBooks,
     friendsRecentReads,
+    friendsPagesRead,
     refetchUserStats,
     refetchFriendsStats,
   } = useStats();
@@ -154,6 +156,12 @@ export const HomeScreen = () => {
           recentReads={friendsRecentReads}
           loading={loadingFriendsRecentReads}
           error={!loadingFriendsRecentReads && friendsRecentReads.length === 0}
+        />
+
+        <PagesReadRanking
+          pagesRanking={friendsPagesRead}
+          loading={loadingFriendsPagesRead}
+          error={!loadingFriendsPagesRead && friendsPagesRead.length === 0}
         />
 
     </ScrollView>

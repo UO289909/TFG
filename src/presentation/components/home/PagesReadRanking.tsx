@@ -1,39 +1,18 @@
-import { FlatList, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { CompactBookCard } from '../books/CompactBookCard';
-import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
+import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
-import { Book } from '../../../core/entities/book.entity';
 import { FullScreenLoader } from '../feedback';
-import { RootStackParams } from '../../navigation/HomeStackNavigator';
 
 interface Props {
-    recentReads: { nickname: string, book: Book }[];
+    pagesRanking: { nickname: string, pages: number }[];
     loading: boolean;
     error?: boolean;
 }
 
-export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
-
-    const navigation = useNavigation<NavigationProp<RootStackParams>>();
+export const PagesReadRanking = ({ pagesRanking, loading, error }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
-    const { width, height } = useWindowDimensions();
-    const isLandscape = width > height;
-
-    const handleGoToReadInfo = (book: Book, nickname: string) => {
-        navigation.navigate('ReadDetails', { book, nickname });
-    };
-
-    const renderReadInfo = ({ item }: { item: { nickname: string, book: Book } }) => (
-        <CompactBookCard
-            title={item.book.title}
-            cover_url={item.book.cover_url}
-            rating={item.book.rating}
-            nickname={item.nickname}
-            onPress={() => handleGoToReadInfo(item.book, item.nickname)}
-        />
-    );
 
     if (error) {
         return (
@@ -45,7 +24,7 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
                 },
             ]}>
                 <Text style={{ ...styles.loadingText, color: colors.text }}>
-                    No hay lecturas recientes de amigos disponibles.
+                    No se ha podido crear el ranking de páginas leídas.
                 </Text>
             </View>
         );
@@ -62,7 +41,7 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
             ]}>
                 <FullScreenLoader />
                 <Text style={{ ...styles.loadingText, color: colors.text }}>
-                    Cargando lecturas recientes de tus amigos...
+                    Cargando páginas leídas por tus amigos...
                 </Text>
             </View>
         );
@@ -76,13 +55,25 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
                 shadowColor: colors.shadow,
             },
         ]}>
-            <Text style={{ ...styles.title, color: colors.text }}>Lecturas recientes de amigos</Text>
-            <FlatList
-                data={recentReads}
-                key={isLandscape ? 'h' : 'v'}
-                renderItem={renderReadInfo}
-                horizontal
-            />
+            <Text style={{ ...styles.title, color: colors.text }}>Ranking de páginas leídas este mes</Text>
+            {pagesRanking.map((item, index) => (
+                <View
+                    key={item.nickname + index}
+                    style={{ ...styles.rowContainer, backgroundColor: colors.background, shadowColor: colors.shadow }}
+                >
+                    <Text
+                        style={{
+                            ...(item.nickname === 'Tú' ? styles.user : styles.nickname),
+                            color: colors.text,
+                        }}
+                    >
+                        {index + 1}. {item.nickname}
+                    </Text>
+                    <Text style={{ ...styles.pages, color: colors.secondaryText }}>
+                        {item.pages} pág.
+                    </Text>
+                </View>
+            ))}
         </View>
     );
 };
@@ -106,16 +97,32 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '95%',
-        height: 295,
+        height: 'auto',
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
+        alignItems: 'center',
         margin: 10,
         padding: 4,
+        paddingBottom: 12,
         marginRight: 16,
+    },
+    rowContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 50,
+        width: '95%',
+        marginVertical: 4,
+        paddingHorizontal: 12,
+        borderRadius: 12,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
     },
     loadingText: {
         alignSelf: 'center',
@@ -127,5 +134,17 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontFamily: 'Roboto-Medium',
         marginVertical: 6,
+    },
+    nickname: {
+        fontSize: 16,
+        fontFamily: 'Roboto-Medium',
+    },
+    user: {
+        fontSize: 16,
+        fontFamily: 'Roboto-Bold',
+    },
+    pages: {
+        fontSize: 18,
+        fontFamily: 'Roboto-Regular',
     },
 });

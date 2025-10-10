@@ -33,10 +33,14 @@ export const useStats = () => {
     useEffect(() => {
         if (friends.length > 0) {
             setLoadingFriendsRecentReads(true);
+            setLoadingFriendsPagesRead(true);
             calculateFriendsRecentReads();
+            calculateFriendsPagesRead();
         } else {
             setFriendsRecentReads([]);
+            setFriendsPagesRead([]);
             setLoadingFriendsRecentReads(false);
+            setLoadingFriendsPagesRead(false);
         }
     }, [friends]);
 
@@ -112,13 +116,89 @@ export const useStats = () => {
 
     };
 
+    const calculateFriendsPagesRead = async () => {
+        console.log('Calculating friends pages read this month...');
+        setLoadingFriendsPagesRead(true);
+
+        const now = new Date();
+        const currentMonth = now.getUTCMonth();
+        const currentYear = now.getUTCFullYear();
+
+        const friendsPagesReadPromises = friends.map(async friend => {
+            const readingLogs = await getReadingLogs(friend.id);
+
+            const logsThisMonth = readingLogs.filter(log => {
+                const logDate = new Date(log.reading_date);
+                return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
+            });
+
+            const logsByIsbn: { [isbn: string]: typeof readingLogs } = {};
+            logsThisMonth.forEach(log => {
+                if (!logsByIsbn[log.isbn]) {
+                    logsByIsbn[log.isbn] = [];
+                }
+                logsByIsbn[log.isbn].push(log);
+            });
+
+            let pagesReadThisMonth = 0;
+            Object.values(logsByIsbn).forEach(logs => {
+                const sortedLogs = logs.sort((a, b) => new Date(a.reading_date).getTime() - new Date(b.reading_date).getTime());
+                const fromPage = sortedLogs[0].from_page ?? 0;
+                const toPage = sortedLogs[sortedLogs.length - 1].to_page ?? 0;
+                const diff = Math.max(0, toPage - fromPage);
+                pagesReadThisMonth += diff;
+            });
+
+            return { nickname: friend.nickname, pages: pagesReadThisMonth };
+        });
+
+        const userReadingLogs = await getReadingLogs();
+        const userLogsThisMonth = userReadingLogs.filter(log => {
+            const logDate = new Date(log.reading_date);
+            return logDate.getUTCMonth() === currentMonth && logDate.getUTCFullYear() === currentYear;
+        });
+
+        const userLogsByIsbn: { [isbn: string]: typeof userReadingLogs } = {};
+        userLogsThisMonth.forEach(log => {
+            if (!userLogsByIsbn[log.isbn]) {
+                userLogsByIsbn[log.isbn] = [];
+            }
+            userLogsByIsbn[log.isbn].push(log);
+        });
+
+        let userPagesReadThisMonth = 0;
+        Object.values(userLogsByIsbn).forEach(logs => {
+            const sortedLogs = logs.sort((a, b) => new Date(a.reading_date).getTime() - new Date(b.reading_date).getTime());
+            const fromPage = sortedLogs[0].from_page ?? 0;
+            const toPage = sortedLogs[sortedLogs.length - 1].to_page ?? 0;
+            const diff = Math.max(0, toPage - fromPage);
+            userPagesReadThisMonth += diff;
+        });
+
+        const friendsPagesReadResults = await Promise.all(friendsPagesReadPromises);
+
+        const allPagesReadResults = [
+            ...friendsPagesReadResults,
+            { nickname: 'Tú', pages: userPagesReadThisMonth },
+        ];
+
+        allPagesReadResults.sort((a, b) => b.pages - a.pages);
+
+        setFriendsPagesRead(allPagesReadResults);
+
+        setLoadingFriendsPagesRead(false);
+        console.log('Finished calculating friends pages read this month:', allPagesReadResults);
+    };
+
     return {
         loadingUserStats,
         loadingFriendsRecentReads,
+        loadingFriendsPagesRead,
         pagesThisMonth,
         lastBook,
         totalBooks,
         friendsRecentReads,
+        friendsPagesRead,
         refetchUserStats,
         refetchFriendsStats,
     };

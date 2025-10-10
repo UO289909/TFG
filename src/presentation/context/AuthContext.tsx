@@ -1,14 +1,14 @@
-// src/presentation/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
 import { checkNicknameExists } from '../../core/use-cases/auth/check-nickname-exists.use-case';
 import { AuthApiError, AuthWeakPasswordError } from '@supabase/supabase-js';
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 interface AuthContextProps {
   currentUser: any;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
   changePassword: (newPassword: string, nonce: string) => Promise<boolean>;
@@ -20,6 +20,7 @@ const AuthContext = createContext<AuthContextProps>({
   currentUser: null,
   loading: true,
   signIn: async () => { },
+  signInWithGoogle: async () => { },
   signUp: async () => { return false; },
   resetPassword: async () => { },
   changePassword: async () => { return false; },
@@ -30,59 +31,83 @@ const AuthContext = createContext<AuthContextProps>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
   const [currentUser, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // GoogleSignin.configure({
-  //   scopes: [],
-  //   webClientId: '844618426591-tjrv5acfqjcj69hr8fqnu9lt793t8bm5.apps.googleusercontent.com',
-  // });
-
   useEffect(() => {
-    const checkSession = async () => {
+
+    GoogleSignin.configure({
+      webClientId: '844618426591-tjrv5acfqjcj69hr8fqnu9lt793t8bm5.apps.googleusercontent.com',
+      offlineAccess: true,
+    });
+
+    const init = async () => {
       const { data: { user } } = await SupabaseClient.auth.getUser();
       setUser(user ?? null);
+
+      SupabaseClient.auth.startAutoRefresh();
       setLoading(false);
     };
-    checkSession();
-    // Puedes añadir lógica para refrescar la sesión cada x tiempo aquí
+
+    init();
   }, []);
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
     try {
-    const { data, error } = await SupabaseClient.auth.signInWithPassword({ email, password });
-    if (error) {
+      const { data, error } = await SupabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        throw error;
+      }
+      setUser(data.user);
+    } catch (error: any) {
+      if (error.message === 'Email not confirmed') {
+        throw new Error('Por favor, confirma tu correo electrónico antes de iniciar sesión');
+      }
+      if (error.message === 'Invalid login credentials') {
+        throw new Error('Credenciales inválidas. Revisa tu email y contraseña');
+      }
       throw error;
+    } finally {
+      setLoading(false);
     }
-    setUser(data.user);
-  } catch (error: any) {
-    if (error.message === 'Email not confirmed') {
-      throw new Error('Por favor, confirma tu correo electrónico antes de iniciar sesión');
-    }
-    if (error.message === 'Invalid login credentials') {
-      throw new Error('Credenciales inválidas. Revisa tu email y contraseña');
-    }
-    throw error;
-  } finally {
-    setLoading(false);
-  }
   };
 
-  // const signInWithGoogle = async () => {
-  //   const userInfo = await GoogleSignin.signIn();
-  //   console.log(userInfo);
-  //   if (userInfo.data?.idToken) {
-  //     const { data, error } = await SupabaseClient.auth.signInWithIdToken({
-  //       provider: 'google',
-  //       token: userInfo.data.idToken,
-  //     });
-  //     if (error) {
-  //       console.log(error, data);
-  //       throw error;
-  //     }
-  //   }
-  // };
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+
+      const googleUser = await GoogleSignin.signIn();
+      const idToken = googleUser.data?.idToken;
+      if (!idToken) {
+        throw new Error('No se pudo obtener un token de Google válido');
+      }
+
+      const { accessToken } = await GoogleSignin.getTokens();
+      if (!accessToken) {
+        throw new Error('No se pudo obtener un token de acceso de Google válido');
+      }
+
+      const { data, error } = await SupabaseClient.auth.signInWithIdToken({
+        provider: 'google',
+        token: idToken,
+        access_token: accessToken,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      setUser(data.user);
+    } catch (error) {
+      console.log('El error con google es:', error);
+      throw new Error('Error al iniciar sesión con Google. Inténtalo de nuevo más tarde');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const signUp = async (email: string, password: string, full_name: string, nickname: string): Promise<boolean> => {
     setLoading(true);
@@ -116,20 +141,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
     }
   };
-
-  // const signUpWithGoogle = async () => {
-  //   const userInfo = await GoogleSignin.signIn();
-  //   if (userInfo.data?.idToken) {
-  //     const { data, error } = await SupabaseClient.auth.signUp({
-  //       provider: 'google',
-  //       token: userInfo.data.idToken,
-  //     });
-  //     if (error) {
-  //       console.log(error, data);
-  //       throw error;
-  //     }
-  //   }
-  // };
 
   const resetPassword = async (email: string) => {
     setLoading(true);
@@ -191,7 +202,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, resetPassword, changePassword, sendNonceCode, signOut }}>
+    <AuthContext.Provider value={{
+      currentUser,
+      loading,
+      signIn,
+      signInWithGoogle,
+      signUp,
+      resetPassword,
+      changePassword,
+      sendNonceCode,
+      signOut,
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -79,7 +79,7 @@ android {
 
     namespace "com.tfg"
     defaultConfig {
-        applicationId "com.tfg"
+        applicationId "com.tfg.uo289909"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

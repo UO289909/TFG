@@ -19,18 +19,18 @@ export const SignInScreen = () => {
   const [showNotif, setShowNotif] = useState(false);
   const [notifMessage, setNotifMessage] = useState('');
 
-  const { signIn, loading } = useAuth();
+  const { signIn, signInWithGoogle, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleGoogleSignIn = async () => {
-    // try {
-    //   await signInWithGoogle();
-    // } catch (error) {
-    //   console.log(error);
-    //   setNotifMessage('Error al iniciar sesión con Google.');
-    //   setShowNotif(true);
-    // }
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.log(error);
+      setNotifMessage('Error al iniciar sesión con Google.');
+      setShowNotif(true);
+    }
   };
 
   const handleSignIn = async () => {
@@ -97,7 +97,7 @@ export const SignInScreen = () => {
           disabled={!email || !password}
         />
 
-        <Text style={{ ...styles.forgot, color: colors.text }} onPress={() => {/* navega a PasswordResetScreen */ }}>
+        <Text style={{ ...styles.forgot, color: colors.text }}>
           o también puedes...
         </Text>
 

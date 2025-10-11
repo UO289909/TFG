@@ -298,3 +298,26 @@ export const databaseRejectRequest = async (friendId: string): Promise<void> => 
         throw new Error(`Error rejecting friend request: ${error}`);
     }
 };
+
+
+export const databaseChangeNickname = async (newNickname: string): Promise<boolean> => {
+
+    const userId = await getUserId();
+
+    try {
+
+        const { error } = await SupabaseClient
+            .from('users')
+            .update({ nickname: newNickname })
+            .eq('id', userId);
+
+        if (error) {
+            throw error;
+        }
+
+        return true;
+
+    } catch (error) {
+        throw new Error('Error al cambiar el nickname, inténtalo de nuevo');
+    }
+};

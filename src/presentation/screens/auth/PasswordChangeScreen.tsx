@@ -12,7 +12,7 @@ export const PasswordChangeScreen = () => {
 
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-    const { params } = useRoute<RouteProp<RootStackParams>>();
+    const { params } = useRoute<RouteProp<RootStackParams, 'PasswordChange'>>();
     const alreadySentCode = params?.alreadySentCode ?? false;
     const notifPosition = params?.notifPosition ?? 'top';
 

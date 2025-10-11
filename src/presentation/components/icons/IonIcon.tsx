@@ -37,6 +37,8 @@ export type IonIconNames =
     | 'book-outline'
     | 'arrow-up'
     | 'arrow-up-outline'
+    | 'text'
+    | 'text-outline'
     | 'search'
     | 'archive'
     | 'send'

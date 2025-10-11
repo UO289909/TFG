@@ -3,6 +3,7 @@ import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
 import { checkNicknameExists } from '../../core/use-cases/auth/check-nickname-exists.use-case';
 import { AuthApiError, AuthWeakPasswordError } from '@supabase/supabase-js';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { changeNickname } from '../../core/use-cases/auth/change-nickname.use-case';
 
 interface AuthContextProps {
   currentUser: any;
@@ -12,6 +13,7 @@ interface AuthContextProps {
   signUp: (email: string, password: string, fullName: string, nickname: string) => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
   changePassword: (newPassword: string, nonce: string) => Promise<boolean>;
+  changeUserNickname: (newNickname: string) => Promise<boolean>;
   sendNonceCode: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -24,6 +26,7 @@ const AuthContext = createContext<AuthContextProps>({
   signUp: async () => { return false; },
   resetPassword: async () => { },
   changePassword: async () => { return false; },
+  changeUserNickname: async () => { return false; },
   sendNonceCode: async () => { },
   signOut: async () => { },
 });
@@ -179,6 +182,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const changeUserNickname = async (newNickname: string): Promise<boolean> => {
+    setLoading(true);
+    try {
+      const changed = await changeNickname(newNickname);
+      if (!changed) {
+        throw new Error('No se pudo cambiar el nickname, inténtalo de nuevo');
+      }
+      return true;
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const sendNonceCode = async () => {
     setLoading(true);
     try {
@@ -187,7 +205,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
     } catch (error) {
-      console.log(error);
       throw new Error('Error al enviar el código de verificación, inténtalo de nuevo');
     } finally {
       setLoading(false);
@@ -210,6 +227,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       signUp,
       resetPassword,
       changePassword,
+      changeUserNickname,
       sendNonceCode,
       signOut,
     }}>

@@ -6,7 +6,7 @@ import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { useProfile } from '../../hooks/useProfile';
 import { CustomMenuButton } from '../../components/pressables/CustomMenuButton';
 import { useEffect, useState } from 'react';
-import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
 import { ThemeSelectorMenu } from '../../components/profile/ThemeSelectorMenu';
@@ -16,6 +16,9 @@ import { CustomNotification } from '../../components/feedback';
 export const ProfileScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
+  const { params } = useRoute<RouteProp<RootStackParams, 'ProfileMenu'>>();
+  const doRefetch = params?.doRefetch ?? false;
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -46,6 +49,13 @@ export const ProfileScreen = () => {
     refetch();
   }, []);
 
+  useEffect(() => {
+    if (doRefetch) {
+      refetch();
+      navigation.setParams({ doRefetch: false });
+    }
+  }, [doRefetch]);
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -66,12 +76,16 @@ export const ProfileScreen = () => {
 
   const handleChangePassword = async () => {
     try {
-    await sendNonceCode();
+      await sendNonceCode();
     } catch (error: any) {
       navigation.navigate('PasswordChange', { alreadySentCode: true, notifPosition: 'bottom' });
       return;
     }
     navigation.navigate('PasswordChange', { alreadySentCode: false, notifPosition: 'bottom' });
+  };
+
+  const handleChangeNickname = () => {
+    navigation.navigate('NicknameChange');
   };
 
   const handleSignOut = async () => {
@@ -210,6 +224,14 @@ export const ProfileScreen = () => {
           onPress={handleChangePassword}
           label="Cambiar contraseña"
           icon="lock-open"
+          style={styles.button}
+          disabled={loading}
+        />
+
+        <CustomMenuButton
+          onPress={handleChangeNickname}
+          label="Cambiar nickname"
+          icon="text"
           style={styles.button}
           disabled={loading}
         />

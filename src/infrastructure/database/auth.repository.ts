@@ -86,3 +86,21 @@ export const databaseCheckNicknameExists = async (nickname: string): Promise<boo
 
     return data.length > 0;
 };
+
+
+export const databaseCheckSameNickname = async (newNickname: string): Promise<boolean> => {
+
+    const userId = await getUserId();
+
+    const { data, error } = await SupabaseClient
+        .from('users')
+        .select()
+        .eq('id', userId)
+        .eq('nickname', newNickname);
+
+    if (error) {
+        throw error;
+    }
+
+    return data.length > 0;
+};

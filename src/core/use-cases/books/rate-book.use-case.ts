@@ -4,12 +4,14 @@ import { databaseRateUserBook } from '../../../infrastructure/database/books.rep
  * Adds a rating and reading dates to a user's book.
  * @param isbn ISBN of the book to be rated
  * @param rating Rating given by the user
+ * @param review Optional review text provided by the user
  * @param startDate Date when the user started reading the book
  * @param finishDate Date when the user finished reading the book
  */
 export const rateUserBook = async (
     isbn: string,
     rating: number,
+    review: string | null,
     startDate: Date,
     finishDate: Date,
 ): Promise<void> => {
@@ -18,6 +20,7 @@ export const rateUserBook = async (
         await databaseRateUserBook(
             isbn,
             rating,
+            review,
             startDate,
             finishDate
         );

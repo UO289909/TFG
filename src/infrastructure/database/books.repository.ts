@@ -202,10 +202,11 @@ export const databaseAddUserBook = async (book: Book): Promise<void> => {
  *
  * @param isbn The ISBN of the book to rate.
  * @param rating The rating to give to the book.
+ * @param review Optional review text provided by the user.
  * @param startDate The start date of the reading period.
  * @param finishDate The finish date of the reading period.
  */
-export const databaseRateUserBook = async (isbn: string, rating: number, startDate: Date, finishDate: Date): Promise<void> => {
+export const databaseRateUserBook = async (isbn: string, rating: number, review: string | null, startDate: Date, finishDate: Date): Promise<void> => {
 
     const userId = await getUserId();
 
@@ -215,6 +216,7 @@ export const databaseRateUserBook = async (isbn: string, rating: number, startDa
             .from('user_books')
             .update({
                 rating,
+                review: review || null,
                 start_date: startDate.toISOString().slice(0, 10),
                 finish_date: finishDate.toISOString().slice(0, 10),
             })

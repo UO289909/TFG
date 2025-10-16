@@ -122,6 +122,7 @@ export const AddBookScreen = () => {
       release_year: year,
       cover_url: cover,
       rating: null,
+      review: null,
       start_date: null,
       finish_date: null,
       created_at: null,

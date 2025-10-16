@@ -10,6 +10,7 @@ import { rateUserBook } from '../../../core/use-cases/books/rate-book.use-case';
 import { addReadingLog } from '../../../core/use-cases/books/add-reading-log.use-case';
 import { getReadingLogs } from '../../../core/use-cases/books/get-reading-logs.use-case';
 import { FullScreenLoader } from '../../components/feedback';
+import { CustomTextInput } from '../../components/inputs';
 
 
 export const RateBookScreen = () => {
@@ -26,6 +27,7 @@ export const RateBookScreen = () => {
     const [startDatePages, setStartDatePages] = useState<number>();
     const [daysRead, setDaysRead] = useState<number>(0);
     const [finishDatePages, setFinishDatePages] = useState<number>();
+    const [review, setReview] = useState<string>('');
     const [currentRating, setCurrentRating] = useState<number>(rating);
 
     const [ratingBook, setRatingBook] = useState(false);
@@ -63,6 +65,7 @@ export const RateBookScreen = () => {
         const ratePromise = rateUserBook(
             book.isbn,
             currentRating,
+            review.trim() === '' ? null : review.trim(),
             startDate,
             today
         );
@@ -100,7 +103,7 @@ export const RateBookScreen = () => {
                 {ratingBook &&
                     <FullScreenLoader
                         message="Añadiendo valoración al libro..."
-                        style={{ ...styles.loader, backgroundColor: colors.card}}
+                        style={{ ...styles.loader, backgroundColor: colors.card }}
                     />
                 }
 
@@ -136,6 +139,19 @@ export const RateBookScreen = () => {
                         </Text>
                     </View>
                 }
+
+                <View style={{ ...styles.infoContainer, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+                    <Text style={{ ...styles.label, color: colors.text }}>
+                        Reseña
+                    </Text>
+                    <CustomTextInput
+                        style={styles.reviewInput}
+                        placeholder="Escribe tu reseña para que tus amigos la vean (opcional)"
+                        multiline
+                        value={review}
+                        onChangeText={setReview}
+                    />
+                </View>
 
                 <Text style={{ ...styles.ratingLabel, color: colors.text }}>Valoración:</Text>
                 <FiveStarsInput value={currentRating} onPress={setCurrentRating} editable={!ratingBook} />
@@ -209,33 +225,15 @@ const styles = StyleSheet.create({
         marginVertical: 4,
         textAlign: 'center',
     },
+    reviewInput: {
+        marginTop: 8,
+        width: '100%',
+    },
     ratingLabel: {
         textAlign: 'center',
         fontSize: 16,
         fontFamily: 'Roboto-Medium',
         marginTop: 16,
         marginBottom: 8,
-    },
-    dateInput: {
-        borderWidth: 2,
-        borderRadius: 10,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        marginBottom: 8,
-    },
-    dateLabel: {
-        fontFamily: 'Roboto-Regular',
-        fontSize: 16,
-    },
-    pickerOverlay: {
-        position: 'absolute',
-        top: 0, left: 0, right: 0, bottom: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 100,
-    },
-    overlayBg: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.2)',
     },
 });

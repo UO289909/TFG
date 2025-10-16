@@ -8,6 +8,7 @@ export interface Book {
     release_year: string | null;
     author: string | null;
     rating: 1 | 2 | 3 | 4 | 5 | null;
+    review: string | null;
     start_date: string | null;
     finish_date: string | null;
     created_at: string | null;

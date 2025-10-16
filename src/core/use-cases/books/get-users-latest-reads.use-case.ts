@@ -39,6 +39,7 @@ export const getUsersLatestReads = async (
                 release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
                 author: userBook.author !== null ? userBook.author : dbBook.author,
                 rating: userBook.rating,
+                review: userBook.review,
                 start_date: userBook.start_date,
                 finish_date: userBook.finish_date,
                 created_at: userBook.created_at,

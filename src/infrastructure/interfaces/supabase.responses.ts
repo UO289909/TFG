@@ -3,6 +3,7 @@ export interface UserBook {
     user_id: string;
     isbn: string;
     rating: 1 | 2 | 3 | 4 | 5 | null;
+    review: string | null;
     pages: number | string | null;
     current_page: number | string;
     cover_url: string | null;

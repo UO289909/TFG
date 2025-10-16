@@ -46,11 +46,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     const init = async () => {
-      const { data: { user } } = await SupabaseClient.auth.getUser();
-      setUser(user ?? null);
+      try {
 
-      SupabaseClient.auth.startAutoRefresh();
-      setLoading(false);
+        const { data: { user }, error } = await SupabaseClient.auth.getUser();
+        if (error || !user) {
+          setUser(null);
+        } else {
+          setUser(user);
+        }
+
+      } catch (error) {
+
+        setUser(null);
+
+      } finally {
+
+        SupabaseClient.auth.startAutoRefresh();
+        setLoading(false);
+
+      }
     };
 
     init();

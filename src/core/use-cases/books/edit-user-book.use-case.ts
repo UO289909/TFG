@@ -11,6 +11,7 @@ import { databaseEditUserBook } from '../../../infrastructure/database/books.rep
  * @param start_date Date when the user started reading the book.
  * @param finish_date Date when the user finished reading the book.
  * @param rating Rating given by the user to the book.
+ * @param review Review written by the user for the book.
  */
 export const editUserBook = async (
     isbn: string,
@@ -21,7 +22,8 @@ export const editUserBook = async (
     release_year: number | null,
     start_date: string | null,
     finish_date: string | null,
-    rating: number | null
+    rating: number | null,
+    review: string | null
 ): Promise<void> => {
     try {
 
@@ -34,7 +36,8 @@ export const editUserBook = async (
             release_year,
             start_date,
             finish_date,
-            rating
+            rating,
+            review
         );
 
         return;

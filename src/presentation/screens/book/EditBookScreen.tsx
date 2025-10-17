@@ -36,6 +36,7 @@ export const EditBookScreen = () => {
     const [year, setYear] = useState('');
     const [cover, setCover] = useState('');
     const [rating, setRating] = useState(0);
+    const [review, setReview] = useState('');
 
 
     const fetchUserBook = async () => {
@@ -55,6 +56,7 @@ export const EditBookScreen = () => {
             setYear(userBook.release_year?.toString() ?? '');
             setCover(userBook.cover_url ?? '');
             setRating(Number(userBook.rating) || 0);
+            setReview(userBook.review ?? '');
 
             if (userBook.author) {
                 setFieldsEnabled((prev) => [...prev, 'author']);
@@ -70,6 +72,7 @@ export const EditBookScreen = () => {
             }
             if (userBook.rating) {
                 setFieldsEnabled((prev) => [...prev, 'rating']);
+                setFieldsEnabled((prev) => [...prev, 'review']);
             }
         }
 
@@ -113,6 +116,7 @@ export const EditBookScreen = () => {
                 null,
                 null,
                 fieldsEnabled.includes('rating') ? rating : null,
+                fieldsEnabled.includes('review') ? review.trim() : null,
             );
 
             navigation.reset({
@@ -196,6 +200,16 @@ export const EditBookScreen = () => {
                         value={cover}
                         onChangeText={text => setCover(text.replace(/\s/g, ''))}
                         style={styles.textInput}
+                    />
+                }
+
+                {fieldsEnabled.includes('review') &&
+                    <CustomTextInput
+                        label="Reseña (opcional):"
+                        value={review}
+                        onChangeText={setReview}
+                        style={styles.textInput}
+                        multiline
                     />
                 }
 

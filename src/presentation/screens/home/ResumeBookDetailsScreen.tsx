@@ -41,9 +41,6 @@ export const ResumeBookDetailsScreen = () => {
           <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
           <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
-          {book.rating !== null && (
-            <FiveStarsInput onPress={() => { }} value={book.rating} editable={false} />
-          )}
 
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
@@ -51,6 +48,23 @@ export const ResumeBookDetailsScreen = () => {
             </Text>
           }
         </View>
+
+        {book.review &&
+          <View style={[
+            isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
+            styles.reviewContainer,
+            {
+              backgroundColor: colors.card,
+              shadowColor: colors.shadow,
+            },
+          ]}>
+            <Text style={{ ...styles.reviewTitle, color: colors.text }}>Reseña</Text>
+            <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
+            {book.rating !== null && (
+              <FiveStarsInput onPress={() => { }} value={book.rating} editable={false} />
+            )}
+          </View>
+        }
 
       </ScrollView >
 
@@ -144,5 +158,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     marginTop: 5,
+  },
+  reviewContainer: {
+    marginTop: 10,
+  },
+  reviewTitle: {
+    fontSize: 20,
+    fontFamily: 'Roboto-Medium',
+    marginBottom: 6,
+  },
+  reviewText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Italic',
+    textAlign: 'justify',
+    marginBottom: 6,
   },
 });

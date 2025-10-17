@@ -278,7 +278,8 @@ export const databaseEditUserBook = async (
     release_year: number | null,
     start_date: string | null,
     finish_date: string | null,
-    rating: number | null
+    rating: number | null,
+    review: string | null
 ): Promise<void> => {
 
     const userId = await getUserId();
@@ -292,6 +293,7 @@ export const databaseEditUserBook = async (
     if (start_date !== null) { updatedFields.start_date = start_date; }
     if (finish_date !== null) { updatedFields.finish_date = finish_date; }
     if (rating !== null) { updatedFields.rating = rating; }
+    if (review !== null) { updatedFields.review = review; }
 
     try {
 

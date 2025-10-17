@@ -92,13 +92,27 @@ export const BookDetailsScreen = () => {
           <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
           <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
-          <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
               Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
             </Text>
           }
         </View>
+
+        {book.review &&
+          <View style={[
+            isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
+            styles.reviewContainer,
+            {
+              backgroundColor: colors.card,
+              shadowColor: colors.shadow,
+            },
+          ]}>
+            <Text style={{ ...styles.reviewTitle, color: colors.text }}>Reseña</Text>
+            <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
+            <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
+          </View>
+        }
 
         <View style={isLandscape ? styles.buttonsContainerLandscape : styles.buttonsContainer}>
 
@@ -169,6 +183,9 @@ const styles = StyleSheet.create({
     padding: 12,
     elevation: 4,
   },
+  reviewContainer: {
+    marginTop: 10,
+  },
   cover: {
     width: 200,
     height: 320,
@@ -216,6 +233,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Roboto-Regular',
     marginTop: 5,
+  },
+  reviewTitle: {
+    fontSize: 20,
+    fontFamily: 'Roboto-Medium',
+    marginBottom: 6,
+  },
+  reviewText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Italic',
+    textAlign: 'justify',
+    marginBottom: 6,
   },
   buttonsContainer: {
     flexDirection: 'column',

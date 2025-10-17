@@ -99,7 +99,7 @@ export const BookDetailsScreen = () => {
           }
         </View>
 
-        {book.review &&
+        {book.rating !== null &&
           <View style={[
             isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
             styles.reviewContainer,
@@ -109,7 +109,11 @@ export const BookDetailsScreen = () => {
             },
           ]}>
             <Text style={{ ...styles.reviewTitle, color: colors.text }}>Reseña</Text>
-            <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
+
+            {book.review &&
+              <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
+            }
+
             <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
           </View>
         }

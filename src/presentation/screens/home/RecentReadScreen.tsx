@@ -49,7 +49,7 @@ export const RecentReadScreen = () => {
           }
         </View>
 
-        {book.review &&
+        {book.rating !== null &&
           <View style={[
             isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
             styles.reviewContainer,
@@ -59,10 +59,12 @@ export const RecentReadScreen = () => {
             },
           ]}>
             <Text style={{ ...styles.reviewTitle, color: colors.text }}>Reseña</Text>
-            <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
-            {book.rating !== null && (
-              <FiveStarsInput onPress={() => { }} value={book.rating} editable={false} />
-            )}
+
+            {book.review &&
+              <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
+            }
+
+            <FiveStarsInput onPress={() => { }} value={book.rating} editable={false} />
           </View>
         }
 

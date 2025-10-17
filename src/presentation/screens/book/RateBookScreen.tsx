@@ -150,6 +150,7 @@ export const RateBookScreen = () => {
                         multiline
                         value={review}
                         onChangeText={setReview}
+                        editable={!ratingBook}
                     />
                 </View>
 

@@ -92,6 +92,10 @@ export const BookDetailsScreen = () => {
           <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
           <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
+          {book.rating === null &&
+            <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={true} />
+          }
+
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
               Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
@@ -114,7 +118,7 @@ export const BookDetailsScreen = () => {
               <Text style={{ ...styles.reviewText, color: colors.text }}>{book.review}</Text>
             }
 
-            <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={book.rating === null} />
+            <FiveStarsInput onPress={handleRateBook} value={book.rating} editable={false} />
           </View>
         }
 

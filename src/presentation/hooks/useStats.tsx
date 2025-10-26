@@ -54,7 +54,6 @@ export const useStats = () => {
 
     const calculateUserStats = async () => {
 
-        console.log('Calculating user stats...');
         setLoadingUserStats(true);
 
         const now = new Date();
@@ -98,13 +97,11 @@ export const useStats = () => {
         setTotalBooks(myBooks.length);
 
         setLoadingUserStats(false);
-        console.log('Finished calculating user stats.');
 
     };
 
     const calculateFriendsRecentReads = async () => {
 
-        console.log('Calculating friends recent reads...');
         setLoadingFriendsRecentReads(true);
 
         const recentReads: { nickname: string; book: Book; }[] = await getUsersLatestReads(friends);
@@ -112,12 +109,10 @@ export const useStats = () => {
         setFriendsRecentReads(recentReads);
 
         setLoadingFriendsRecentReads(false);
-        console.log('Finished calculating friends recent reads.');
 
     };
 
     const calculateFriendsPagesRead = async () => {
-        console.log('Calculating friends pages read this month...');
         setLoadingFriendsPagesRead(true);
 
         const now = new Date();
@@ -187,7 +182,6 @@ export const useStats = () => {
         setFriendsPagesRead(allPagesReadResults);
 
         setLoadingFriendsPagesRead(false);
-        console.log('Finished calculating friends pages read this month:', allPagesReadResults);
     };
 
     return {

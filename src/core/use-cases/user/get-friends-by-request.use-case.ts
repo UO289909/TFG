@@ -18,7 +18,6 @@ export const getFriendsByRequests = async (expiresInSeconds = 3600, friendReques
 
     const infos: {user: DatabaseUser, request: 'sent' | 'received', accepted: boolean}[] = await Promise.all(infosPromise);
     const avatars: string[] = await Promise.all(avatarsPromise);
-    console.log('friend requests:', friendRequests);
 
     const users: {user: User, request: 'sent' | 'received', accepted: boolean}[] = infos.map((info, idx) => ({
         user: {

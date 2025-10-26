@@ -18,12 +18,9 @@ export const databaseAskAIRecommendations = async (
     });
 
     if (error) {
-        console.log('Error:', error);
-        console.log('Data:', data);
         return [];
     }
 
-    console.log('Data.recommendations:', data.recommendations);
     return data.recommendations;
 
 };

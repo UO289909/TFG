@@ -39,8 +39,6 @@ export const FriendRequestsScreen = () => {
         setLoading(true);
 
         const users = await getFriendsByRequests(3600, friendRequests);
-        console.log(friendRequests);
-        console.log(users);
 
         setSentUsers(users.filter(user => user.request === 'sent' && user.accepted === false).map(u => u.user));
         setReceivedUsers(users.filter(user => user.request === 'received' && user.accepted === false).map(u => u.user));

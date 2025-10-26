@@ -10,7 +10,6 @@ export const getMyBooks = async (): Promise<Book[]> => {
 
     try {
         const userBooks: UserBook[] = await databaseGetMyBooks();
-        console.log('User books response:', userBooks);
 
         const databaseBooks: DatabaseBook[] = await Promise.all(
             userBooks.map(async (userBook) => {
@@ -18,7 +17,6 @@ export const getMyBooks = async (): Promise<Book[]> => {
                 return details;
             })
         );
-        console.log('Database books response:', databaseBooks);
 
         const myBooks: Book[] = userBooks.map((userBook, idx) => {
             const dbBook = databaseBooks[idx];
@@ -38,7 +36,6 @@ export const getMyBooks = async (): Promise<Book[]> => {
                 created_at: userBook.created_at,
             };
         });
-        console.log('Mapped books:', myBooks);
 
         return myBooks;
 

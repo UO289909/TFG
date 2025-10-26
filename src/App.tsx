@@ -64,25 +64,22 @@ export const App = () => {
           code = h.code ?? code;
           type = h.type ?? type;
         }
-        console.log({ path, access_token, refresh_token, code, type });
 
         if (code) {
           const { error } = await SupabaseClient.auth.exchangeCodeForSession(code);
-          console.log(error);
+          throw error;
         } else if (access_token && refresh_token) {
           const { error } = await SupabaseClient.auth.setSession({ access_token, refresh_token });
-          console.log(error);
+          throw error;
         }
-
-        console.log(await SupabaseClient.auth.getSession());
 
         if (path === 'confirm' || type === 'signup') {
           navigation.isReady() && navigation.navigate('SignIn');
         } else if (path === 'reset' || type === 'recovery') {
           navigation.isReady() && navigation.navigate('PasswordChange');
         }
-      } catch {
-
+      } catch (error) {
+        throw error;
       }
     };
 
@@ -97,7 +94,6 @@ export const App = () => {
 
   }, []);
 
-  console.log('Current User in App.tsx:', currentUser);
 
   return (
     <NavigationContainer theme={theme} ref={navigation}>

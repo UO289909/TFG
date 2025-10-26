@@ -76,8 +76,6 @@ export const AddBookScreen = () => {
           setIsNewBook(true);
         }
 
-        console.log('Libro encontrado:', book);
-
         setFieldsEnabled([]);
         setTitle(book.title);
 

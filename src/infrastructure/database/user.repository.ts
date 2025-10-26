@@ -57,7 +57,6 @@ export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> =
         .upload(fileName, formData, { upsert: true, contentType: 'image/webp' });
 
     if (error) {
-        console.log(`Error uploading avatar: ${error.message}`);
         throw new Error(`Error uploading avatar: ${error.message}`);
     }
 

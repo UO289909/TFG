@@ -13,8 +13,6 @@ export const deleteUserBook = async (
             isbn
         );
 
-        console.log('Libro eliminado.');
-
         return;
 
     } catch (error) {

@@ -9,18 +9,15 @@ import { databaseChangeNickname } from '../../../infrastructure/database/user.re
 export const changeNickname = async (newNickname: string): Promise<boolean> => {
 
     const nicknameExists = await databaseCheckNicknameExists(newNickname);
-    console.log('Existencia del nickname:', nicknameExists);
 
     if (nicknameExists) {
         const sameNickname = await databaseCheckSameNickname(newNickname);
-        console.log('El mismo nickname:', sameNickname);
         if (sameNickname) {
             throw new Error('El nickname es el mismo que el actual');
         }
         throw new Error('El nickname ya está en uso, elige otro');
     }
 
-    console.log('Intentando cambiar el nickname a:', newNickname);
     const changed = await databaseChangeNickname(newNickname);
 
     return changed;

@@ -12,7 +12,6 @@ import { getUserAvatarUrl } from './get-user-avatar-url.use-case';
 export const searchUsersByNickname = async (nickname: string): Promise<User[]> => {
 
     if (!nickname.trim()) {
-        console.log('No se proporcionó un nickname para buscar.');
         return [];
     }
 

@@ -11,7 +11,6 @@ export const getAccessToken = async () => {
         .getSession();
 
     if (session) {
-        console.log('Access Token:', session.access_token);
         return session.access_token;
     }
 
@@ -29,7 +28,6 @@ export const getUserId = async () => {
         .getUser();
 
     if (user) {
-        console.log('User ID:', user.id);
         return user.id;
     }
 

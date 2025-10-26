@@ -121,7 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setUser(data.user);
     } catch (error) {
-      console.log('El error con google es:', error);
       throw new Error('Error al iniciar sesión con Google. Inténtalo de nuevo más tarde');
     } finally {
       setLoading(false);
@@ -171,7 +170,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw error;
       }
     } catch (error) {
-      console.log(error);
       throw new Error('Error al enviar el email de recuperación, revisa el correo e inténtalo de nuevo');
     } finally {
       setLoading(false);
@@ -191,7 +189,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       return true;
     } catch (error) {
-      console.log(error);
       throw new Error('Error al cambiar la contraseña, inténtalo de nuevo');
     } finally {
       setLoading(false);

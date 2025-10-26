@@ -23,10 +23,8 @@ export const getBookByIsbn = async (
         }
 
         const bookInfo: DatabaseBook = await databaseSearchBookByIsbn(isbn);
-        console.log('Database response:', bookInfo);
 
         if (!bookInfo || (Array.isArray(bookInfo) && bookInfo.length === 0) || bookInfo.isbn === null) {
-            console.log('No book found in database, fetching from OpenLibrary');
             const details: OpenLibraryResponseByIsbn = await fetcher.get('', {
             params: {
                 format: 'json',
@@ -36,13 +34,10 @@ export const getBookByIsbn = async (
             });
 
             const bookData: BookData = Object.values(details)[0];
-            console.log('Book data:', bookData);
             if (!bookData) {
-                console.log('No book found in OpenLibrary');
                 return {book: null, fromOpenLibrary: true, alreadyInUser: false};
             }
             const book: Book = BookMapper.fromOpenLibraryResponseToEntity(bookData);
-            console.log('libro mapeado', book);
             return {book, fromOpenLibrary: true, alreadyInUser: false};
         } else {
             const book: Book = BookMapper.fromDatabaseBookToEntity(bookInfo);

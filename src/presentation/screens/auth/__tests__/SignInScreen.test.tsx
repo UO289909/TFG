@@ -1,49 +1,61 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { SignInScreen } from '../SignInScreen';
+import { NavigationContainer } from '@react-navigation/native';
 
-// AuthContext mock
+const mockSignIn = jest.fn().mockResolvedValue(true);
+
 jest.mock('../../../context/AuthContext', () => ({
   useAuth: () => ({
-    signIn: jest.fn().mockResolvedValue(true),
+    signIn: mockSignIn,
     loading: false,
   }),
 }));
 
+import { SignInScreen } from '../SignInScreen';
+
 describe('SignInScreen', () => {
-  it('renderiza los campos correctamente', () => {
-    const { getByPlaceholderText, getByText } = render(<SignInScreen />);
-    expect(getByPlaceholderText(/email/i)).toBeTruthy();
-    expect(getByPlaceholderText(/contraseña/i)).toBeTruthy();
-    expect(getByText(/iniciar sesión/i)).toBeTruthy();
+  const renderWithNavigation = () => (
+    render(
+      <NavigationContainer>
+        <SignInScreen />
+      </NavigationContainer>
+    )
+  );
+
+  it('renders fields and buttons correctly', () => {
+    const { getByPlaceholderText, getAllByText } = renderWithNavigation();
+    expect(getByPlaceholderText(/something@provider.com/i)).toBeTruthy();
+    expect(getByPlaceholderText(/abcD5*/i)).toBeTruthy();
+    const title = getAllByText(/Iniciar sesión/i);
+    expect(title.length).toBeGreaterThan(1);
   });
 
-  it('muestra error si se intenta iniciar sin email o contraseña', async () => {
-    const { getByText, queryByText } = render(<SignInScreen />);
-    const button = getByText(/iniciar sesión/i);
-
+  it('shows error if trying to sign in without email or password', async () => {
+    const { UNSAFE_getAllByType, getByText } = renderWithNavigation();
+    const pressables = UNSAFE_getAllByType(require('react-native').Pressable);
+    const button = pressables.find(p =>
+      p.props.children?.props?.children?.toString().includes('Iniciar sesión')
+    );
     fireEvent.press(button);
-    await waitFor(() => {
-      expect(queryByText(/introduce tus credenciales/i)).toBeTruthy();
-    });
+    await waitFor(() =>
+      expect(getByText(/El correo electrónico no es válido/i)).toBeTruthy()
+    );
   });
 
-  it('llama a signIn con los datos correctos', async () => {
-    const mockSignIn = jest.fn().mockResolvedValue(true);
-    jest.doMock('../../../context/AuthContext', () => ({
-      useAuth: () => ({
-        signIn: mockSignIn,
-        loading: false,
-      }),
-    }));
-
-    const { getByPlaceholderText, getByText } = render(<SignInScreen />);
-    const emailInput = getByPlaceholderText(/email/i);
-    const passwordInput = getByPlaceholderText(/contraseña/i);
+  it('calls signIn with the correct data', async () => {
+    const { getByPlaceholderText, UNSAFE_getAllByType } = renderWithNavigation();
+    const emailInput = getByPlaceholderText(/something@provider.com/i);
+    const passwordInput = getByPlaceholderText(/abcD5*/i);
 
     fireEvent.changeText(emailInput, 'user@test.com');
     fireEvent.changeText(passwordInput, '123456');
-    fireEvent.press(getByText(/iniciar sesión/i));
+
+    const pressables = UNSAFE_getAllByType(require('react-native').Pressable);
+    const button = pressables.find(p =>
+      p.props.children?.props?.children?.toString().includes('Iniciar sesión')
+    );
+
+    fireEvent.press(button);
 
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledWith('user@test.com', '123456');

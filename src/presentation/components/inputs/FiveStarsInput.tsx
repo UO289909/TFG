@@ -1,6 +1,5 @@
-/* eslint-disable react-native/no-inline-styles */
 import { useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { IonIcon } from '../icons/IonIcon';
 
 interface Props {
@@ -14,7 +13,7 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true, size = 'la
     const [rating, setRating] = useState(value === null ? 0 : value > 5 ? 5 : value < 0 ? 0 : value);
 
     return (
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.container}>
             {[1, 2, 3, 4, 5].map((star, idx) => (
                 <TouchableOpacity
                     key={star}
@@ -27,7 +26,7 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true, size = 'la
                             : () => {}
                     }
                     activeOpacity={editable ? 0.2 : 1}
-                    style={{ marginRight: idx !== 4 ? 8 : 0 }}
+                    style={idx !== 4 ? styles.starWithMargin : styles.starLast}
                     disabled={!editable}
                 >
                     <IonIcon
@@ -46,3 +45,18 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true, size = 'la
         </View>
     );
 };
+
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    starWithMargin: {
+        marginRight: 8,
+    },
+    starLast: {
+        marginRight: 0,
+    },
+});

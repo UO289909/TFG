@@ -7,6 +7,7 @@ interface Props {
   onPress: () => void;
   icon: IonIconNames;
   shape?: 'default' | 'round';
+  size?: 'large' | 'small';
   position: 'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left';
   color: string;
   colorPressed?: string;
@@ -18,6 +19,7 @@ export const FloatingButton = ({
   onPress,
   icon,
   shape = 'default',
+  size = 'small',
   position,
   color,
   colorPressed = color,
@@ -30,7 +32,11 @@ export const FloatingButton = ({
   return (
     <Pressable
       style={({ pressed }) => [
-        shape === 'default' ? styles.button : styles.roundButton,
+        shape === 'round'
+          ? styles.roundButton
+          : size === 'small'
+            ? styles.button
+            : styles.bigButton,
         {
           backgroundColor: disabled ? colorDisabled || colors.buttonDisabled : pressed ? colorPressed : color,
           elevation: pressed ? 4 : 8,
@@ -41,7 +47,7 @@ export const FloatingButton = ({
           ...(position === 'bottom-center' && {
             left: '50%',
             bottom: 16,
-            transform: [{ translateX: shape === 'default' ? -28 : -18 }],
+            transform: [{ translateX: shape === 'default' ? -28 : -22 }],
           }),
           shadowColor: colors.shadow,
         },
@@ -67,11 +73,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
+  bigButton: {
+    position: 'absolute',
+    borderRadius: 18,
+    width: 72,
+    height: 72,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
   roundButton: {
     position: 'absolute',
     borderRadius: 30,
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     shadowOffset: { width: 0, height: 2 },

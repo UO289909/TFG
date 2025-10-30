@@ -81,7 +81,12 @@ const config = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    '^react-native$': '<rootDir>/__mocks__/react-native.js',
+    '^@react-navigation/native$': '<rootDir>/__mocks__/@react-navigation/native.js',
+    '^@react-native-vector-icons/ionicons$':
+      '<rootDir>/__mocks__/@react-native-vector-icons/ionicons.js',
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -169,7 +174,11 @@ const config = {
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   transformIgnorePatterns: [
-    'node_modules/(?!(@react-native|react-native|@react-navigation|@react-native-community)/)',
+    'node_modules/(?!(react-native' +
+    '|@react-native' +
+    '|@react-navigation' +
+    '|@react-native-vector-icons' +
+    ')/)',
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

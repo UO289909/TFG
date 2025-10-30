@@ -11,29 +11,28 @@ jest.mock('../../icons/IonIcon', () => {
 });
 
 
-
 describe('FiveStarsInput', () => {
-    it('renderiza 5 estrellas', () => {
+    it('renders 5 stars', () => {
         const { getAllByText } = render(<FiveStarsInput onPress={() => { }} />);
-        const estrellas = getAllByText(/icon-star-outline/);
-        expect(estrellas.length).toBe(5);
+        const stars = getAllByText(/icon-star-outline/);
+        expect(stars.length).toBe(5);
     });
 
-    it('llama a onPress con el valor correcto al tocar una estrella', () => {
+    it('calls onPress with the correct value when a star is pressed', () => {
         const mockOnPress = jest.fn();
         const { getAllByText, rerender } = render(<FiveStarsInput onPress={mockOnPress} />);
 
-        const estrellas = getAllByText(/icon-star-outline/);
-        fireEvent.press(estrellas[2]); // tercera estrella (valor 3)
+        const stars = getAllByText(/icon-star-outline/);
+        fireEvent.press(stars[2]); // third star (value 3)
 
         expect(mockOnPress).toHaveBeenCalledWith(3);
 
         rerender(<FiveStarsInput onPress={mockOnPress} value={3} />);
-        const nuevas = getAllByText(/icon-star/);
-        expect(nuevas.length).toBeGreaterThan(0);
+        const newStars = getAllByText(/icon-star/);
+        expect(newStars.length).toBeGreaterThan(0);
     });
 
-    it('no responde si editable=false', () => {
+    it('not calls onPress when editable is false', () => {
         const mockOnPress = jest.fn();
         const { getAllByText } = render(
             <FiveStarsInput onPress={mockOnPress} editable={false} />
@@ -44,7 +43,7 @@ describe('FiveStarsInput', () => {
         expect(mockOnPress).not.toHaveBeenCalled();
     });
 
-    it('limita el valor máximo y mínimo sin error', () => {
+    it('limits the max and min value without error', () => {
         render(<FiveStarsInput onPress={() => { }} value={8} />);
         render(<FiveStarsInput onPress={() => { }} value={-2} />);
     });

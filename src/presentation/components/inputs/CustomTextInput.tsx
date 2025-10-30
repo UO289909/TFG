@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
 import { useTheme } from '@react-navigation/native';

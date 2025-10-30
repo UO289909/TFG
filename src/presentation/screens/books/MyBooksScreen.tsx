@@ -200,6 +200,7 @@ export const MyBooksScreen = () => {
       <FloatingButton
         onPress={handleAddBook}
         icon="add-outline"
+        size="large"
         position="bottom-right"
         color={colors.primary}
         colorPressed={colors.primaryDark}

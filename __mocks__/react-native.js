@@ -6,7 +6,12 @@ const RNMock = {
     TextInput: (props) => React.createElement('TextInput', props, props.children),
     ScrollView: (props) => React.createElement('ScrollView', props, props.children),
     TouchableOpacity: (props) => React.createElement('TouchableOpacity', props, props.children),
-    Pressable: (props) => React.createElement('Pressable', props, props.children),
+    Pressable: ({ children, onPress, testID, ...rest }) =>
+        React.createElement(
+            'Pressable',
+            { testID, ...rest, onClick: onPress },
+            typeof children === 'function' ? children({ pressed: false }) : children
+        ),
     StyleSheet: {
         create: (styles) => styles,
         flatten: (style) => {
@@ -18,6 +23,9 @@ const RNMock = {
     },
     Platform: { OS: 'android', select: (obj) => obj.android },
     Dimensions: { get: () => ({ width: 400, height: 800 }) },
+    Keyboard: {
+        dismiss: jest.fn(),
+    },
     KeyboardAvoidingView: (props) => React.createElement('KeyboardAvoidingView', props, props.children),
     SafeAreaView: (props) => React.createElement('SafeAreaView', props, props.children),
     StatusBar: (props) => React.createElement('StatusBar', props, props.children),

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { GOOGLE_WEB_CLIENT_ID } from '@env';
 import { SupabaseClient } from '../../infrastructure/database/supabaseClient';
 import { checkNicknameExists } from '../../core/use-cases/auth/check-nickname-exists.use-case';
 import { AuthApiError, AuthWeakPasswordError } from '@supabase/supabase-js';
@@ -41,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
 
     GoogleSignin.configure({
-      webClientId: '844618426591-tjrv5acfqjcj69hr8fqnu9lt793t8bm5.apps.googleusercontent.com',
+      webClientId: GOOGLE_WEB_CLIENT_ID,
       offlineAccess: true,
     });
 

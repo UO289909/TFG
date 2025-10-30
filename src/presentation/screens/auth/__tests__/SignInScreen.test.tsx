@@ -50,11 +50,13 @@ describe('SignInScreen', () => {
     mockAuth.loading = false;
   });
 
-  it('renders fields and title', () => {
+  it('renders fields, title and buttons', () => {
     const { getByPlaceholderText, getAllByText } = renderWithNav();
     expect(getByPlaceholderText(/something@provider\.com/i)).toBeTruthy();
     expect(getByPlaceholderText(/abcD5\*/i)).toBeTruthy();
     expect(getAllByText(/Iniciar sesión/i).length).toBe(2);
+    expect(getAllByText(/Entrar con Google/i).length).toBe(1);
+    expect(getAllByText(/¿Has olvidado tu contraseña\?/i).length).toBe(1);
   });
 
   it('shows <FullScreenLoader /> when loading=true', () => {

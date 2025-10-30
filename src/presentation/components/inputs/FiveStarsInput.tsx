@@ -24,7 +24,7 @@ export const FiveStarsInput = ({ onPress, value = 0, editable = true, size = 'la
                                   rating === star ? setRating(0) : setRating(star);
                                   onPress(rating === star ? 0 : star);
                               }
-                            : undefined
+                            : () => {}
                     }
                     activeOpacity={editable ? 0.2 : 1}
                     style={{ marginRight: idx !== 4 ? 8 : 0 }}

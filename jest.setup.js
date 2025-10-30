@@ -10,6 +10,17 @@ if (global.window !== global) {
 import 'react-native';
 import '@testing-library/react-native';
 
+const originalError = console.error;
+console.error = (...args) => {
+    if (
+        typeof args[0] === 'string' &&
+        args[0].includes('react-test-renderer is deprecated')
+    ) {
+        return;
+    }
+    originalError(...args);
+};
+
 jest.mock('@react-native-vector-icons/ionicons', () => require('./__mocks__/react-native-vector-icons.js'));
 
 jest.mock('@react-navigation/native', () => {

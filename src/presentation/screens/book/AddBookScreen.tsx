@@ -44,7 +44,6 @@ export const AddBookScreen = () => {
 
   const handleSearchISBN = async (text: string) => {
 
-    setLoadingBook(true);
     setFieldsEnabled([]);
 
     if (text.length === 0) {
@@ -59,6 +58,7 @@ export const AddBookScreen = () => {
       return;
     }
 
+    setLoadingBook(true);
     setIsbn(text);
 
     try {
@@ -169,7 +169,7 @@ export const AddBookScreen = () => {
                 ? 'Buscando información del libro...'
                 : 'Añadiendo libro a tu colección...'
             }
-            style={{ ...styles.loader, backgroundColor: colors.card}}
+            style={{ ...styles.loader, backgroundColor: colors.card }}
           />
         }
 

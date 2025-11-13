@@ -22,6 +22,8 @@ export const EditBookScreen = () => {
 
     const { colors } = useTheme() as CustomTheme;
 
+    const [editingBook, setEditingBook] = useState(false);
+
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
 
@@ -95,29 +97,37 @@ export const EditBookScreen = () => {
 
         if (userBook) {
 
-            let currentPage = null;
-            if (fieldsEnabled.includes('pages')) {
-                if (book.rating !== null) {
-                    currentPage = Number(pages);
-                    await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
-                } else if (bookLogs.length > 0 && bookLogs[0].to_page > Number(pages)) {
-                    currentPage = Number(pages);
-                    await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
-                }
-            }
+            setEditingBook(true);
 
-            await editUserBook(
-                userBook.isbn,
-                fieldsEnabled.includes('author') ? author : null,
-                fieldsEnabled.includes('pages') ? Number(pages) : null,
-                currentPage,
-                fieldsEnabled.includes('cover_url') ? cover : null,
-                fieldsEnabled.includes('release_year') ? Number(year) : null,
-                null,
-                null,
-                fieldsEnabled.includes('rating') ? rating : null,
-                fieldsEnabled.includes('review') ? review.trim() : null,
-            );
+            try {
+                let currentPage = null;
+                if (fieldsEnabled.includes('pages')) {
+                    if (book.rating !== null) {
+                        currentPage = Number(pages);
+                        await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
+                    } else if (bookLogs.length > 0 && bookLogs[0].to_page > Number(pages)) {
+                        currentPage = Number(pages);
+                        await editReadingLog(book.isbn, bookLogs[0].reading_date, null, Number(pages));
+                    }
+                }
+
+                await editUserBook(
+                    userBook.isbn,
+                    fieldsEnabled.includes('author') ? author : null,
+                    fieldsEnabled.includes('pages') ? Number(pages) : null,
+                    currentPage,
+                    fieldsEnabled.includes('cover_url') ? cover : null,
+                    fieldsEnabled.includes('release_year') ? Number(year) : null,
+                    null,
+                    null,
+                    fieldsEnabled.includes('rating') ? rating : null,
+                    fieldsEnabled.includes('review') ? review.trim() : null,
+                );
+            } catch (error) {
+                throw new Error(`Error editing book: ${error}`);
+            } finally {
+                setEditingBook(false);
+            }
 
             navigation.reset({
                 index: 0,
@@ -157,6 +167,12 @@ export const EditBookScreen = () => {
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 
+                {editingBook &&
+                    <FullScreenLoader
+                        message={'Guardando cambios en el libro...'}
+                        style={{ ...styles.loader, backgroundColor: colors.card }}
+                    />
+                }
 
                 {fieldsEnabled.includes('author') &&
                     <CustomTextInput
@@ -231,6 +247,7 @@ export const EditBookScreen = () => {
                 position="bottom-left"
                 color={colors.danger}
                 colorPressed={colors.dangerDark}
+                disabled={editingBook}
             />
 
             <FloatingButton
@@ -246,7 +263,8 @@ export const EditBookScreen = () => {
                     (bookLogs.length > 1 && fieldsEnabled.includes('pages') && book.rating !== null && Number(pages) <= bookLogs[1].to_page) ||
                     (bookLogs.length > 1 && fieldsEnabled.includes('pages') && book.rating === null && Number(pages) <= bookLogs[0].to_page) ||
                     (bookLogs.length === 1 && fieldsEnabled.includes('pages') && Number(pages) <= bookLogs[0].to_page) ||
-                    (fieldsEnabled.includes('release_year') && (Number(year) > today.getFullYear() || year.length !== 4))
+                    (fieldsEnabled.includes('release_year') && (Number(year) > today.getFullYear() || year.length !== 4)) ||
+                    editingBook
                 }
             />
 
@@ -262,6 +280,18 @@ const styles = StyleSheet.create({
     scrollContainer: {
         padding: 20,
         paddingBottom: 84,
+    },
+    loader: {
+        borderRadius: 16,
+        width: '100%',
+        minHeight: 120,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
+        alignSelf: 'center',
+        margin: 10,
+        padding: 4,
     },
     titleText: {
         fontSize: 24,

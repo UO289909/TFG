@@ -26,7 +26,7 @@ export const PasswordChangeScreen = () => {
 
     useEffect(() => {
         if (alreadySentCode) {
-            setNotifMessage('Utiliza el código de verifiación que solicitaste hace menos de 1 minuto');
+            setNotifMessage('Utiliza el código de verificación que solicitaste hace menos de 1 minuto');
             setShowNotif(true);
         }
     }, []);

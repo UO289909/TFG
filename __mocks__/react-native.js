@@ -36,6 +36,27 @@ const RNMock = {
         timing: () => ({ start: (cb) => cb && cb() }),
     },
     NativeModules: {},
+    useWindowDimensions: () => ({ width: 400, height: 800 }),
+    RefreshControl: (props) =>
+        React.createElement('RefreshControl', props, props.children),
+    FlatList: (props) => {
+    const { data = [], renderItem, ListHeaderComponent, ListFooterComponent, keyExtractor } = props;
+    return React.createElement(
+      'FlatList',
+      props,
+      <>
+        {ListHeaderComponent ? React.createElement(ListHeaderComponent) : null}
+        {data.map((item, index) =>
+          renderItem
+            ? React.createElement('View', { key: keyExtractor ? keyExtractor(item, index) : index }, renderItem({ item, index }))
+            : null
+        )}
+        {ListFooterComponent ? React.createElement(ListFooterComponent) : null}
+      </>
+    );
+  },
+  VirtualizedList: (props) => RNMock.FlatList(props),
+
 };
 
 module.exports = RNMock;

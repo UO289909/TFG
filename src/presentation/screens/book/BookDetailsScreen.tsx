@@ -6,9 +6,9 @@ import { CustomTheme } from '../../../config/app-theme';
 import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.use-case';
 import { useState } from 'react';
 import { CustomNotification } from '../../components/feedback/CustomNotification';
-import { CustomButton } from '../../components/pressables';
+import { CustomButton } from '../../components/pressables/CustomButton';
 import { ReadingLogMenu } from '../../components/inputs/ReadingLogMenu';
-import { FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 
 export const BookDetailsScreen = () => {
 

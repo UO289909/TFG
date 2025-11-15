@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { SearchBar } from '../SearchBar';
 
-// CustomTextInput mock
 jest.mock('../CustomTextInput', () => {
   const { TextInput } = require('react-native');
   return {
@@ -20,7 +19,6 @@ jest.mock('../CustomTextInput', () => {
   };
 });
 
-// CustomIconButton mock
 jest.mock('../../pressables/CustomIconButton', () => {
   const { TouchableOpacity, Text } = require('react-native');
   return {

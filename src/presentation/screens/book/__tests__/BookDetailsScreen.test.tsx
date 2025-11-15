@@ -15,7 +15,7 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-const mockBook = {
+const mockBook: any = {
   isbn: '1234',
   title: 'Clean Code',
   author: 'Robert C. Martin',
@@ -129,20 +129,42 @@ describe('BookDetailsScreen', () => {
     expect(getByText(/páginas/i)).toBeTruthy();
   });
 
-  it('navigates to RateBook when rating', () => {
+  it('shows current page fraction when rating is falsy (0)', () => {
+    mockBook.rating = 0;
+    const { getByText } = render(<BookDetailsScreen />);
+    expect(getByText('120 / 464 páginas')).toBeTruthy();
+  });
+
+  it('navigates to RateBook when rating (rating present path)', () => {
+    // with rating 0 the review section renders a FiveStarsInput (mocked)
+    mockBook.rating = 0;
+    const { getByTestId } = render(<BookDetailsScreen />);
+    fireEvent.press(getByTestId('five-stars'));
+    expect(mockNavigate).toHaveBeenCalledWith('RateBook', { book: mockBook, rating: 5 });
+  });
+
+  it('navigates to RateBook when rating is null (interactive path)', () => {
+    mockBook.rating = null;
     const { getByTestId } = render(<BookDetailsScreen />);
     fireEvent.press(getByTestId('five-stars'));
     expect(mockNavigate).toHaveBeenCalledWith('RateBook', { book: mockBook, rating: 5 });
   });
 
   it('opens reading log menu when pressing register daily read', () => {
+    mockBook.rating = null;
     const { getByTestId, getByText } = render(<BookDetailsScreen />);
-    // el botón tiene título "Registrar lectura diaria"
     fireEvent.press(getByText('Registrar lectura diaria'));
     expect(getByTestId('reading-log-menu')).toBeTruthy();
   });
 
+  it('does not show "Registrar lectura diaria" when book has rating', () => {
+    mockBook.rating = 4;
+    const { queryByText } = render(<BookDetailsScreen />);
+    expect(queryByText('Registrar lectura diaria')).toBeNull();
+  });
+
   it('closes reading log menu when pressing close', () => {
+    mockBook.rating = null;
     const { getByTestId, getByText, queryByTestId } = render(<BookDetailsScreen />);
     fireEvent.press(getByText('Registrar lectura diaria'));
     expect(getByTestId('reading-log-menu')).toBeTruthy();
@@ -155,10 +177,8 @@ describe('BookDetailsScreen', () => {
     fireEvent.press(getByText('Eliminar libro'));
     expect(getByTestId('custom-notification')).toBeTruthy();
 
-    // al pulsar accept debe activar deleteUserBook y navigation.reset
     fireEvent.press(getByTestId('notif-accept'));
 
-    // inmediatamente debería mostrar el full screen loader (deletingBook true)
     expect(getByTestId('full-screen-loader')).toBeTruthy();
 
     await waitFor(() => {

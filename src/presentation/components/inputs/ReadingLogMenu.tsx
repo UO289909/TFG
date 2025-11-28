@@ -20,6 +20,7 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
     const { colors } = useTheme() as CustomTheme;
 
     const [newPage, setNewPage] = useState(book.current_page);
+    const [addingLog, setAddingLog] = useState(false);
 
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
     const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -39,14 +40,16 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
         ]).start();
     }, [scaleAnim, opacityAnim]);
 
-    const handleAddLog = () => {
+    const handleAddLog = async () => {
 
         if (Number(newPage) === Number(book.pages)) {
             navigation.navigate('RateBook', { book, rating: 0 });
             onClose();
             return;
         } else {
-            addReadingLog(book.isbn, book.current_page!, newPage!);
+            setAddingLog(true);
+            await addReadingLog(book.isbn, book.current_page!, newPage!);
+            setAddingLog(false);
             navigation.reset({
                 index: 0,
                 routes: [
@@ -83,7 +86,12 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
                 <CustomButton
                     title="Añadir registro de lectura"
                     onPress={handleAddLog}
-                    disabled={!newPage || Number(newPage) <= Number(book.current_page) || Number(newPage) > Number(book.pages)}
+                    disabled={
+                        !newPage
+                        || Number(newPage) <= Number(book.current_page)
+                        || Number(newPage) > Number(book.pages)
+                        || addingLog
+                    }
                 />
 
             </Animated.View>

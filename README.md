@@ -1,56 +1,55 @@
+# Bookshelf App
 
-# Bookshelf App (TFG)
+En este repositorio encontrarás el código fuente de Bookshelf, una aplicación de registro, valoración y recomendación literaria que permite a sus usuarios tener una estantería digital donde guardar los libros leen, buscar a sus amigos para ver los libros que han leido y sus reseñas, y recibir recomendaciones literarias personalizadas mediante inteligencia artificial.
 
-> **Note**: This steps are design for developers with the required env variables and other information. Currently, the app is thought to run on Android.
+La aplicación ha sido desarrollada como parte de mi TFG y está disponible para dispositivos móviles Android. Para instalarla simplemente descarga el último APK disponible en *Releases* y abrelá con tu móvil.
 
-## Development
+## Desarrollo
 
-### Step 1: Start Metro
+> **Nota**: Estos pasos están diseñados para desarrolladores con las variables de entorno y otras informaciones requeridas.
 
-First, you will need to run **Metro** (JavaScript build tool for React Native).
+### Paso 1: Iniciar Metro
 
-To start the Metro dev server, run the following command from the root of the project:
+Primero, necesitarás ejecutar **Metro** (herramienta de build de JavaScript para React Native).
+
+Para iniciar el servidor de desarrollo Metro, ejecuta el siguiente comando desde la raíz del proyecto:
 
 ```sh
-# Using npm
 npm start
 ```
 
-### Step 2: Build and run your app
+### Paso 2: Compilar y ejecutar la app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+Con Metro en ejecución, abre una nueva terminal/pestaña desde la raíz del proyecto React Native y usa uno de los siguientes comandos para compilar y ejecutar la app en Android:
 
 ```sh
-# Using npm
 npm run android
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator or your connected device.
+Si todo está configurado correctamente, deberías ver la app ejecutándose en el emulador de Android o en el dispositivo conectado.
 
+### Paso 3: Modificar la app
 
-### Step 3: Modify your app
+Ahora que has ejecutado la app correctamente, ¡haz cambios!
 
-Now that you have successfully run the app, let's make changes!
+Abre cualquier archivo en ./src y realiza cambios. Al guardar, la app se actualizará automáticamente y reflejará los cambios.
 
-Open any ./src file and make some changes. When you save, the app will automatically update and reflect these changes.
+Cuando quieras recargar forzosamente, por ejemplo para reiniciar el estado de la app, puedes realizar una recarga completa presionando R en la terminal donde estás ejecutando Metro.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload pressing R on the terminal where you are running Metro.
+## Despliegue
 
-
-## Deployment
-
-For generating a debug/release apk you have to run the following commands:
+Para generar un apk debug/release debes ejecutar los siguientes comandos:
 
 ```sh
-# Navigate to ./android folder
+# Navegar a la carpeta ./android
 cd ./android
 
-# Clear cache (recommendated)
+# Limpiar caché (recomendado)
 ./gradlew clean
 
-# To generate a debug apk
+# Para generar un apk de debug
 ./gradlew assembleDebug
 
-# To generate a release apk
+# Para generar un apk de release
 ./gradlew assembleRelease
 ```

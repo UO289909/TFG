@@ -64,7 +64,7 @@ export const BookDetailsScreen = () => {
 
       {showNotif &&
         <CustomNotification
-          message="Seguro que quieres eliminar este libro?"
+          message="¿Seguro que quieres eliminar este libro?"
           position="bottom"
           onClose={() => setShowNotif(false)}
           onAccept={handleDeleteBook}

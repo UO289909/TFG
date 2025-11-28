@@ -90,7 +90,7 @@ export const ProfileScreen = () => {
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    setNotifMessage('Estás seguro de que quieres cerrar sesión?');
+    setNotifMessage('¿Estás seguro de que quieres cerrar sesión?');
     setShowNotif(true);
   };
 

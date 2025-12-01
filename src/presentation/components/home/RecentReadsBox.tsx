@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 10,
         padding: 4,
-        marginRight: 16,
     },
     loadingText: {
         alignSelf: 'center',

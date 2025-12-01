@@ -83,10 +83,10 @@ export const MonthReadingLogs = () => {
         <View style={styles.container}>
             <FlatList
                 data={readInfoByBook}
-                key={isLandscape ? 'h' : 'v'}
+                key={isLandscape ? 'v' : 'h'}
                 renderItem={renderBookStat}
                 keyExtractor={(item, index) => item.title + index}
-                numColumns={isLandscape ? 2 : 1}
+                numColumns={1}
                 contentContainerStyle={styles.scrollContainer}
             />
         </View>

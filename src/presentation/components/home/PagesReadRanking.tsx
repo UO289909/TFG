@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 4,
         paddingBottom: 12,
-        marginRight: 16,
     },
     rowContainer: {
         flexDirection: 'row',

@@ -46,5 +46,7 @@ describe('FiveStarsInput', () => {
     it('limits the max and min value without error', () => {
         render(<FiveStarsInput onPress={() => { }} value={8} />);
         render(<FiveStarsInput onPress={() => { }} value={-2} />);
+        render(<FiveStarsInput onPress={() => { }} value={0} />);
+        render(<FiveStarsInput onPress={() => { }} value={5} />);
     });
 });

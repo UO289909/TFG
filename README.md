@@ -38,6 +38,8 @@ Cuando quieras recargar forzosamente, por ejemplo para reiniciar el estado de la
 
 ## Despliegue
 
+> **Nota**: Estos pasos están diseñados para desarrolladores con las variables de entorno y otras informaciones requeridas.
+
 Para generar un apk debug/release debes ejecutar los siguientes comandos:
 
 ```sh

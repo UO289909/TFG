@@ -77,9 +77,9 @@ export const useProfile = () => {
     const changeAvatar = async (newAvatarUrl: string) => {
 
         setIsLoadingProfile(true);
-
+        console.log('Changing avatar to URL:', newAvatarUrl);
         await changeUserAvatar(newAvatarUrl);
-
+        console.log('Avatar change request completed.');
         setIsLoadingProfile(false);
 
     };

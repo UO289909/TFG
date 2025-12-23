@@ -103,20 +103,23 @@ export const ProfileScreen = () => {
     setChangingAvatar(true);
 
     try {
+      console.log('Launching image library...');
       const picker = await launchImageLibrary({
         mediaType: 'photo',
         selectionLimit: 1,
       });
 
+      console.log('Image picker result:', picker);
       const asset = picker.assets ? picker.assets[0] : null;
 
       if (!asset || picker.didCancel) {
         setChangingAvatar(false);
         return;
       }
-
+      console.log('Selected asset:', asset);
       await changeAvatar(asset.uri!);
       await refetchProfile();
+      console.log('Avatar changed successfully.');
 
     } finally {
       setChangingAvatar(false);

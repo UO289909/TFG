@@ -1,4 +1,5 @@
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import { databaseUploadMyAvatar } from '../../../infrastructure/database/user.repository';
 
 /**
@@ -7,6 +8,7 @@ import { databaseUploadMyAvatar } from '../../../infrastructure/database/user.re
  */
 export const changeUserAvatar = async (imageUri: string): Promise<void> => {
 
+    console.log('Resizing image for avatar...');
     const treatedImage = await ImageResizer.createResizedImage(
         imageUri,
         512,
@@ -16,10 +18,13 @@ export const changeUserAvatar = async (imageUri: string): Promise<void> => {
         0
     );
 
-    const response = await fetch(treatedImage.uri);
-    if (!response.ok) {
-        throw new Error('Cannot read processed WEBP avatar');
-    }
+    // const response = await fetch(treatedImage.uri);
+    // if (!response.ok) {
+    //     throw new Error('Cannot read processed WEBP avatar');
+    // }
 
-    await databaseUploadMyAvatar(treatedImage.uri);
+    const blob = await ReactNativeBlobUtil.fs.readFile(treatedImage.uri, 'base64')
+        .then(data => Uint8Array.from(ReactNativeBlobUtil.base64.decode(data), c => c.charCodeAt(0)).buffer);
+
+    await databaseUploadMyAvatar(blob);
 };

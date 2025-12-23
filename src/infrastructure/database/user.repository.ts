@@ -39,22 +39,22 @@ export const databaseGetUserInfo = async (id?: string): Promise<DatabaseUser> =>
  * @param file The avatar file route to upload.
  * @returns The file name of the uploaded avatar.
  */
-export const databaseUploadMyAvatar = async (fileUri: string): Promise<string> => {
+export const databaseUploadMyAvatar = async (fileBuffer: ArrayBuffer): Promise<string> => {
 
     const userId = await getUserId();
     const fileName = `${userId}.webp`;
 
-    const formData = new FormData();
-    formData.append('file', {
-        uri: fileUri,
-        name: fileName,
-        type: 'image/webp',
-    } as any);
+    // const formData = new FormData();
+    // formData.append('file', {
+    //     uri: fileUri,
+    //     name: fileName,
+    //     type: 'image/webp',
+    // } as any);
 
     const { error } = await SupabaseClient
         .storage
         .from(AVATARS_BUCKET)
-        .upload(fileName, formData, { upsert: true, contentType: 'image/webp' });
+        .upload(fileName, fileBuffer, { upsert: true, contentType: 'image/webp' });
 
     if (error) {
         throw new Error(`Error uploading avatar: ${error.message}`);

@@ -17,6 +17,7 @@ const Stack = createNativeStackNavigator();
 
 const AuthTabs = () => (
   <Tab.Navigator
+  id="AuthTabsNavigator"
     screenOptions={{
       tabBarLabelStyle: {
         fontFamily: 'Roboto-Light',
@@ -35,6 +36,7 @@ export const AuthStackNavigator = () => {
 
   return (
     <Stack.Navigator
+      id="AuthStackNavigator"
       screenOptions={{
         headerShown: true,
         headerTitleStyle: {

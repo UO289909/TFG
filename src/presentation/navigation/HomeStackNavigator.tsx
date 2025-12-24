@@ -21,6 +21,7 @@ export const HomeStackNavigator = () => {
 
     return (
         <Stack.Navigator
+            id="HomeStackNavigator"
             screenOptions={{
                 headerShown: true,
                 headerTitleStyle: {

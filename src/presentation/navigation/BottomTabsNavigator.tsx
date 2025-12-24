@@ -32,6 +32,7 @@ export const BottomTabsNavigator = () => {
 
     return (
         <Tab.Navigator
+            id="BottomTabsNavigator"
             screenOptions={{
                 headerShown: true,
                 headerTitleStyle: {

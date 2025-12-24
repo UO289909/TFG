@@ -22,6 +22,7 @@ export const ProfileStackNavigator = () => {
 
     return (
         <Stack.Navigator
+            id="ProfileStackNavigator"
             screenOptions={{
                 headerShown: true,
                 headerTitleStyle: {

@@ -21,6 +21,7 @@ export const MyBooksStackNavigator = () => {
 
   return (
     <Stack.Navigator
+      id="MyBooksStackNavigator"
       screenOptions={{
         headerShown: true,
         headerTitleStyle: {

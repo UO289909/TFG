@@ -7,6 +7,7 @@ import { CustomTextInput } from './CustomTextInput';
 import { addReadingLog } from '../../../core/use-cases/books/add-reading-log.use-case';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { Book } from '../../../core/entities/book.entity';
+import { FullScreenLoader } from '../feedback';
 
 interface Props {
     book: Book;
@@ -62,7 +63,7 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
 
     return (
         <View style={styles.overlay}>
-            <TouchableOpacity style={styles.overlayBg} onPress={onClose} />
+            <TouchableOpacity style={styles.overlayBg} onPress={addingLog ? null : onClose} />
             <Animated.View
                 style={[
                     styles.menuContainer,
@@ -74,25 +75,33 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
                 ]}
             >
 
-                <CustomTextInput
-                    label="Hoy has leido hasta la página..."
-                    style={styles.input}
-                    info={`Ibas por la página ${book.current_page} de ${book.pages}`}
-                    value={newPage!}
-                    onChangeText={text => setNewPage(text.replace(/[^0-9]/g, ''))}
-                    keyboardType="numeric"
-                />
+                {addingLog &&
+                    <FullScreenLoader message="Añadiendo registro de lectura..." />
+                }
 
-                <CustomButton
-                    title="Añadir registro de lectura"
-                    onPress={handleAddLog}
-                    disabled={
-                        !newPage
-                        || Number(newPage) <= Number(book.current_page)
-                        || Number(newPage) > Number(book.pages)
-                        || addingLog
-                    }
-                />
+                {!addingLog &&
+                    <>
+                        <CustomTextInput
+                            label="Hoy has leido hasta la página..."
+                            style={styles.input}
+                            info={`Ibas por la página ${book.current_page} de ${book.pages}`}
+                            value={newPage!}
+                            onChangeText={text => setNewPage(text.replace(/[^0-9]/g, ''))}
+                            keyboardType="numeric"
+                        />
+
+                        <CustomButton
+                            title="Añadir registro de lectura"
+                            onPress={handleAddLog}
+                            disabled={
+                                !newPage
+                                || Number(newPage) <= Number(book.current_page)
+                                || Number(newPage) > Number(book.pages)
+                                || addingLog
+                            }
+                        />
+                    </>
+                }
 
             </Animated.View>
         </View>

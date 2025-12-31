@@ -33,6 +33,7 @@ export const BottomTabsNavigator = () => {
     return (
         <Tab.Navigator
             id="BottomTabsNavigator"
+            key={`bottom-tabs-${colors.text}`}
             screenOptions={{
                 headerShown: true,
                 headerTitleStyle: {
@@ -43,6 +44,7 @@ export const BottomTabsNavigator = () => {
                 tabBarStyle: {
                     borderTopWidth: 0,
                     elevation: 10,
+                    backgroundColor: colors.navigationBackground,
                 },
                 tabBarLabelStyle: {
                     fontFamily: 'Roboto-Bold',

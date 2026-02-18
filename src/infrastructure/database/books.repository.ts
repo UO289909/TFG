@@ -42,6 +42,43 @@ export const databaseGetMyBooks = async (limit?: number, offset?: number): Promi
 };
 
 /**
+ * Fetches the books associated with a specific user from the database.
+ *
+ * @param {string} user The ID of the user.
+ * @param {number} [limit] The maximum number of books to fetch.
+ * @param {number} [offset] The number of books to skip before starting to fetch.
+ * @returns {Promise<UserBook[]>} A promise that resolves to the user's books data in descending order.
+ * @throws {Error} If there is an error fetching the data from the database.
+ */
+export const databaseGetBooksByUser = async (user: string, offset?: number, limit?: number): Promise<UserBook[]> => {
+
+    let query = SupabaseClient
+        .from('user_books')
+        .select()
+        .eq('user_id', user)
+        .order('created_at', { ascending: false });
+
+    if (typeof limit === 'number' && typeof offset === 'number') {
+        query = query.range(offset, offset + limit - 1);
+    }
+
+    try {
+
+        const { data, error } = await query;
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching user books from database: ${error}`);
+    }
+
+};
+
+/**
  * Checks if a book exists in the user's collection.
  *
  * @param isbn The ISBN of the book to check.

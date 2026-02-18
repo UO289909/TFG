@@ -1,19 +1,20 @@
 import { FlatList, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { CompactBookCard } from '../books/CompactBookCard';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { Book } from '../../../core/entities/book.entity';
 import { FullScreenLoader } from '../feedback';
 import { RootStackParams } from '../../navigation/HomeStackNavigator';
+import { FriendBookCard } from './FriendBookCard';
 import { User } from '../../../core/entities/user.entity';
 
 interface Props {
-    recentReads: { user: User, book: Book }[];
+    books: Book[];
     loading: boolean;
     error?: boolean;
+    friend: User;
 }
 
-export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
+export const FriendBooksBox = ({ books, loading, error, friend }: Props) => {
 
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
@@ -22,17 +23,18 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height;
 
-    const handleGoToReadInfo = (book: Book, user: User) => {
-        navigation.navigate('ReadDetails', { book, user, userPressable: true });
+    const handleGoToReadInfo = (book: Book) => {
+        navigation.navigate('ReadDetails', { book, user: friend, userPressable: false });
     };
 
-    const renderReadInfo = ({ item }: { item: { user: User, book: Book } }) => (
-        <CompactBookCard
-            title={item.book.title}
-            cover_url={item.book.cover_url}
-            rating={item.book.rating}
-            nickname={item.user.nickname}
-            onPress={() => handleGoToReadInfo(item.book, item.user)}
+    const renderBook = ({ item }: { item: Book }) => (
+        <FriendBookCard
+            title={item.title}
+            cover_url={item.cover_url}
+            rating={item.rating}
+            pages={item.pages}
+            current_page={item.current_page}
+            onPress={() => handleGoToReadInfo(item)}
         />
     );
 
@@ -46,7 +48,7 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
                 },
             ]}>
                 <Text style={{ ...styles.loadingText, color: colors.text }}>
-                    No hay lecturas recientes de amigos disponibles.
+                    No hay libros disponibles.
                 </Text>
             </View>
         );
@@ -63,7 +65,23 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
             ]}>
                 <FullScreenLoader />
                 <Text style={{ ...styles.loadingText, color: colors.text }}>
-                    Cargando lecturas recientes de tus amigos...
+                    Cargando libros...
+                </Text>
+            </View>
+        );
+    }
+
+    if (books.length === 0) {
+        return (
+            <View style={[
+                styles.loadingContainer,
+                {
+                    backgroundColor: colors.card,
+                    shadowColor: colors.shadow,
+                },
+            ]}>
+                <Text style={{ ...styles.loadingText, color: colors.text }}>
+                    {friend.nickname} no tiene libros registrados.
                 </Text>
             </View>
         );
@@ -77,12 +95,13 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
                 shadowColor: colors.shadow,
             },
         ]}>
-            <Text style={{ ...styles.title, color: colors.text }}>Lecturas recientes de amigos</Text>
+            <Text style={{ ...styles.title, color: colors.text }}>Libros de {friend.nickname}</Text>
             <FlatList
-                data={recentReads}
+                data={books}
                 key={isLandscape ? 'h' : 'v'}
-                renderItem={renderReadInfo}
+                renderItem={renderBook}
                 horizontal
+                showsHorizontalScrollIndicator={false}
             />
         </View>
     );
@@ -102,7 +121,6 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
-        marginTop: 10,
         padding: 12,
     },
     container: {
@@ -114,13 +132,13 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
-        margin: 10,
         padding: 4,
     },
     loadingText: {
         alignSelf: 'center',
         fontSize: 14,
         fontFamily: 'Roboto-Regular',
+        textAlign: 'center',
     },
     title: {
         alignSelf: 'center',

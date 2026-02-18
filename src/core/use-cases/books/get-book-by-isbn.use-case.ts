@@ -14,34 +14,33 @@ import { Book } from '../../entities/book.entity';
 export const getBookByIsbn = async (
     fetcher: HttpAdapter,
     isbn: string,
-): Promise<{book: Book | null, fromOpenLibrary: boolean | null, alreadyInUser: boolean}> => {
+): Promise<{ book: Book | null, fromOpenLibrary: boolean | null, alreadyInUser: boolean }> => {
 
     try {
         const alreadyInUser = await databaseCheckUserBookExists(isbn);
         if (alreadyInUser) {
-            return {book: null, fromOpenLibrary: null, alreadyInUser};
+            return { book: null, fromOpenLibrary: null, alreadyInUser };
         }
 
         const bookInfo: DatabaseBook = await databaseSearchBookByIsbn(isbn);
 
         if (!bookInfo || (Array.isArray(bookInfo) && bookInfo.length === 0) || bookInfo.isbn === null) {
             const details: OpenLibraryResponseByIsbn = await fetcher.get('', {
-            params: {
-                format: 'json',
-                jscmd: 'data',
-                bibkeys: `ISBN:${isbn}`,
-            },
+                params: {
+                    format: 'json',
+                    jscmd: 'data',
+                    bibkeys: `ISBN:${isbn}`,
+                },
             });
-
             const bookData: BookData = Object.values(details)[0];
             if (!bookData) {
-                return {book: null, fromOpenLibrary: true, alreadyInUser: false};
+                return { book: null, fromOpenLibrary: true, alreadyInUser: false };
             }
             const book: Book = BookMapper.fromOpenLibraryResponseToEntity(bookData);
-            return {book, fromOpenLibrary: true, alreadyInUser: false};
+            return { book, fromOpenLibrary: true, alreadyInUser: false };
         } else {
             const book: Book = BookMapper.fromDatabaseBookToEntity(bookInfo);
-            return {book, fromOpenLibrary: false, alreadyInUser: false};
+            return { book, fromOpenLibrary: false, alreadyInUser: false };
         }
 
     } catch (error) {

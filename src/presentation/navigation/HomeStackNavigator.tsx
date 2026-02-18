@@ -3,13 +3,16 @@ import { HomeScreen, ResumeBookDetailsScreen, MonthReadingLogs } from '../screen
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
 import { Book } from '../../core/entities/book.entity';
-import { RecentReadScreen } from '../screens/home/RecentReadScreen';
+import { FriendReadScreen } from '../screens/home/FriendReadScreen';
+import { User } from '../../core/entities/user.entity';
+import { FriendScreen } from '../screens/profile/FriendScreen';
 
 
 export type RootStackParams = {
     HomeScreen: undefined;
     BookDetails: { book: Book };
-    ReadDetails: { book: Book, nickname: string, avatarUrl: string | null };
+    ReadDetails: { book: Book, user: User, userPressable: boolean };
+    Friend: { friend: User, fromHome?: boolean };
     MonthLogs: undefined;
 }
 
@@ -37,7 +40,8 @@ export const HomeStackNavigator = () => {
         >
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Inicio' }} />
             <Stack.Screen name="BookDetails" component={ResumeBookDetailsScreen} options={{ title: 'Detalles del libro' }} />
-            <Stack.Screen name="ReadDetails" component={RecentReadScreen} options={{ title: 'Lectura reciente' }} />
+            <Stack.Screen name="ReadDetails" component={FriendReadScreen} options={{ title: 'Lectura reciente' }} />
+            <Stack.Screen name="Friend" component={FriendScreen} options={{ title: 'Amigo' }} />
             <Stack.Screen name="MonthLogs" component={MonthReadingLogs} options={{ title: 'Registros del mes' }} />
         </Stack.Navigator>
     );

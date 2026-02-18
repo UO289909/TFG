@@ -22,7 +22,7 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
 
     return (
         <Pressable
-            onPress={onPress}
+            onPress={type == 'friend' ? onPress : undefined}
             style={({ pressed }) => ({
                 ...styles.cardContainer,
                 backgroundColor: pressed && type == 'friend' ? colors.cardPressed : colors.card,

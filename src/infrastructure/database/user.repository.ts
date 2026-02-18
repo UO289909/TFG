@@ -298,7 +298,11 @@ export const databaseRejectRequest = async (friendId: string): Promise<void> => 
     }
 };
 
-
+/**
+ * Changes the nickname of the current user.
+ * @param newNickname The new nickname to set.
+ * @returns A promise that resolves to true if the nickname was changed successfully.
+ */
 export const databaseChangeNickname = async (newNickname: string): Promise<boolean> => {
 
     const userId = await getUserId();
@@ -318,5 +322,31 @@ export const databaseChangeNickname = async (newNickname: string): Promise<boole
 
     } catch (error) {
         throw new Error('Error al cambiar el nickname, inténtalo de nuevo');
+    }
+};
+
+/**
+ * Gets the number of friends a user has.
+ * @param id The ID of the user.
+ * @returns A promise that resolves to the number of friends the user has.
+ */
+export const databaseGetUserFriendNumber = async (id: string): Promise<number> => {
+
+    try {
+
+        const { data, error } = await SupabaseClient
+            .from('friends')
+            .select()
+            .or(`sender.eq.${id}, receiver.eq.${id}`)
+            .eq('accepted', true);
+
+        if (error) {
+            throw error;
+        }
+
+        return data.length;
+
+    } catch (error) {
+        throw new Error(`Error fetching user friend number: ${error}`);
     }
 };

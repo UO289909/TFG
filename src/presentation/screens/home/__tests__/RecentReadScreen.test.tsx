@@ -41,15 +41,15 @@ jest.mock('../../../components/inputs/FiveStarsInput', () => {
   };
 });
 
-import { RecentReadScreen } from '../RecentReadScreen';
+import { FriendReadScreen } from '../FriendReadScreen';
 
-describe('RecentReadScreen', () => {
+describe('FriendReadScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('renders basic book info (title, author, pages, year)', () => {
-    const { getByText } = render(<RecentReadScreen />);
+    const { getByText } = render(<FriendReadScreen />);
     expect(getByText('Clean Code')).toBeTruthy();
     expect(getByText('Robert C. Martin')).toBeTruthy();
     expect(getByText(/páginas/i)).toBeTruthy();
@@ -57,7 +57,7 @@ describe('RecentReadScreen', () => {
   });
 
   it('when rating is null shows current page fraction and hides review/dates', () => {
-    const { getByText, queryByText } = render(<RecentReadScreen />);
+    const { getByText, queryByText } = render(<FriendReadScreen />);
     expect(getByText(/120 \/\s*464\s*páginas/i)).toBeTruthy();
     expect(queryByText('Reseña')).toBeNull();
     expect(queryByText(/Leido por/i)).toBeNull();
@@ -96,7 +96,7 @@ describe('RecentReadScreen', () => {
       };
     });
 
-    const { RecentReadScreen: Screen } = require('../RecentReadScreen');
+    const { FriendReadScreen: Screen } = require('../FriendReadScreen');
     const { getByText, getByTestId } = render(React.createElement(Screen));
 
     expect(getByText('Reseña')).toBeTruthy();

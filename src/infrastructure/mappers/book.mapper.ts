@@ -9,7 +9,7 @@ export class BookMapper {
         return {
             isbn: response.identifiers.isbn_13?.[0] || response.identifiers.isbn_10?.[0],
             title: response.title,
-            author: response.authors[0].name,
+            author: response.authors?.[0]?.name || null,
             pages: response.number_of_pages !== null && response.number_of_pages !== undefined
                 ? response.number_of_pages.toString()
                 : null,

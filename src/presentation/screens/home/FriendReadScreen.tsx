@@ -1,21 +1,26 @@
-import { RouteProp, useRoute, useTheme } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/HomeStackNavigator';
 import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { CustomTheme } from '../../../config/app-theme';
 import { MiniUserCard } from '../../components/profile/MiniUserCard';
 
-export const RecentReadScreen = () => {
+export const FriendReadScreen = () => {
 
   const { params } = useRoute<RouteProp<RootStackParams, 'ReadDetails'>>();
-  const { book, nickname, avatarUrl } = params;
+  const { book, user, userPressable } = params;
 
+  const navigation = useNavigation<any>();
   const { colors } = useTheme() as CustomTheme;
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
 
   const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
+
+  const handleNavigateToUser = () => {
+    navigation.navigate('Friend', { friend: user, fromHome: true });
+  };
 
 
   return (
@@ -32,11 +37,12 @@ export const RecentReadScreen = () => {
           <View style={styles.coverContainer}>
             <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
             <MiniUserCard
-              nickname={nickname}
-              avatarUrl={avatarUrl}
+              nickname={user.nickname}
+              avatarUrl={user.avatarUrl}
+              onPress={userPressable ? handleNavigateToUser : undefined}
               style={({ pressed }) => [
                 styles.floatingUserCard,
-                { opacity: pressed ? 0.6 : 0.8 },
+                { opacity: pressed && userPressable ? 0.6 : 0.8 },
               ]}
             />
           </View>
@@ -54,11 +60,12 @@ export const RecentReadScreen = () => {
 
           {isLandscape &&
             <MiniUserCard
-              nickname={nickname}
-              avatarUrl={avatarUrl}
+              nickname={user.nickname}
+              avatarUrl={user.avatarUrl}
+              onPress={userPressable ? handleNavigateToUser : undefined}
               style={({ pressed }) => [
                 styles.floatingUserCardLandscape,
-                { backgroundColor: pressed ? colors.cardPressed : colors.card },
+                { backgroundColor: pressed && userPressable ? colors.cardPressed : colors.card },
               ]}
             />
           }

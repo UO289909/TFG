@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   authorText: {
     fontSize: 20,
     fontFamily: 'Roboto-Medium',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   pagesText: {
     fontSize: 16,

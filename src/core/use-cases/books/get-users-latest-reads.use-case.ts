@@ -9,7 +9,7 @@ import { User } from '../../entities/user.entity';
  */
 export const getUsersLatestReads = async (
     users: User[],
-): Promise<{ nickname: string, avatarUrl: string | null, book: Book }[]> => {
+): Promise<{ user: User, book: Book }[]> => {
 
     const readBooks = await databaseGetUsersReadBooks(users.map(u => u.id));
 
@@ -21,7 +21,7 @@ export const getUsersLatestReads = async (
         const userBooks = readBooks.filter(book => book.user_id === user.id);
 
         if (userBooks.length === 0) {
-            return { nickname: user.nickname, avatarUrl: user.avatarUrl, book: null };
+            return { user: user, book: null };
         }
 
         const userBook = userBooks.reduce((a, b) =>
@@ -45,7 +45,7 @@ export const getUsersLatestReads = async (
             created_at: userBook.created_at,
         } as Book;
 
-        return { nickname: user.nickname, avatarUrl: user.avatarUrl, book };
+        return { user, book };
     });
 
     const latestReadBooks = await Promise.all(latestReadBooksPromise);

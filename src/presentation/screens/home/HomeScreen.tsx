@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { PagesReadRanking, StatsCard } from '../../components/home';
+import { PagesReadRanking, RecentReadsBox, StatsCard } from '../../components/home';
 import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
@@ -11,7 +11,6 @@ import { CustomButton } from '../../components/pressables';
 import { useRecommendations } from '../../hooks/useRecomendations';
 import { RecommendationBox } from '../../components/recommendations/RecommendationsBox';
 import { useStats } from '../../hooks/useStats';
-import { RecentReadsBox } from '../../components/home/RecentReadsBox';
 
 export const HomeScreen = () => {
 
@@ -152,17 +151,17 @@ export const HomeScreen = () => {
 
       <View style={{ ...styles.separator, shadowColor: colors.shadow, backgroundColor: colors.card }} />
 
-        <RecentReadsBox
-          recentReads={friendsRecentReads}
-          loading={loadingFriendsRecentReads}
-          error={!loadingFriendsRecentReads && friendsRecentReads.length === 0}
-        />
+      <RecentReadsBox
+        recentReads={friendsRecentReads}
+        loading={loadingFriendsRecentReads}
+        error={!loadingFriendsRecentReads && friendsRecentReads.length === 0}
+      />
 
-        <PagesReadRanking
-          pagesRanking={friendsPagesRead}
-          loading={loadingFriendsPagesRead}
-          error={!loadingFriendsPagesRead && friendsPagesRead.length <= 1}
-        />
+      <PagesReadRanking
+        pagesRanking={friendsPagesRead}
+        loading={loadingFriendsPagesRead}
+        error={!loadingFriendsPagesRead && friendsPagesRead.length <= 1}
+      />
 
     </ScrollView>
 
@@ -173,6 +172,7 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     alignItems: 'center',
+    paddingBottom: 10,
   },
   statsRow: {
     flexDirection: 'row',

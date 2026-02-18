@@ -5,6 +5,7 @@ import { Book } from '../../core/entities/book.entity';
 import { getReadingLogs } from '../../core/use-cases/books/get-reading-logs.use-case';
 import { useProfile } from './useProfile';
 import { getUsersLatestReads } from '../../core/use-cases/books/get-users-latest-reads.use-case';
+import { User } from '../../core/entities/user.entity';
 
 
 export const useStats = () => {
@@ -18,7 +19,7 @@ export const useStats = () => {
     const [totalBooks, setTotalBooks] = useState(0);
 
     const [loadingFriendsRecentReads, setLoadingFriendsRecentReads] = useState(true);
-    const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; avatarUrl: string | null; book: Book; }[]>([]);
+    const [friendsRecentReads, setFriendsRecentReads] = useState<{ user: User, book: Book }[]>([]);
 
     const [loadingFriendsPagesRead, setLoadingFriendsPagesRead] = useState(false);
     const [friendsPagesRead, setFriendsPagesRead] = useState<{ nickname: string, pages: number }[]>([]);
@@ -104,7 +105,7 @@ export const useStats = () => {
 
         setLoadingFriendsRecentReads(true);
 
-        const recentReads: { nickname: string; avatarUrl: string | null; book: Book; }[] = await getUsersLatestReads(friends);
+        const recentReads: { user: User, book: Book }[] = await getUsersLatestReads(friends);
 
         setFriendsRecentReads(recentReads);
 

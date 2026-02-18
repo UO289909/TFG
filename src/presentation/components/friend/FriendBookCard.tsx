@@ -8,12 +8,13 @@ interface Props {
     title: string;
     cover_url: string | null;
     rating: 1 | 2 | 3 | 4 | 5 | null;
-    nickname: string;
+    pages: string | null;
+    current_page: string | null;
     onPress: () => void;
     style?: StyleProp<any>;
 }
 
-export const CompactBookCard = ({ title, cover_url, rating, nickname, onPress, style }: Props) => {
+export const FriendBookCard = ({ title, cover_url, rating, pages, current_page, onPress, style }: Props) => {
     const default_cover = `https://placehold.co/160x256.webp?text=${title}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
@@ -38,13 +39,24 @@ export const CompactBookCard = ({ title, cover_url, rating, nickname, onPress, s
             />
 
             <View style={styles.infoContainer}>
-                <Text style={{ ...styles.text, color: colors.text }}>{nickname}</Text>
-                <FiveStarsInput
-                    onPress={() => { }}
-                    editable={false}
-                    value={rating}
-                    size="tiny"
-                />
+                <Text
+                    style={{ ...styles.title, color: colors.text }}
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                >
+                    {title}
+                </Text>
+                {rating !== null
+                    ? <FiveStarsInput
+                        onPress={() => { }}
+                        editable={false}
+                        value={rating}
+                        size="tiny"
+                    />
+                    : <Text style={{ ...styles.text, color: colors.text }}>
+                        {`${current_page} / ${pages}`}
+                    </Text>
+                }
             </View>
 
         </Pressable>
@@ -67,6 +79,7 @@ const styles = StyleSheet.create({
         margin: 5,
         marginVertical: 10,
         padding: 5,
+        paddingBottom: 10,
     },
     cover: {
         width: '95%',
@@ -76,15 +89,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 6,
         elevation: 4,
+        marginBottom: 4,
     },
     infoContainer: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
     },
-    text: {
-        textAlign: 'center',
+    title: {
         fontSize: 16,
         fontFamily: 'Roboto-Regular',
-        marginBottom: 2,
+        textAlign: 'center',
+
+    },
+    text: {
+        fontSize: 14,
+        fontFamily: 'Roboto-Italic',
+        textAlign: 'center',
     },
 });

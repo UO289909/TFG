@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomIconButton } from '../pressables/CustomIconButton';
 import { useTheme } from '@react-navigation/native';
@@ -10,21 +10,25 @@ interface Props {
     type?: UserType;
     onRightButtonPress: () => void;
     onRejectRequest?: () => void;
+    onPress?: () => void;
 }
 
 export type UserType = 'user' | 'friend' | 'requestSent' | 'requestReceived';
 
-export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => { } }: Props) => {
+export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButtonPress, onRejectRequest = () => { }, onPress }: Props) => {
     const default_avatar = `https://placehold.co/150x150.webp?text=${nickname}&font=roboto`;
 
     const { colors } = useTheme() as CustomTheme;
 
     return (
-        <View style={{
-            ...styles.cardContainer,
-            backgroundColor: colors.card,
-            shadowColor: colors.shadow,
-        }}>
+        <Pressable
+            onPress={onPress}
+            style={({ pressed }) => ({
+                ...styles.cardContainer,
+                backgroundColor: pressed && type == 'friend' ? colors.cardPressed : colors.card,
+                shadowColor: colors.shadow,
+            })}
+        >
 
             <Image
                 source={{ uri: avatarUrl || default_avatar }}
@@ -32,9 +36,9 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
             />
 
             <View style={styles.infoContainer}>
-                <Text style={{...styles.nickname, color: colors.text}}>{nickname}</Text>
-                <Text style={{...styles.name, color: colors.secondaryText}}>{name}</Text>
-                <Text style={{...styles.alreadyFriend, color: colors.text}}>{
+                <Text style={{ ...styles.nickname, color: colors.text }}>{nickname}</Text>
+                <Text style={{ ...styles.name, color: colors.secondaryText }}>{name}</Text>
+                <Text style={{ ...styles.alreadyFriend, color: colors.text }}>{
                     type === 'friend'
                         ? '¡Ya es tu amigo!'
                         : type === 'requestSent'
@@ -81,7 +85,7 @@ export const UserCard = ({ nickname, avatarUrl, name, type = 'user', onRightButt
                 style={styles.button}
             />
 
-        </View>
+        </Pressable>
     );
 };
 

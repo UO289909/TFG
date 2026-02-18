@@ -4,10 +4,13 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
 import { PasswordChangeScreen } from '../screens/auth/PasswordChangeScreen';
 import { NicknameChangeScreen } from '../screens/profile/NicknameChangeScreen';
+import { FriendScreen } from '../screens/profile/FriendScreen';
+import { User } from '../../core/entities/user.entity';
 
 export type RootStackParams = {
     ProfileMenu: { doRefetch?: boolean };
     Friends: undefined;
+    Friend: { friend: User };
     SearchUsers: undefined;
     FriendRequests: undefined;
     PasswordChange: { alreadySentCode: boolean, notifPosition: 'top' | 'bottom' } | undefined;
@@ -38,6 +41,7 @@ export const ProfileStackNavigator = () => {
         >
             <Stack.Screen name="ProfileMenu" component={ProfileScreen} options={{ title: 'Perfil' }} />
             <Stack.Screen name="Friends" component={FriendsScreen} options={{ title: 'Amigos' }} />
+            <Stack.Screen name="Friend" component={FriendScreen} options={{ title: 'Amigo' }} />
             <Stack.Screen name="SearchUsers" component={SearchUsersScreen} options={{ title: 'Buscar usuarios' }} />
             <Stack.Screen name="FriendRequests" component={FriendRequestsScreen} options={{ title: 'Solicitudes de amistad' }} />
             <Stack.Screen name="PasswordChange" component={PasswordChangeScreen} options={{ title: 'Cambiar contraseña' }} />

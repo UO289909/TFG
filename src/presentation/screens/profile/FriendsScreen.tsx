@@ -11,11 +11,13 @@ import { User } from '../../../core/entities/user.entity';
 import { getFriendsByRequests } from '../../../core/use-cases/user/get-friends-by-request.use-case';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
 import { useProfile } from '../../hooks/useProfile';
-import { useTheme } from '@react-navigation/native';
+import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
+import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 
 
 export const FriendsScreen = () => {
 
+    const navigation = useNavigation<NavigationProp<RootStackParams>>();
     const { colors } = useTheme() as CustomTheme;
 
     const { friendRequests, refetchFriendRequests } = useProfile();
@@ -160,6 +162,7 @@ export const FriendsScreen = () => {
                                 name={friend.full_name}
                                 avatarUrl={friend.avatarUrl}
                                 type="friend"
+                                onPress={() => navigation.navigate('Friend', { friend })}
                                 onRightButtonPress={() => handleDeleteFriend(friend.id)}
                             />
                         ))

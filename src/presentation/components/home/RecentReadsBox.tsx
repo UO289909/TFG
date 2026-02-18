@@ -7,7 +7,7 @@ import { FullScreenLoader } from '../feedback';
 import { RootStackParams } from '../../navigation/HomeStackNavigator';
 
 interface Props {
-    recentReads: { nickname: string, book: Book }[];
+    recentReads: { nickname: string, avatarUrl: string | null, book: Book }[];
     loading: boolean;
     error?: boolean;
 }
@@ -21,17 +21,17 @@ export const RecentReadsBox = ({ recentReads, loading, error }: Props) => {
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height;
 
-    const handleGoToReadInfo = (book: Book, nickname: string) => {
-        navigation.navigate('ReadDetails', { book, nickname });
+    const handleGoToReadInfo = (book: Book, nickname: string, avatarUrl: string | null) => {
+        navigation.navigate('ReadDetails', { book, nickname, avatarUrl });
     };
 
-    const renderReadInfo = ({ item }: { item: { nickname: string, book: Book } }) => (
+    const renderReadInfo = ({ item }: { item: { nickname: string, avatarUrl: string | null, book: Book } }) => (
         <CompactBookCard
             title={item.book.title}
             cover_url={item.book.cover_url}
             rating={item.book.rating}
             nickname={item.nickname}
-            onPress={() => handleGoToReadInfo(item.book, item.nickname)}
+            onPress={() => handleGoToReadInfo(item.book, item.nickname, item.avatarUrl)}
         />
     );
 

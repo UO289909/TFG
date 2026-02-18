@@ -9,7 +9,7 @@ import { User } from '../../entities/user.entity';
  */
 export const getUsersLatestReads = async (
     users: User[],
-): Promise<{ nickname: string, book: Book }[]> => {
+): Promise<{ nickname: string, avatarUrl: string | null, book: Book }[]> => {
 
     const readBooks = await databaseGetUsersReadBooks(users.map(u => u.id));
 
@@ -21,7 +21,7 @@ export const getUsersLatestReads = async (
         const userBooks = readBooks.filter(book => book.user_id === user.id);
 
         if (userBooks.length === 0) {
-            return { nickname: user.nickname, book: null };
+            return { nickname: user.nickname, avatarUrl: user.avatarUrl, book: null };
         }
 
         const userBook = userBooks.reduce((a, b) =>
@@ -31,21 +31,21 @@ export const getUsersLatestReads = async (
         const dbBook = await databaseSearchBookByIsbn(userBook.isbn);
 
         const book = {
-                isbn: userBook.isbn,
-                title: dbBook.title,
-                pages: userBook.pages !== null && userBook.pages !== '0' && userBook.pages !== 0 ? userBook.pages.toString() : dbBook.pages,
-                current_page: userBook.current_page.toString(),
-                cover_url: userBook.cover_url !== null ? userBook.cover_url : dbBook.cover_url,
-                release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
-                author: userBook.author !== null ? userBook.author : dbBook.author,
-                rating: userBook.rating,
-                review: userBook.review,
-                start_date: userBook.start_date,
-                finish_date: userBook.finish_date,
-                created_at: userBook.created_at,
-            } as Book;
+            isbn: userBook.isbn,
+            title: dbBook.title,
+            pages: userBook.pages !== null && userBook.pages !== '0' && userBook.pages !== 0 ? userBook.pages.toString() : dbBook.pages,
+            current_page: userBook.current_page.toString(),
+            cover_url: userBook.cover_url !== null ? userBook.cover_url : dbBook.cover_url,
+            release_year: userBook.release_year !== null && userBook.release_year !== 0 ? userBook.release_year.toString() : dbBook.release_year,
+            author: userBook.author !== null ? userBook.author : dbBook.author,
+            rating: userBook.rating,
+            review: userBook.review,
+            start_date: userBook.start_date,
+            finish_date: userBook.finish_date,
+            created_at: userBook.created_at,
+        } as Book;
 
-        return { nickname: user.nickname, book };
+        return { nickname: user.nickname, avatarUrl: user.avatarUrl, book };
     });
 
     const latestReadBooks = await Promise.all(latestReadBooksPromise);

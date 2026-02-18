@@ -9,7 +9,7 @@ import { RecentReadScreen } from '../screens/home/RecentReadScreen';
 export type RootStackParams = {
     HomeScreen: undefined;
     BookDetails: { book: Book };
-    ReadDetails: { book: Book, nickname: string };
+    ReadDetails: { book: Book, nickname: string, avatarUrl: string | null };
     MonthLogs: undefined;
 }
 

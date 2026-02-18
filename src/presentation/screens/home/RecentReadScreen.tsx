@@ -3,11 +3,12 @@ import { RootStackParams } from '../../navigation/HomeStackNavigator';
 import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { CustomTheme } from '../../../config/app-theme';
+import { MiniUserCard } from '../../components/profile/MiniUserCard';
 
 export const RecentReadScreen = () => {
 
   const { params } = useRoute<RouteProp<RootStackParams, 'ReadDetails'>>();
-  const { book, nickname } = params;
+  const { book, nickname, avatarUrl } = params;
 
   const { colors } = useTheme() as CustomTheme;
 
@@ -28,6 +29,8 @@ export const RecentReadScreen = () => {
         {!isLandscape &&
           <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
         }
+
+        <MiniUserCard nickname={nickname} avatarUrl={avatarUrl} />
 
         <View style={[
           isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
@@ -70,6 +73,7 @@ export const RecentReadScreen = () => {
 
       </ScrollView >
 
+
     </View >
   );
 };
@@ -89,6 +93,29 @@ const styles = StyleSheet.create({
   scrollContainerLandscape: {
     alignItems: 'flex-start',
     padding: 20,
+  },
+  userContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 6,
+    flexDirection: 'row',
+    borderRadius: 16,
+    marginBottom: 10,
+    alignSelf: 'center',
+    elevation: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  userName: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Medium',
+    marginLeft: 10,
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
   },
   infoContainer: {
     alignItems: 'center',

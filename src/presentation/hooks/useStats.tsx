@@ -18,7 +18,7 @@ export const useStats = () => {
     const [totalBooks, setTotalBooks] = useState(0);
 
     const [loadingFriendsRecentReads, setLoadingFriendsRecentReads] = useState(true);
-    const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; book: Book; }[]>([]);
+    const [friendsRecentReads, setFriendsRecentReads] = useState<{ nickname: string; avatarUrl: string | null; book: Book; }[]>([]);
 
     const [loadingFriendsPagesRead, setLoadingFriendsPagesRead] = useState(false);
     const [friendsPagesRead, setFriendsPagesRead] = useState<{ nickname: string, pages: number }[]>([]);
@@ -104,7 +104,7 @@ export const useStats = () => {
 
         setLoadingFriendsRecentReads(true);
 
-        const recentReads: { nickname: string; book: Book; }[] = await getUsersLatestReads(friends);
+        const recentReads: { nickname: string; avatarUrl: string | null; book: Book; }[] = await getUsersLatestReads(friends);
 
         setFriendsRecentReads(recentReads);
 

@@ -6,10 +6,11 @@ import { IonIcon } from '../icons';
 interface Props {
     friends: number;
     books: number;
-    loading: boolean;
+    loadingFriends: boolean;
+    loadingBooks: boolean;
 }
 
-export const FriendNumbers = ({ friends, books, loading }: Props) => {
+export const FriendNumbers = ({ friends, books, loadingFriends, loadingBooks }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
@@ -26,11 +27,11 @@ export const FriendNumbers = ({ friends, books, loading }: Props) => {
                 <IonIcon name="person" size={30} color={colors.primary} />
                 <View style={[styles.info, { marginLeft: 15 }]}>
                     {
-                        loading
+                        loadingFriends
                             ? <ActivityIndicator size="small" color={colors.primary} />
                             : <Text style={[styles.number, { color: colors.text }]}>{friends}</Text>
                     }
-                    <Text style={[styles.label, { color: colors.greyDark }]}>Amigos</Text>
+                    <Text style={[styles.label, { color: colors.greyDark }]}>{friends === 1 ? 'Amigo' : 'Amigos'}</Text>
                 </View>
             </View>
 
@@ -40,11 +41,11 @@ export const FriendNumbers = ({ friends, books, loading }: Props) => {
                 <IonIcon name="book" size={30} color={colors.primary} />
                 <View style={[styles.info, { marginLeft: 15 }]}>
                     {
-                        loading
+                        loadingBooks
                             ? <ActivityIndicator size="small" color={colors.primary} />
                             : <Text style={[styles.number, { color: colors.text }]}>{books}</Text>
                     }
-                    <Text style={[styles.label, { color: colors.greyDark }]}>Libros</Text>
+                    <Text style={[styles.label, { color: colors.greyDark }]}>{books === 1 ? 'Libro' : 'Libros'}</Text>
                 </View>
             </View>
 

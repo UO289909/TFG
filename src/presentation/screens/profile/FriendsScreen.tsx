@@ -25,7 +25,7 @@ export const FriendsScreen = () => {
     const [friends, setFriends] = useState<User[]>([]);
     const [filteredFriends, setFilteredFriends] = useState<User[]>(friends);
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [showNotif, setShowNotif] = useState(false);
     const [notifMsg, setNotifMsg] = useState('');
@@ -53,10 +53,11 @@ export const FriendsScreen = () => {
 
         setLoading(true);
 
-        const fetchedFriends = await getFriendsByRequests(3600, friendRequests, true);
-        setFriends(fetchedFriends.map(friend => friend.user));
-
-        setLoading(false);
+        await getFriendsByRequests(3600, friendRequests, true).then((res) => {
+            setFriends(res.map(friend => friend.user));
+        }).finally(() => {
+            setLoading(false);
+        });
 
     };
 

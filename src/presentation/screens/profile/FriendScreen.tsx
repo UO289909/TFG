@@ -23,7 +23,7 @@ export const FriendScreen = () => {
 
     const { friendBooks, friendNumber, loadingFriendBooks, loadingFriendNumber } = useFriend(friend.id);
 
-    const { colors } = useTheme() as CustomTheme;
+    // const { colors } = useTheme() as CustomTheme;
 
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height || width >= 768;
@@ -91,7 +91,8 @@ export const FriendScreen = () => {
                 <FriendNumbers
                     friends={friendNumber}
                     books={friendBooks.length}
-                    loading={loadingFriendBooks || loadingFriendNumber}
+                    loadingFriends={loadingFriendNumber}
+                    loadingBooks={loadingFriendBooks}
                 />
 
                 <FriendBooksBox

@@ -24,7 +24,7 @@ export const FriendRequestsScreen = () => {
 
     const [sentUsers, setSentUsers] = useState<User[]>([]);
     const [receivedUsers, setReceivedUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         refetchFriendRequests();
@@ -38,12 +38,12 @@ export const FriendRequestsScreen = () => {
 
         setLoading(true);
 
-        const users = await getFriendsByRequests(3600, friendRequests);
-
-        setSentUsers(users.filter(user => user.request === 'sent' && user.accepted === false).map(u => u.user));
-        setReceivedUsers(users.filter(user => user.request === 'received' && user.accepted === false).map(u => u.user));
-
-        setLoading(false);
+        await getFriendsByRequests(3600, friendRequests).then((users) => {
+            setSentUsers(users.filter(user => user.request === 'sent' && user.accepted === false).map(u => u.user));
+            setReceivedUsers(users.filter(user => user.request === 'received' && user.accepted === false).map(u => u.user));
+        }).finally(() => {
+            setLoading(false);
+        });
     };
 
     const handleDeleteFriend = (friendId: string) => {

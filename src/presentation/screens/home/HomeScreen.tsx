@@ -57,9 +57,6 @@ export const HomeScreen = () => {
   };
 
   const handleGoToBookDetails = () => {
-    if (!lastBook) {
-      return;
-    }
     navigation.navigate('BookDetails', { book: lastBook });
   };
 
@@ -105,7 +102,7 @@ export const HomeScreen = () => {
               value={pagesThisMonth}
               type="small"
               landscape={isLandscape}
-              onPress={handleGoToMonthLogs}
+              onPress={pagesThisMonth > 0 ? handleGoToMonthLogs : undefined}
             />
 
             <StatsCard
@@ -114,7 +111,7 @@ export const HomeScreen = () => {
               value={totalBooks}
               type="small"
               landscape={isLandscape}
-              onPress={handleGoToMyBooks}
+              onPress={totalBooks > 0 ? handleGoToMyBooks : undefined}
             />
           </View>
 

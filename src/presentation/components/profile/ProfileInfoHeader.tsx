@@ -40,6 +40,7 @@ export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAva
             {!loadingAvatar &&
                 <View style={{
                     ...styles.avatarContainer,
+                    ...(landscape ? styles.avatarContainerLandscape : {}),
                     backgroundColor: colors.cardPressed,
                     borderColor: colors.cardPressed,
                 }}>
@@ -55,8 +56,8 @@ export const ProfileInfoHeader = ({ nickname, avatarUrl, name, style, loadingAva
             }
 
             <View style={[styles.infoContainer, landscape && styles.infoContainerLandscape]}>
-                <Text style={{...styles.nickname, color: colors.text}}>{nickname}</Text>
-                <Text style={{...styles.name, color: colors.secondaryText}}>{name}</Text>
+                <Text style={{ ...styles.nickname, color: colors.text, textAlign: landscape ? 'center' : 'auto' }}>{nickname}</Text>
+                <Text style={{ ...styles.name, color: colors.secondaryText, textAlign: landscape ? 'center' : 'auto' }}>{name}</Text>
             </View>
         </View>
     );
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 10,
         elevation: 4,
-        paddingLeft: 20,
+        padding: 20,
         marginLeft: 34,
         marginRight: 18,
     },
@@ -100,6 +101,14 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 1,
         marginRight: 10,
+    },
+    avatarContainerLandscape: {
+        width: '80%',
+        height: undefined,
+        aspectRatio: 1,
+        marginRight: 0,
+        marginBottom: 10,
+        flexShrink: 1,
     },
     avatar: {
         width: '100%',
@@ -111,7 +120,9 @@ const styles = StyleSheet.create({
     },
     infoContainerLandscape: {
         marginTop: 5,
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
+        alignItems: 'center',
+        flexShrink: 0,
     },
     nickname: {
         fontSize: 20,

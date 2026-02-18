@@ -98,7 +98,7 @@ export const BookDetailsScreen = () => {
 
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
-              Leido entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
+              Leído entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
             </Text>
           }
         </View>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   authorText: {
     fontSize: 20,
     fontFamily: 'Roboto-Medium',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   pagesText: {
     fontSize: 16,

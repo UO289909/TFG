@@ -1,30 +1,35 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, StyleProp, ViewStyle, Pressable, PressableStateCallbackType } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from '@react-navigation/native';
 
 interface Props {
     nickname: string;
     avatarUrl: string | null;
     onPress?: () => void;
+    style?: StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
 }
 
-export const MiniUserCard = ({ nickname, avatarUrl, onPress }: Props) => {
+export const MiniUserCard = ({ nickname, avatarUrl, onPress, style }: Props) => {
 
     const { colors } = useTheme() as CustomTheme;
 
     const default_avatar = `https://placehold.co/32x32.webp?text=${nickname}&font=roboto`;
 
     return (
-        <View style={[
-            styles.userContainer,
-            {
-                backgroundColor: colors.card,
-                shadowColor: colors.shadow,
-            },
-        ]}>
+        <Pressable
+            onPress={onPress}
+            style={(state) => [
+                styles.userContainer,
+                {
+                    backgroundColor: colors.card,
+                    shadowColor: colors.shadow,
+                },
+                typeof style === 'function' ? style(state) : style,
+            ]}
+        >
             <Image source={{ uri: avatarUrl || default_avatar }} style={styles.avatar} />
             <Text style={{ ...styles.userName, color: colors.text }}>{nickname}</Text>
-        </View>
+        </Pressable>
     )
 }
 

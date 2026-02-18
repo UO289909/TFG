@@ -22,15 +22,25 @@ export const RecentReadScreen = () => {
     <View style={[styles.container, isLandscape && styles.containerLandscape]}>
 
       {isLandscape &&
-        <Image source={{ uri: book.cover_url || default_cover }} style={styles.coverLandscape} />
+        <View style={styles.coverContainerLandscape}>
+          <Image source={{ uri: book.cover_url || default_cover }} style={styles.coverLandscape} />
+        </View>
       }
 
       <ScrollView contentContainerStyle={isLandscape ? styles.scrollContainerLandscape : styles.scrollContainer}>
         {!isLandscape &&
-          <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+          <View style={styles.coverContainer}>
+            <Image source={{ uri: book.cover_url || default_cover }} style={styles.cover} />
+            <MiniUserCard
+              nickname={nickname}
+              avatarUrl={avatarUrl}
+              style={({ pressed }) => [
+                styles.floatingUserCard,
+                { opacity: pressed ? 0.6 : 0.8 },
+              ]}
+            />
+          </View>
         }
-
-        <MiniUserCard nickname={nickname} avatarUrl={avatarUrl} />
 
         <View style={[
           isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
@@ -41,13 +51,25 @@ export const RecentReadScreen = () => {
         ]}>
           <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
           <Text style={{ ...styles.authorText, color: colors.text }}>{book.author}</Text>
+
+          {isLandscape &&
+            <MiniUserCard
+              nickname={nickname}
+              avatarUrl={avatarUrl}
+              style={({ pressed }) => [
+                styles.floatingUserCardLandscape,
+                { backgroundColor: pressed ? colors.cardPressed : colors.card },
+              ]}
+            />
+          }
+
           <Text style={{ ...styles.pagesText, color: colors.text }}>{!book.rating && `${book.current_page} / `}{book.pages} páginas</Text>
           <Text style={{ ...styles.releaseYearText, color: colors.text }}>Publicado en {book.release_year}</Text>
 
 
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
-              {`Leido por ${nickname}\nentre el ${new Date(book.start_date).toLocaleDateString()} y ${new Date(book.finish_date).toLocaleDateString()}`}
+              {`Leído entre el ${new Date(book.start_date).toLocaleDateString()} y el ${new Date(book.finish_date).toLocaleDateString()}`}
             </Text>
           }
         </View>
@@ -73,8 +95,7 @@ export const RecentReadScreen = () => {
 
       </ScrollView >
 
-
-    </View >
+    </View>
   );
 };
 
@@ -94,19 +115,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     padding: 20,
   },
-  userContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 6,
-    flexDirection: 'row',
-    borderRadius: 16,
-    marginBottom: 10,
-    alignSelf: 'center',
-    elevation: 4,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
+
   userName: {
     fontSize: 16,
     fontFamily: 'Roboto-Medium',
@@ -140,28 +149,46 @@ const styles = StyleSheet.create({
     padding: 12,
     elevation: 4,
   },
-  cover: {
-    width: 200,
-    height: 320,
-    borderRadius: 10,
+  coverContainer: {
+    position: 'relative',
     marginBottom: 10,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 4,
   },
-  coverLandscape: {
-    width: undefined,
+  cover: {
+    width: 200,
+    height: 320,
+    borderRadius: 10,
+  },
+  floatingUserCard: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    zIndex: 10,
+    opacity: 0.8,
+  },
+  coverContainerLandscape: {
+    position: 'relative',
     height: '95%',
     aspectRatio: 0.625,
     marginVertical: 5,
     marginLeft: '20%',
-    borderRadius: 10,
     marginBottom: 20,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 4,
+  },
+  coverLandscape: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  floatingUserCardLandscape: {
+    alignSelf: 'center',
+    zIndex: 10,
   },
   titleText: {
     fontSize: 30,
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
   authorText: {
     fontSize: 20,
     fontFamily: 'Roboto-Medium',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   pagesText: {
     fontSize: 16,

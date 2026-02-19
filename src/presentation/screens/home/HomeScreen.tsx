@@ -130,8 +130,6 @@ export const HomeScreen = () => {
         </>
       }
 
-      <View style={{ ...styles.separator, shadowColor: colors.shadow, backgroundColor: colors.card }} />
-
       <CustomButton
         title="Pedir 4 recomendaciones a la IA"
         onPress={refetchRecommendations}
@@ -145,8 +143,6 @@ export const HomeScreen = () => {
           loading={loadingRecommendations}
         />
       }
-
-      <View style={{ ...styles.separator, shadowColor: colors.shadow, backgroundColor: colors.card }} />
 
       <RecentReadsBox
         recentReads={friendsRecentReads}
@@ -173,8 +169,8 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    width: '100%',
+    justifyContent: 'space-between',
+    width: '95%',
   },
   separator: {
     height: 1,

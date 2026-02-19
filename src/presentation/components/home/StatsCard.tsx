@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
         marginTop: 10,
-        marginHorizontal: 5,
     },
     containerWithCover: {
         flexDirection: 'row',
@@ -106,11 +105,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     small: {
-        width: '45%',
+        width: '48%',
         aspectRatio: 1,
     },
     smallLandscape: {
-        width: '45%',
+        width: '48%',
         aspectRatio: 2.5,
     },
     large: {

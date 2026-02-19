@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
   floatingUserCard: {
     position: 'absolute',
     bottom: 0,
+    marginBottom: 10,
     alignSelf: 'center',
     zIndex: 10,
     opacity: 0.8,
@@ -195,6 +196,7 @@ const styles = StyleSheet.create({
   },
   floatingUserCardLandscape: {
     alignSelf: 'center',
+    marginBottom: 10,
     zIndex: 10,
   },
   titleText: {

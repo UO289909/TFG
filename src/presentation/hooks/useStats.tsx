@@ -6,6 +6,7 @@ import { getReadingLogs } from '../../core/use-cases/books/get-reading-logs.use-
 import { useProfile } from './useProfile';
 import { getUsersLatestReads } from '../../core/use-cases/books/get-users-latest-reads.use-case';
 import { User } from '../../core/entities/user.entity';
+import { getUser } from '../../core/use-cases/user/get-user.use-case';
 
 
 export const useStats = () => {
@@ -22,7 +23,7 @@ export const useStats = () => {
     const [friendsRecentReads, setFriendsRecentReads] = useState<{ user: User, book: Book }[]>([]);
 
     const [loadingFriendsPagesRead, setLoadingFriendsPagesRead] = useState(false);
-    const [friendsPagesRead, setFriendsPagesRead] = useState<{ nickname: string, pages: number }[]>([]);
+    const [friendsPagesRead, setFriendsPagesRead] = useState<{ user: User, pages: number }[]>([]);
 
 
     useEffect(() => {
@@ -145,7 +146,7 @@ export const useStats = () => {
                 pagesReadThisMonth += diff;
             });
 
-            return { nickname: friend.nickname, pages: pagesReadThisMonth };
+            return { user: friend, pages: pagesReadThisMonth };
         });
 
         const userReadingLogs = await getReadingLogs();
@@ -173,9 +174,12 @@ export const useStats = () => {
 
         const friendsPagesReadResults = await Promise.all(friendsPagesReadPromises);
 
+        const myUser = await getUser();
+        myUser.nickname = 'Tú';
+
         const allPagesReadResults = [
             ...friendsPagesReadResults,
-            { nickname: 'Tú', pages: userPagesReadThisMonth },
+            { user: myUser, pages: userPagesReadThisMonth },
         ];
 
         allPagesReadResults.sort((a, b) => b.pages - a.pages);

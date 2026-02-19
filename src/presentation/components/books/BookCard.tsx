@@ -41,12 +41,12 @@ export const BookCard = ({ title, author, pages, current_page, rating, imageUrl,
                 <View style={styles.infoContainer}>
                     <Text style={{ ...styles.titleText, color: colors.text }}>{title}</Text>
                     <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{author}</Text>
-                    <Text style={{ ...styles.pagesText, color: colors.text }}>{!rating && `${current_page} / `}{pages} páginas</Text>
+                    <Text style={{ ...styles.pagesText, color: colors.text }}>{pages} páginas</Text>
                 </View>
                 <View style={styles.ratingContainer}>
                     {rating
                         ? <FiveStarsInput value={rating} editable={false} size="small" onPress={() => { }} />
-                        : <Text style={{ ...styles.ratingText, color: colors.text }}>Lectura en curso</Text>
+                        : <Text style={{ ...styles.ratingText, color: colors.text }}>Página {current_page} de {pages}</Text>
                     }
                 </View>
             </View>

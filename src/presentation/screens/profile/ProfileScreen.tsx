@@ -179,73 +179,81 @@ export const ProfileScreen = () => {
         refreshControl={refreshControl}
       >
 
-        <Text style={{ ...styles.title, color: colors.text }}>Social</Text>
+        <View style={[styles.socialContainer, { backgroundColor: colors.card }]}>
 
-        <CustomMenuButton
-          onPress={handleFriends}
-          label="Amigos"
-          icon="people"
-          style={styles.button}
-          disabled={loading || isLoadingFriendRequests}
-        />
+          <Text style={[styles.title, { color: colors.text }]}>Social</Text>
 
-        <CustomMenuButton
-          onPress={handleSearchUsers}
-          label="Buscar usuarios"
-          icon="search"
-          style={styles.button}
-          disabled={loading || isLoadingFriendRequests}
-        />
+          <CustomMenuButton
+            onPress={handleFriends}
+            label="Amigos"
+            icon="people"
+            style={styles.button}
+            disabled={loading || isLoadingFriendRequests}
+          />
 
-        <CustomMenuButton
-          onPress={handleFriendRequests}
-          label="Solicitudes de amistad"
-          icon="person-add"
-          style={[styles.button, styles.bottomButton]}
-          disabled={loading || isLoadingFriendRequests}
-        />
+          <CustomMenuButton
+            onPress={handleSearchUsers}
+            label="Buscar usuarios"
+            icon="search"
+            style={styles.button}
+            disabled={loading || isLoadingFriendRequests}
+          />
 
-        <Text style={{ ...styles.title, color: colors.text }}>Ajustes</Text>
+          <CustomMenuButton
+            onPress={handleFriendRequests}
+            label="Solicitudes de amistad"
+            icon="person-add"
+            style={styles.button}
+            disabled={loading || isLoadingFriendRequests}
+          />
 
-        <CustomMenuButton
-          onPress={handleChangeAvatar}
-          label="Cambiar foto de avatar"
-          icon="images"
-          style={styles.button}
-          disabled={loading || changingAvatar || isLoadingProfile}
-        />
+        </View>
 
-        <CustomMenuButton
-          onPress={() => setShowThemeSelector(true)}
-          label="Cambiar esquema de color"
-          icon="contrast"
-          style={styles.button}
-          disabled={loading || showThemeSelector}
-        />
+        <View style={[styles.settingsContainer, { backgroundColor: colors.card }]}>
 
-        <CustomMenuButton
-          onPress={handleChangePassword}
-          label="Cambiar contraseña"
-          icon="lock-open"
-          style={styles.button}
-          disabled={loading}
-        />
+          <Text style={[styles.title, { color: colors.text }]}>Ajustes</Text>
 
-        <CustomMenuButton
-          onPress={handleChangeNickname}
-          label="Cambiar nickname"
-          icon="text"
-          style={styles.button}
-          disabled={loading}
-        />
+          <CustomMenuButton
+            onPress={handleChangeAvatar}
+            label="Cambiar foto de avatar"
+            icon="images"
+            style={styles.button}
+            disabled={loading || changingAvatar || isLoadingProfile}
+          />
 
-        <CustomMenuButton
-          onPress={handleSignOut}
-          label="Cerrar sesión"
-          icon="log-out"
-          style={styles.button}
-          disabled={loading || signingOut}
-        />
+          <CustomMenuButton
+            onPress={() => setShowThemeSelector(true)}
+            label="Cambiar esquema de color"
+            icon="contrast"
+            style={styles.button}
+            disabled={loading || showThemeSelector}
+          />
+
+          <CustomMenuButton
+            onPress={handleChangePassword}
+            label="Cambiar contraseña"
+            icon="lock-open"
+            style={styles.button}
+            disabled={loading}
+          />
+
+          <CustomMenuButton
+            onPress={handleChangeNickname}
+            label="Cambiar nickname"
+            icon="text"
+            style={styles.button}
+            disabled={loading}
+          />
+
+          <CustomMenuButton
+            onPress={handleSignOut}
+            label="Cerrar sesión"
+            icon="log-out"
+            style={styles.button}
+            disabled={loading || signingOut}
+          />
+
+        </View>
 
       </ScrollView>
     </View>
@@ -263,21 +271,47 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
+    paddingTop: 5,
   },
   scrollContainerLandscape: {
     paddingVertical: 10,
     paddingHorizontal: 36,
   },
   profileHeader: {
-    marginBottom: 0,
+    marginBottom: 5,
   },
   profileHeaderLandscape: {
     marginBottom: 10,
   },
+  socialContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  settingsContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    padding: 10,
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
+  },
   title: {
-    fontSize: 20,
-    fontFamily: 'Roboto-Italic',
+    fontSize: 22,
+    fontFamily: 'Roboto-Medium',
     marginBottom: 10,
   },
   avatar: {
@@ -289,8 +323,5 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-  },
-  bottomButton: {
-    marginBottom: 20,
   },
 });

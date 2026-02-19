@@ -4,10 +4,12 @@ import { AddBookScreen, BookDetailsScreen, RateBookScreen, EditBookScreen } from
 import { Book } from '../../core/entities/book.entity';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../config/app-theme';
+import { BookSearchScreen } from '../screens/book/BookSearchScreen';
 
 export type RootStackParams = {
   MyBooksList: { doRefetch?: boolean };
   AddBook: undefined;
+  BookSearch: { query: string };
   BookDetails: { book: Book };
   RateBook: { book: Book; rating: number };
   EditBook: { book: Book };
@@ -37,6 +39,7 @@ export const MyBooksStackNavigator = () => {
     >
       <Stack.Screen name="MyBooksList" component={MyBooksScreen} options={{ title: 'Mis libros' }} />
       <Stack.Screen name="AddBook" component={AddBookScreen} options={{ title: 'Añadir libro' }} />
+      <Stack.Screen name="BookSearch" component={BookSearchScreen} options={{ title: 'Buscar libro' }} />
       <Stack.Screen name="BookDetails" component={BookDetailsScreen} options={{ title: 'Detalles del libro' }} />
       <Stack.Screen name="RateBook" component={RateBookScreen} options={{ title: 'Puntuar libro' }} />
       <Stack.Screen name="EditBook" component={EditBookScreen} options={{ title: 'Editar libro' }} />

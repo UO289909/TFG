@@ -86,7 +86,7 @@ export const PagesReadRanking = ({ pagesRanking, loading, error }: Props) => {
                                 { color: colors.text },
                             ]}
                         >
-                            {index + 1}
+                            {index + 1}º
                         </Text>
                     </View>
                     <View

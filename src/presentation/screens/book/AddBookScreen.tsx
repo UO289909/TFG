@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
-import { openLibraryFetcher } from '../../../config/adapters/openLibrary.adapter';
+import { openLibraryIsbnFetcher } from '../../../config/adapters/openLibrary.adapter';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
@@ -42,7 +42,7 @@ export const AddBookScreen = () => {
     navigation.goBack();
   };
 
-  const handleSearchISBN = async (text: string) => {
+  const handleSearchPress = (text: string) => {
 
     setFieldsEnabled([]);
 
@@ -50,6 +50,17 @@ export const AddBookScreen = () => {
       setFieldsEnabled(['isbn']);
       return;
     }
+
+    if (/^\d+$/.test(text)) {
+      handleSearchISBN(text);
+    } else {
+      setFieldsEnabled(['isbn']);
+      navigation.navigate('BookSearch', { query: text });
+    }
+
+  }
+
+  const handleSearchISBN = async (text: string) => {
 
     if (text.length !== 13) {
       setFieldsEnabled(['isbn']);
@@ -62,7 +73,7 @@ export const AddBookScreen = () => {
     setIsbn(text);
 
     try {
-      const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryFetcher, text);
+      const { book, fromOpenLibrary, alreadyInUser } = await getBookByIsbn(openLibraryIsbnFetcher, text);
 
       if (alreadyInUser) {
         setFieldsEnabled(['isbn']);
@@ -151,10 +162,9 @@ export const AddBookScreen = () => {
       }
 
       <SearchBar
-        placeholder="Introduce el ISBN de 13 dígitos..."
-        numeric
+        placeholder="Introduce el ISBN-13 o el título..."
         disabled={!fieldsEnabled.includes('isbn')}
-        onSearch={handleSearchISBN}
+        onSearch={handleSearchPress}
       />
 
       <View style={{ ...styles.separator, shadowColor: colors.shadow }} />

@@ -1,5 +1,5 @@
 import { Book } from '../../core/entities/book.entity';
-import { BookData } from '../interfaces/open-library.responses';
+import { BookData, Doc } from '../interfaces/open-library.responses';
 import { DatabaseBook } from '../interfaces/supabase.responses';
 
 
@@ -22,6 +22,23 @@ export class BookMapper {
             finish_date: null,
             created_at: null,
         };
+    }
+
+    static fromOpenLibrarySearchToEntity(response: Doc): Book {
+        return {
+            isbn: response.isbn?.[0],
+            title: response.title,
+            author: response.author_name?.[0] || null,
+            pages: null,
+            current_page: null,
+            release_year: null,
+            cover_url: response.cover_i ? `https://covers.openlibrary.org/b/id/${response.cover_i}-M.jpg` : null,
+            rating: null,
+            review: null,
+            start_date: null,
+            finish_date: null,
+            created_at: null,
+        }
     }
 
     static fromDatabaseBookToEntity(databaseBook: DatabaseBook): Book {

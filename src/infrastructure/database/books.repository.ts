@@ -542,3 +542,34 @@ export const databaseGetUsersReadBooks = async (
         throw new Error(`Error fetching users' read books from database: ${error}`);
     }
 };
+
+/**
+ * Fetches a book from the database by its title.
+ * @param title The title of the book to fetch.
+ * @returns A book matching the specified criteria.
+ */
+export const databaseGetBookByTitle = async (
+    title: string,
+): Promise<DatabaseBook | null> => {
+
+    try {
+
+        const { data, error } = await SupabaseClient
+            .from('books')
+            .select()
+            .ilike('title', `%${title}%`)
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') {
+                return null;
+            }
+            throw error;
+        }
+
+        return data;
+
+    } catch (error) {
+        throw new Error(`Error fetching book by title from database: ${error}`);
+    }
+};

@@ -22,8 +22,8 @@ export const SearchCard = ({ book, fromOpenLibrary, alreadyInUser, onPress, styl
             style={({ pressed }) => [
                 styles.cardContainer,
                 {
-                    backgroundColor: pressed ? colors.cardPressed : colors.card,
-                    elevation: pressed ? 2 : 4,
+                    backgroundColor: pressed && !alreadyInUser ? colors.cardPressed : colors.card,
+                    elevation: pressed && !alreadyInUser ? 2 : 4,
                     shadowColor: colors.shadow,
                 },
                 style,
@@ -38,13 +38,16 @@ export const SearchCard = ({ book, fromOpenLibrary, alreadyInUser, onPress, styl
             <View style={styles.dataContainer}>
                 <View style={styles.infoContainer}>
                     <Text style={{ ...styles.titleText, color: colors.text }}>{book.title}</Text>
-                    <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{book.author}</Text>
-                    <Text style={{ ...styles.pagesText, color: colors.text }}>{book.pages} páginas</Text>
+                    {book.author &&
+                        <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{book.author}</Text>
+                    }
+                    {!fromOpenLibrary && book.pages &&
+                        <Text style={{ ...styles.pagesText, color: colors.text }}>{book.pages} páginas</Text>
+                    }
                 </View>
-                <View style={styles.ratingContainer}>
-                    {book.rating
-                        ? <FiveStarsInput value={book.rating} editable={false} size="small" onPress={() => { }} />
-                        : <Text style={{ ...styles.ratingText, color: colors.text }}>Página {book.current_page} de {book.pages}</Text>
+                <View style={styles.alreadyInUserContainer}>
+                    {!fromOpenLibrary &&
+                        <Text style={{ ...styles.ratingText, color: colors.text }}>{alreadyInUser ? 'Ya lo tienes en tu biblioteca' : 'Otros usuarios de la app lo tienen'}</Text>
                     }
                 </View>
             </View>
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         flex: 1,
     },
-    ratingContainer: {
+    alreadyInUserContainer: {
         marginBottom: 0,
         alignItems: 'flex-end',
     },

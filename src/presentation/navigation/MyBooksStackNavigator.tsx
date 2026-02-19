@@ -8,7 +8,7 @@ import { BookSearchScreen } from '../screens/book/BookSearchScreen';
 
 export type RootStackParams = {
   MyBooksList: { doRefetch?: boolean };
-  AddBook: undefined;
+  AddBook: { search?: { book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean } };
   BookSearch: { query: string };
   BookDetails: { book: Book };
   RateBook: { book: Book; rating: number };

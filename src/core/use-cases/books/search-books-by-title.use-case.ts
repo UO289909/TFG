@@ -46,10 +46,19 @@ export const searchBooksByTitle = async (
         }
 
         for (const book of openLibraryBooks.docs) {
-            if (book.isbn === undefined || book.isbn.length === null || (databaseBook !== null && book.isbn[0] === databaseBook.isbn)) {
+            if (
+                book.isbn === undefined ||
+                book.isbn.length === null ||
+                (
+                    databaseBook !== null &&
+                    book.isbn[0] === databaseBook.isbn
+                )
+            ) {
                 continue;
             }
             const bookEntity = BookMapper.fromOpenLibrarySearchToEntity(book);
+            const isDuplicate = results.some(r => r.book.isbn === bookEntity.isbn);
+            if (isDuplicate) continue;
             results.push({ book: bookEntity, fromOpenLibrary: true, alreadyInUser: false });
         }
 

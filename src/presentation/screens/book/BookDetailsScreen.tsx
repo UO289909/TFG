@@ -98,7 +98,10 @@ export const BookDetailsScreen = () => {
 
           {book.rating !== null && book.start_date && book.finish_date &&
             <Text style={{ ...styles.datesText, color: colors.text }}>
-              Leído entre el {new Date(book.start_date).toLocaleDateString()} y {new Date(book.finish_date).toLocaleDateString()}
+              {book.start_date === book.finish_date ?
+                `Leído el ${new Date(book.start_date).toLocaleDateString()}` :
+                `Leído entre el ${new Date(book.start_date).toLocaleDateString()} y el ${new Date(book.finish_date).toLocaleDateString()}`
+              }
             </Text>
           }
         </View>

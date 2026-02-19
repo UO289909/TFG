@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
-        marginTop: 10,
+        margin: 10,
         padding: 12,
     },
     container: {

@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     container: {
+        width: '95%',
         height: 200,
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
@@ -103,8 +104,8 @@ const styles = StyleSheet.create({
         elevation: 4,
         alignSelf: 'center',
         margin: 10,
+        marginBottom: 0,
         padding: 4,
-        marginRight: 16,
     },
     loadingText: {
         alignSelf: 'center',

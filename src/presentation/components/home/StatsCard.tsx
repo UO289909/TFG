@@ -45,26 +45,41 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                 type === 'cover' ? styles.textContainerWithCover : styles.textContainer,
                 landscape ? styles.textContainerWithCoverLandscape : {},
             ]}>
-                <Text style={{
-                    ...styles.text,
-                    ...(type === 'cover' && styles.textWithCover),
-                    color: colors.secondaryText,
-                }}>
+                <Text
+                    style={[
+                        styles.text,
+                        type === 'cover' && styles.textWithCover,
+                        { color: colors.secondaryText },
+                    ]}
+                    adjustsFontSizeToFit
+                    numberOfLines={1}
+                    minimumFontScale={0.5}
+                >
                     {topLabel}
                 </Text>
-                <Text style={{
-                    ...styles.value,
-                    ...(type === 'cover' && styles.valueWithCover),
-                    color: colors.text,
-                }}>
+                <Text
+                    style={[
+                        styles.value,
+                        type === 'cover' && styles.valueWithCover,
+                        { color: colors.text },
+                    ]}
+                    adjustsFontSizeToFit
+                    numberOfLines={type === 'cover' ? 2 : 1}
+                    minimumFontScale={0.3}
+                >
                     {value}
                 </Text>
                 {bottomLabel && (
-                    <Text style={{
-                        ...styles.text,
-                        ...(type === 'cover' && styles.textWithCover),
-                        color: colors.secondaryText,
-                    }}>
+                    <Text
+                        style={[
+                            styles.text,
+                            type === 'cover' && styles.textWithCover,
+                            { color: colors.secondaryText },
+                        ]}
+                        adjustsFontSizeToFit
+                        numberOfLines={2}
+                        minimumFontScale={0.5}
+                    >
                         {bottomLabel}
                     </Text>
                 )}

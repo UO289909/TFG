@@ -39,6 +39,8 @@ export type IonIconNames =
     | 'arrow-up-outline'
     | 'text'
     | 'text-outline'
+    | 'file-tray-stacked'
+    | 'file-tray-stacked-outline'
     | 'search'
     | 'archive'
     | 'send'
@@ -56,7 +58,7 @@ interface Props {
     style?: StyleProp<TextStyle>;
 }
 
-export const IonIcon = ({ name, size = 20, color = 'black', style}: Props) => {
+export const IonIcon = ({ name, size = 20, color = 'black', style }: Props) => {
     return (
         <Icon
             name={name}

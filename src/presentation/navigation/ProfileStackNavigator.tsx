@@ -8,6 +8,7 @@ import { FriendScreen } from '../screens/profile/FriendScreen';
 import { User } from '../../core/entities/user.entity';
 import { FriendReadScreen } from '../screens/home/FriendReadScreen';
 import { Book } from '../../core/entities/book.entity';
+import { Changelog } from '../screens/profile/Changelog';
 
 export type RootStackParams = {
     ProfileMenu: { doRefetch?: boolean };
@@ -18,6 +19,7 @@ export type RootStackParams = {
     FriendRequests: undefined;
     PasswordChange: { alreadySentCode: boolean, notifPosition: 'top' | 'bottom' } | undefined;
     NicknameChange: undefined;
+    Changelog: undefined;
 }
 
 const Stack = createNativeStackNavigator();
@@ -50,6 +52,7 @@ export const ProfileStackNavigator = () => {
             <Stack.Screen name="FriendRequests" component={FriendRequestsScreen} options={{ title: 'Solicitudes de amistad' }} />
             <Stack.Screen name="PasswordChange" component={PasswordChangeScreen} options={{ title: 'Cambiar contraseña' }} />
             <Stack.Screen name="NicknameChange" component={NicknameChangeScreen} options={{ title: 'Cambiar nickname' }} />
+            <Stack.Screen name="Changelog" component={Changelog} options={{ title: 'Historial de versiones' }} />
         </Stack.Navigator>
     );
 

@@ -1,6 +1,6 @@
 {
   "name": "TFG",
-  "version": "0.0.1",
+  "version": "1.4.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

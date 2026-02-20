@@ -1,0 +1,70 @@
+[
+    {
+        "version": "1.4.2",
+        "date": "2026-02-20",
+        "summary": "Nuevo historial de actualizaciones y cambios",
+        "changes": [
+            "Nueva pantalla que muestra el historial de actualizaciones y cambios.",
+            "Nuevo desplegable con información de la última actualización al abrir la app."
+        ]
+    },
+    {
+        "version": "1.4.1",
+        "date": "2026-02-20",
+        "summary": "Arreglo de errores derivados de la busqueda por título",
+        "changes": [
+            "Nuevo mensaje indicativo cuando la búsqueda no arroja resultados.",
+            "Arreglado error que bloqueaba la app al no encontrar resultados.",
+            "Nuevo indicador resaltando tu posición en el ranking de páginas leídas.",
+            "Mejora de visualización en pantallas de menor resolución."
+        ]
+    },
+    {
+        "version": "1.4.0",
+        "date": "2026-02-19",
+        "summary": "Nueva opción de busqueda de libros por título",
+        "changes": [
+            "Nueva opción de buscar libros a través de su título sin conocer su ISBN.",
+            "Nueva pantalla que muestra los resultados de la búsqueda por título.",
+            "Rediseño del ranking de páginas leídas en el mes.",
+            "Pequeño rediseño de la página de perfil.",
+            "Arreglados pequeños errores de la interfaz."
+        ]
+    },
+    {
+        "version": "1.3.0",
+        "date": "2026-02-18",
+        "summary": "Nueva pantalla de perfil para otros usuarios",
+        "changes": [
+            "Nueva pantalla de perfil de un amigo (mostrando todos sus libros y estadísticas).",
+            "Nueva etiqueta indicando el usuario al que pertenece una lectura reciente.",
+            "Añadido indicador de carga mientras se registra lectura diaria.",
+            "Arreglado error que impedía añadir un libro si no había información de su autor.",
+            "Arreglados pequeños errores de la interfaz."
+        ]
+    },
+    {
+        "version": "1.2.0",
+        "date": "2025-11-28",
+        "summary": "Arreglo de errores",
+        "changes": [
+            "Arreglado un error que mantenía un indicador de carga infinito en pantalla.",
+            "Areglado un error que no mostraba un libro recién añadido a la estantería."
+        ]
+    },
+    {
+        "version": "1.1.0",
+        "date": "2025-10-30",
+        "summary": "Arreglo de errores",
+        "changes": [
+            "Aumento del tamaño de algunos botones mejorando la experiencia.",
+            "Mejoras de seguridad."
+        ]
+    },
+    {
+        "version": "1.0.0",
+        "date": "2025-09-26",
+        "summary": "Primera versión funcional de la app",
+        "changes": []
+    }
+]

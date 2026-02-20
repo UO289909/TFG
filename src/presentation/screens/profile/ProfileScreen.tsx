@@ -88,6 +88,10 @@ export const ProfileScreen = () => {
     navigation.navigate('NicknameChange');
   };
 
+  const handleChangelog = () => {
+    navigation.navigate('Changelog');
+  };
+
   const handleSignOut = async () => {
     setSigningOut(true);
     setNotifMessage('¿Estás seguro de que quieres cerrar sesión?');
@@ -241,6 +245,14 @@ export const ProfileScreen = () => {
             onPress={handleChangeNickname}
             label="Cambiar nickname"
             icon="text"
+            style={styles.button}
+            disabled={loading}
+          />
+
+          <CustomMenuButton
+            onPress={handleChangelog}
+            label="Historial de versiones"
+            icon="file-tray-stacked"
             style={styles.button}
             disabled={loading}
           />

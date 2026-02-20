@@ -27,11 +27,11 @@ export const CustomMenuButton = ({ onPress, label, icon, style, disabled = false
                     backgroundColor: disabled
                         ? colors.grey
                         : pressed
-                            ? colors.cardPressed
-                            : colors.card,
+                            ? colors.card
+                            : colors.cardPressed,
                     elevation: pressed ? 2 : 4,
                     shadowColor: colors.shadow,
-            },
+                },
                 style,
             ]}
         >

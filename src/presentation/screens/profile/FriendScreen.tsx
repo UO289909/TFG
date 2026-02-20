@@ -1,5 +1,5 @@
 
-import { View, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import { ProfileInfoHeader } from '../../components/profile';
 import { FriendBooksBox } from '../../components/friend/FriendBooksBox';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
@@ -23,7 +23,7 @@ export const FriendScreen = () => {
 
     const { friendBooks, friendNumber, loadingFriendBooks, loadingFriendNumber } = useFriend(friend.id);
 
-    // const { colors } = useTheme() as CustomTheme;
+    const { colors } = useTheme() as CustomTheme;
 
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height || width >= 768;
@@ -101,15 +101,21 @@ export const FriendScreen = () => {
                     friend={friend}
                 />
 
-                <CustomMenuButton
-                    onPress={() => {
-                        setShowNotif(true);
-                    }}
-                    label="Eliminar amigo"
-                    icon="person-remove"
-                    style={styles.button}
-                    disabled={showNotif}
-                />
+                <View style={[styles.actionsContainer, { backgroundColor: colors.card }]}>
+
+                    <Text style={[styles.title, { color: colors.text }]}>Acciones</Text>
+
+                    <CustomMenuButton
+                        onPress={() => {
+                            setShowNotif(true);
+                        }}
+                        label="Eliminar amigo"
+                        icon="person-remove"
+                        style={styles.button}
+                        disabled={showNotif}
+                    />
+
+                </View>
 
             </ScrollView>
         </View>
@@ -127,28 +133,37 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         alignItems: 'center',
-        paddingVertical: 10,
+        padding: 10,
+        paddingTop: 5,
     },
     scrollContainerLandscape: {
         paddingVertical: 10,
         paddingHorizontal: 36,
     },
     profileHeader: {
-        marginBottom: 0,
+        marginBottom: 5,
     },
     profileHeaderLandscape: {
         marginBottom: 10,
     },
-    statsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    actionsContainer: {
+        flexDirection: 'column',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        alignSelf: 'center',
+        width: '100%',
+        padding: 10,
+        borderRadius: 16,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 4,
+    },
+    title: {
+        fontSize: 22,
+        fontFamily: 'Roboto-Medium',
         marginBottom: 10,
     },
     button: {
-        width: '95%',
-        alignSelf: 'center',
-        marginVertical: 10,
+        width: '100%',
     },
 });

@@ -8,6 +8,7 @@ import { openLibrarySearchFetcher } from '../../../config/adapters/openLibrary.a
 import { Book } from '../../../core/entities/book.entity';
 import { SearchCard } from '../../components/books/SearchCard';
 import { CustomTheme } from '../../../config/app-theme';
+import { IonIcon } from '../../components/icons';
 
 
 export const BookSearchScreen = () => {
@@ -21,9 +22,10 @@ export const BookSearchScreen = () => {
 
     const { colors } = useTheme() as CustomTheme;
 
-    const [showNotif, setShowNotif] = useState(true);
+    const [showNotif, setShowNotif] = useState(false);
 
-    const [bookResults, setBookResults] = useState<{ book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[]>([]);
+    const [bookResults, setBookResults] = useState<{ book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[] | null>([]);
+    const [noResults, setNoResults] = useState(false);
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -32,10 +34,15 @@ export const BookSearchScreen = () => {
     }, []);
 
     useEffect(() => {
-        if (bookResults.length === 0) {
+        if (bookResults === null) {
+            setNoResults(true);
+            setIsLoading(false);
+            return;
+        } else if (bookResults.length === 0) {
             return;
         }
         setIsLoading(false);
+        setShowNotif(true);
     }, [bookResults]);
 
     const handleSearch = async () => {
@@ -54,19 +61,40 @@ export const BookSearchScreen = () => {
         }
     }
 
-    const renderSearchCard = ({ item }: { item: { book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean } }) => (
+    const renderSearchCard = ({ item, index }: { item: { book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }, index: number }) => (
         <SearchCard
             book={item.book}
             fromOpenLibrary={item.fromOpenLibrary}
             alreadyInUser={item.alreadyInUser}
             onPress={() => handleSelectBook(item)}
-            style={isLandscape ? styles.searchCardLandscape : undefined}
+            style={[
+                isLandscape ? styles.searchCardLandscape : undefined,
+                index === 0 ? { marginTop: 5 } : undefined
+            ]}
         />
     );
 
 
     if (isLoading) {
         return <FullScreenLoader message={`Buscando libros por "${query}"...`} />
+    }
+
+    if (noResults) {
+        return (
+            <View style={styles.container}>
+                <View style={[styles.headerContainer, { backgroundColor: colors.card }]}>
+                    <Text style={[styles.titleText, { color: colors.text },]}>
+                        No se ha encontrado nada por "{query}"
+                    </Text>
+                </View>
+                <IonIcon
+                    name="book"
+                    size={200}
+                    color={colors.greyLight}
+                    style={styles.bigIcon}
+                />
+            </View>
+        )
     }
 
     return (
@@ -121,6 +149,11 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'Roboto-Medium',
         textAlign: 'center',
+    },
+    bigIcon: {
+        flex: 1,
+        alignSelf: 'center',
+        marginTop: 50,
     },
     scrollContainer: {
         paddingBottom: 10,

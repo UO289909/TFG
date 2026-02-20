@@ -13,12 +13,11 @@ import { BookMapper } from '../../../infrastructure/mappers/book.mapper';
 export const searchBooksByTitle = async (
     fetcher: HttpAdapter,
     search: string,
-): Promise<{ book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[]> => {
+): Promise<{ book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[] | null> => {
 
     try {
 
         const databaseBook = await databaseGetBookByTitle(search);
-        console.log(databaseBook);
 
         let alreadyInUser = false;
         if (databaseBook !== null) {
@@ -33,16 +32,15 @@ export const searchBooksByTitle = async (
                 sort: 'rating'
             },
         });
-        console.log(openLibraryBooks);
-
-        if (openLibraryBooks.numFound === 0) {
-            return [];
-        }
 
         const results: { book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[] = [];
 
         if (databaseBook !== null) {
             results.push({ book: BookMapper.fromDatabaseBookToEntity(databaseBook), fromOpenLibrary: false, alreadyInUser });
+        }
+
+        if (openLibraryBooks.numFound === 0 && databaseBook === null) {
+            return null;
         }
 
         for (const book of openLibraryBooks.docs) {
@@ -63,6 +61,10 @@ export const searchBooksByTitle = async (
         }
 
         console.log(results);
+        if (results.length === 0) {
+            return null;
+        }
+
         return results;
 
     } catch (error) {

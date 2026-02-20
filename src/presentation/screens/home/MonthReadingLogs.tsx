@@ -15,14 +15,16 @@ export const MonthReadingLogs = () => {
     const { width, height } = useWindowDimensions();
     const isLandscape = width > height || width >= 768;
 
-    const { myBooks } = useBooks();
+    const { myBooks, isLoading: isBooksLoading } = useBooks();
 
     const [loading, setLoading] = useState(true);
     const [readInfoByBook, setReadInfoByBook] = useState<{ title: string, pagesRead: number }[]>([]);
 
     useEffect(() => {
-        fetchLogs();
-    }, [myBooks]);
+        if (!isBooksLoading) {
+            fetchLogs();
+        }
+    }, [myBooks, isBooksLoading]);
 
     const fetchLogs = async () => {
         setLoading(true);
@@ -68,7 +70,11 @@ export const MonthReadingLogs = () => {
     };
 
     const renderBookStat = ({ item }: { item: { title: string, pagesRead: number } }) => (
-        <View style={{ ...styles.card, backgroundColor: colors.card, shadowColor: colors.shadow }}>
+        <View style={[
+            styles.card,
+            { backgroundColor: colors.card, shadowColor: colors.shadow },
+            isLandscape ? styles.bookStatLandscape : undefined,
+        ]}>
             <Text style={{ ...styles.title, color: colors.text }}>{item.title}</Text>
             <Text style={{ ...styles.pages, color: colors.text }}>{item.pagesRead} páginas leídas</Text>
         </View>
@@ -86,7 +92,7 @@ export const MonthReadingLogs = () => {
                 key={isLandscape ? 'v' : 'h'}
                 renderItem={renderBookStat}
                 keyExtractor={(item, index) => item.title + index}
-                numColumns={1}
+                numColumns={isLandscape ? 2 : 1}
                 contentContainerStyle={styles.scrollContainer}
             />
         </View>
@@ -123,5 +129,9 @@ const styles = StyleSheet.create({
     pages: {
         fontSize: 14,
         fontFamily: 'Roboto-Light',
+    },
+    bookStatLandscape: {
+        flex: 1,
+        margin: 8,
     },
 });

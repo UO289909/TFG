@@ -79,6 +79,7 @@ export const PagesReadRanking = ({ pagesRanking, loading, error }: Props) => {
                     <View style={[
                         styles.positionContainer,
                         { backgroundColor: index === 0 ? '#FFD700' : index == 1 ? '#C0C0C0' : index == 2 ? '#CD7F32' : colors.cardPressed },
+                        item.user.nickname === 'Tú' ? { borderWidth: 1.5, borderColor: colors.primary } : undefined,
                     ]}>
                         <Text
                             style={[

@@ -53,7 +53,7 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                     ]}
                     adjustsFontSizeToFit
                     numberOfLines={1}
-                    minimumFontScale={0.5}
+                    minimumFontScale={0.3}
                 >
                     {topLabel}
                 </Text>
@@ -78,7 +78,7 @@ export const StatsCard = ({ topLabel, bottomLabel, value, type, landscape, cover
                         ]}
                         adjustsFontSizeToFit
                         numberOfLines={2}
-                        minimumFontScale={0.5}
+                        minimumFontScale={0.3}
                     >
                         {bottomLabel}
                     </Text>

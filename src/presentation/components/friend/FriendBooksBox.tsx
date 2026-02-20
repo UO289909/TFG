@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '95%',
+        width: '100%',
         minHeight: 148,
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
@@ -122,9 +122,10 @@ const styles = StyleSheet.create({
         elevation: 4,
         alignSelf: 'center',
         padding: 12,
+        marginBottom: 10,
     },
     container: {
-        width: '95%',
+        width: '100%',
         height: 295,
         borderRadius: 16,
         shadowOffset: { width: 0, height: 4 },
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
         elevation: 4,
         alignSelf: 'center',
         padding: 4,
+        marginBottom: 10,
     },
     loadingText: {
         alignSelf: 'center',

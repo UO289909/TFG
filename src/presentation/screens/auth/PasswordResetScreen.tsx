@@ -3,17 +3,17 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { isValidEmail } from '../../../utils/isValidEmail';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/AuthStackNavigator';
+import { useNotification } from '../../context/NotificationContext';
 
 export const PasswordResetScreen = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMessage, setNotifMessage] = useState('');
+  const { showNotification } = useNotification();
 
   const { resetPassword, loading } = useAuth();
   const [email, setEmail] = useState('');
@@ -21,20 +21,17 @@ export const PasswordResetScreen = () => {
   const handleResetPassword = async () => {
 
     if (!isValidEmail(email)) {
-      setNotifMessage('El correo electrónico no es válido');
-      setShowNotif(true);
+      showNotification({ message: 'El correo electrónico no es válido', position: 'top' });
       return;
     }
 
     try {
       await resetPassword(email);
-      setNotifMessage('Revisa tu correo para las instrucciones de reseteo');
-      setShowNotif(true);
+      showNotification({ message: 'Revisa tu correo para las instrucciones de reseteo', position: 'top' });
       setEmail('');
       navigation.navigate('PasswordChange', { alreadySentCode: true, notifPosition: 'top' });
     } catch (error: any) {
-      setNotifMessage(error.message);
-      setShowNotif(true);
+      showNotification({ message: error.message, position: 'top' });
     }
   };
 
@@ -44,14 +41,6 @@ export const PasswordResetScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      {showNotif &&
-        <CustomNotification
-          message={notifMessage}
-          onClose={() => setShowNotif(false)}
-          position="top"
-        />
-      }
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 

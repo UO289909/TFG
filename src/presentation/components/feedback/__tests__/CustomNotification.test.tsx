@@ -20,60 +20,88 @@ jest.mock('react-native', () => {
   return RN;
 });
 
+// mock useNotification
+const mockHideNotification = jest.fn();
+const mockShowNotification = jest.fn();
+let mockState = {
+  visible: true,
+  message: 'Test message',
+  position: 'top' as 'top' | 'bottom',
+  duration: 1000,
+  onAccept: undefined as (() => void) | undefined,
+  onClose: undefined as (() => void) | undefined,
+};
+
+jest.mock('../../../../presentation/context/NotificationContext', () => ({
+  useNotification: () => ({
+    state: mockState,
+    showNotification: mockShowNotification,
+    hideNotification: mockHideNotification,
+  }),
+}));
+
 describe('CustomNotification', () => {
-  const defaultProps = {
-    message: 'Test message',
-    duration: 1000,
-    onClose: jest.fn(),
-    onAccept: undefined,
-    position: 'top' as 'top' | 'bottom',
-  };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockState = {
+      visible: true,
+      message: 'Test message',
+      position: 'top',
+      duration: 1000,
+      onAccept: undefined,
+      onClose: undefined,
+    };
   });
 
-  it('renders correctly', () => {
-    const { getByText } = render(<CustomNotification {...defaultProps} />);
+  it('renders correctly when visible', () => {
+    const { getByText } = render(<CustomNotification />);
     expect(getByText('Test message')).toBeTruthy();
     expect(getByText('✕')).toBeTruthy();
   });
 
-  it('calls onClose when close button is pressed', () => {
-    const { getByText } = render(<CustomNotification {...defaultProps} />);
+  it('returns null when not visible', () => {
+    mockState = { ...mockState, visible: false };
+    const { queryByText } = render(<CustomNotification />);
+    expect(queryByText('Test message')).toBeNull();
+  });
+
+  it('calls hideNotification when close button is pressed', () => {
+    const { getByText } = render(<CustomNotification />);
     fireEvent.press(getByText('✕'));
-    expect(defaultProps.onClose).toHaveBeenCalled();
+    expect(mockHideNotification).toHaveBeenCalled();
   });
 
   it('renders accept button when onAccept is provided', () => {
-    const props = { ...defaultProps, onAccept: jest.fn() };
-    const { getByText } = render(<CustomNotification {...props} />);
+    mockState = { ...mockState, onAccept: jest.fn() };
+    const { getByText } = render(<CustomNotification />);
     expect(getByText('✓')).toBeTruthy();
   });
 
   it('calls onAccept when accept button is pressed', () => {
-    const props = { ...defaultProps, onAccept: jest.fn() };
-    const { getByText } = render(<CustomNotification {...props} />);
+    const onAccept = jest.fn();
+    mockState = { ...mockState, onAccept };
+    const { getByText } = render(<CustomNotification />);
     fireEvent.press(getByText('✓'));
-    expect(props.onAccept).toHaveBeenCalled();
+    expect(onAccept).toHaveBeenCalled();
   });
 
-  it('calls onClose after duration if no onAccept', async () => {
-    const props = { ...defaultProps, duration: 100 };
-    render(<CustomNotification {...props} />);
-    await waitFor(() => expect(props.onClose).toHaveBeenCalled(), { timeout: 200 });
+  it('calls hideNotification after duration if no onAccept', async () => {
+    mockState = { ...mockState, duration: 100 };
+    render(<CustomNotification />);
+    await waitFor(() => expect(mockHideNotification).toHaveBeenCalled(), { timeout: 200 });
   });
 
   it('does not auto-close if onAccept is provided', async () => {
-    const props = { ...defaultProps, onAccept: jest.fn(), duration: 100 };
-    render(<CustomNotification {...props} />);
+    mockState = { ...mockState, onAccept: jest.fn(), duration: 100 };
+    render(<CustomNotification />);
     await new Promise(resolve => setTimeout(resolve, 200));
-    expect(props.onClose).not.toHaveBeenCalled();
+    expect(mockHideNotification).not.toHaveBeenCalled();
   });
 
   it('renders at bottom position', () => {
-    const props = { ...defaultProps, position: 'bottom' as 'top' | 'bottom' };
-    const { getByText } = render(<CustomNotification {...props} />);
+    mockState = { ...mockState, position: 'bottom' };
+    const { getByText } = render(<CustomNotification />);
     expect(getByText('Test message')).toBeTruthy();
   });
 });

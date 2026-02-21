@@ -10,9 +10,9 @@ import { FloatingButton } from '../../components/pressables/FloatingButton';
 import { CustomTheme } from '../../../config/app-theme';
 import { useEffect, useRef, useState } from 'react';
 import { SearchBar } from '../../components/inputs';
-import { CustomNotification } from '../../components/feedback';
 import { normalizeText } from '../../../utils/normalizeText';
 import { IonIcon } from '../../components/icons';
+import { useNotification } from '../../context/NotificationContext';
 
 export const MyBooksScreen = () => {
 
@@ -29,8 +29,7 @@ export const MyBooksScreen = () => {
 
   const [filteredBooks, setFilteredBooks] = useState<Book[]>(myBooks);
 
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMsg, setNotifMsg] = useState('');
+  const { showNotification } = useNotification();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -80,8 +79,10 @@ export const MyBooksScreen = () => {
     );
 
     if (filtered.length === 0) {
-      setNotifMsg('No tienes libros que coincidan con la busqueda');
-      setShowNotif(true);
+      showNotification({
+        message: 'No tienes libros que coincidan con la busqueda',
+        position: 'bottom',
+      });
       setFilteredBooks(myBooks);
       return;
     }
@@ -138,14 +139,6 @@ export const MyBooksScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      {showNotif &&
-        <CustomNotification
-          message={notifMsg}
-          position="bottom"
-          onClose={() => setShowNotif(false)}
-        />
-      }
 
       <SearchBar
         onSearch={handleFilterBooks}

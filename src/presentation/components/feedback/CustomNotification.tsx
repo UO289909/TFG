@@ -2,27 +2,30 @@ import { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { CustomTheme } from '../../../config/app-theme';
 import { useTheme } from '@react-navigation/native';
+import { useNotification } from '../../context/NotificationContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-interface Props {
-    message: string;
-    duration?: number;
-    onClose?: () => void;
-    onAccept?: () => void;
-    position?: 'top' | 'bottom';
-}
+const BOTTOM_TAB_BAR_HEIGHT = 56;
 
-export const CustomNotification = ({
-    message,
-    duration = 3000,
-    onClose,
-    onAccept,
-    position = 'top',
-}: Props) => {
+export const CustomNotification = () => {
+
+    const { state, hideNotification } = useNotification();
+    const { visible, message, position = 'top', duration = 3000, onAccept } = state;
+
+    const insets = useSafeAreaInsets();
+
     const slideAnim = useRef(new Animated.Value(position === 'top' ? -80 : 80)).current;
 
     const { colors } = useTheme() as CustomTheme;
 
     useEffect(() => {
+        if (!visible) {
+            slideAnim.setValue(position === 'top' ? -80 : 80);
+            return;
+        }
+
+        slideAnim.setValue(position === 'top' ? -80 : 80);
+
         Animated.timing(slideAnim, {
             toValue: 0,
             duration: 300,
@@ -36,26 +39,32 @@ export const CustomNotification = ({
                     duration: 300,
                     useNativeDriver: true,
                 }).start(() => {
-                    onClose && onClose();
+                    hideNotification();
                 });
             }, duration);
             return () => clearTimeout(timer);
         }
-    }, [duration, onClose, onAccept, slideAnim, position]);
+    }, [visible, duration, onAccept, slideAnim, position, hideNotification]);
+
+    if (!visible) { return null; }
+
+    const positionStyle = position === 'top'
+        ? { top: insets.top + 5 }
+        : { bottom: insets.bottom + BOTTOM_TAB_BAR_HEIGHT + 5 };
 
     return (
         <>
             {onAccept && (
                 <Pressable
                     style={styles.overlay}
-                    onPress={onClose}
+                    onPress={hideNotification}
                 />
             )}
 
             <Animated.View
                 style={[
                     styles.container,
-                    position === 'top' ? styles.top : styles.bottom,
+                    positionStyle,
                     {
                         transform: [{ translateY: slideAnim }],
                         backgroundColor: colors.notification,
@@ -70,7 +79,7 @@ export const CustomNotification = ({
                     </TouchableOpacity>
                 )}
 
-                <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+                <TouchableOpacity onPress={hideNotification} style={styles.closeButton}>
                     <Text style={styles.buttonText}>✕</Text>
                 </TouchableOpacity>
 
@@ -98,14 +107,8 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 999, // menor que la notificación para que no la tape
+        zIndex: 999,
         backgroundColor: 'transparent',
-    },
-    top: {
-        top: 5,
-    },
-    bottom: {
-        bottom: 5,
     },
     text: {
         color: '#fff',

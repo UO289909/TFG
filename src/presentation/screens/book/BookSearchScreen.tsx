@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, FlatList } from 'react-native';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
 import { searchBooksByTitle } from '../../../core/use-cases/books/search-books-by-title.use-case';
@@ -9,6 +9,7 @@ import { Book } from '../../../core/entities/book.entity';
 import { SearchCard } from '../../components/books/SearchCard';
 import { CustomTheme } from '../../../config/app-theme';
 import { IonIcon } from '../../components/icons';
+import { useNotification } from '../../context/NotificationContext';
 
 
 export const BookSearchScreen = () => {
@@ -22,7 +23,7 @@ export const BookSearchScreen = () => {
 
     const { colors } = useTheme() as CustomTheme;
 
-    const [showNotif, setShowNotif] = useState(false);
+    const { showNotification } = useNotification();
 
     const [bookResults, setBookResults] = useState<{ book: Book, fromOpenLibrary: boolean, alreadyInUser: boolean }[] | null>([]);
     const [noResults, setNoResults] = useState(false);
@@ -42,7 +43,10 @@ export const BookSearchScreen = () => {
             return;
         }
         setIsLoading(false);
-        setShowNotif(true);
+        showNotification({
+            message: 'Selecciona un resultado para añadir a tu biblioteca o vuelve atrás',
+            position: 'bottom',
+        });
     }, [bookResults]);
 
     const handleSearch = async () => {
@@ -99,14 +103,6 @@ export const BookSearchScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={'Selecciona un resultado para añadir a tu biblioteca o vuelve atrás'}
-                    position="bottom"
-                    onClose={() => setShowNotif(false)}
-                />
-            }
 
             <View style={[styles.headerContainer, { backgroundColor: colors.card }]}>
                 <Text style={[styles.titleText, { color: colors.text },]}>

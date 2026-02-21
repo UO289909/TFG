@@ -9,6 +9,7 @@ import { AuthStackNavigator, RootStackParams } from './presentation/navigation/A
 import { useEffect } from 'react';
 import { SupabaseClient } from './infrastructure/database/supabaseClient';
 import { ReleaseNotesModal } from './presentation/components/feedback/ReleaseNotesModal';
+import { CustomNotification } from './presentation/components/feedback/CustomNotification';
 
 export const navigation = createNavigationContainerRef<RootStackParams>();
 
@@ -102,8 +103,12 @@ export const App = () => {
         ? <>
           <BottomTabsNavigator />
           <ReleaseNotesModal />
+          <CustomNotification />
         </>
-        : <AuthStackNavigator />}
+        : <>
+          <AuthStackNavigator />
+          <CustomNotification />
+        </>}
     </NavigationContainer>
   );
 };

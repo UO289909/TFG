@@ -4,17 +4,17 @@ import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { useAuth } from '../../context/AuthContext';
 import { isValidEmail } from '../../../utils/isValidEmail';
+import { useNotification } from '../../context/NotificationContext';
 
 export const SignUpScreen = () => {
 
   const { colors } = useTheme() as CustomTheme;
   const { signUp, loading } = useAuth();
 
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMessage, setNotifMessage] = useState('');
+  const { showNotification } = useNotification();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,22 +25,19 @@ export const SignUpScreen = () => {
   const handleSignUp = async () => {
 
     if (!isValidEmail(email)) {
-      setNotifMessage('El correo electrónico no es válido');
-      setShowNotif(true);
+      showNotification({ message: 'El correo electrónico no es válido', position: 'top' });
       return;
     }
 
     if (password !== confirmPassword) {
-      setNotifMessage('Las contraseñas no coinciden');
-      setShowNotif(true);
+      showNotification({ message: 'Las contraseñas no coinciden', position: 'top' });
       return;
     }
 
     try {
       const success = await signUp(email, password, fullName.trim(), nickname);
       if (success) {
-        setNotifMessage('¡Registro exitoso! Confirma tu email y podrás iniciar sesión');
-        setShowNotif(true);
+        showNotification({ message: '¡Registro exitoso! Confirma tu email y podrás iniciar sesión', position: 'top' });
         setEmail('');
         setPassword('');
         setConfirmPassword('');
@@ -48,8 +45,7 @@ export const SignUpScreen = () => {
         setNickname('');
       }
     } catch (error: any) {
-      setNotifMessage(error.message);
-      setShowNotif(true);
+      showNotification({ message: error.message, position: 'top' });
     }
   };
 
@@ -60,14 +56,6 @@ export const SignUpScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      {showNotif &&
-        <CustomNotification
-          message={notifMessage}
-          onClose={() => setShowNotif(false)}
-          position="top"
-        />
-      }
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={{ ...styles.title, color: colors.text }}>Registrarse</Text>

@@ -5,10 +5,10 @@ import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { CustomTheme } from '../../../config/app-theme';
 import { deleteUserBook } from '../../../core/use-cases/books/delete-user-book.use-case';
 import { useState } from 'react';
-import { CustomNotification } from '../../components/feedback/CustomNotification';
 import { CustomButton } from '../../components/pressables/CustomButton';
 import { ReadingLogMenu } from '../../components/inputs/ReadingLogMenu';
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
+import { useNotification } from '../../context/NotificationContext';
 
 export const BookDetailsScreen = () => {
 
@@ -21,9 +21,10 @@ export const BookDetailsScreen = () => {
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
 
-  const [showNotif, setShowNotif] = useState(false);
   const [showReadLog, setShowReadLog] = useState(false);
   const [deletingBook, setDeletingBook] = useState(false);
+
+  const { showNotification, hideNotification } = useNotification();
 
   const default_cover = `https://placehold.co/400x640.webp?text=${book.title}&font=roboto`;
 
@@ -47,6 +48,17 @@ export const BookDetailsScreen = () => {
     navigation.navigate('EditBook', { book });
   };
 
+  const handleShowDeleteConfirmation = () => {
+    showNotification({
+      message: '¿Seguro que quieres eliminar este libro?',
+      position: 'bottom',
+      onAccept: () => {
+        hideNotification();
+        handleDeleteBook();
+      },
+    });
+  };
+
 
   if (deletingBook) {
     return <FullScreenLoader message="Eliminando libro..." />;
@@ -59,15 +71,6 @@ export const BookDetailsScreen = () => {
         <ReadingLogMenu
           book={book}
           onClose={() => setShowReadLog(false)}
-        />
-      }
-
-      {showNotif &&
-        <CustomNotification
-          message="¿Seguro que quieres eliminar este libro?"
-          position="bottom"
-          onClose={() => setShowNotif(false)}
-          onAccept={handleDeleteBook}
         />
       }
 
@@ -138,7 +141,7 @@ export const BookDetailsScreen = () => {
           <View style={styles.buttonRow}>
             <CustomButton
               title="Eliminar libro"
-              onPress={() => setShowNotif(true)}
+              onPress={handleShowDeleteConfirmation}
               style={{ ...styles.button, backgroundColor: colors.danger }}
             />
             <CustomButton

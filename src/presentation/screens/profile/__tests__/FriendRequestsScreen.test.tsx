@@ -61,21 +61,23 @@ jest.mock('../../../components/profile/UserCard', () => {
   };
 });
 
-// mock feedback module (export both FullScreenLoader and CustomNotification)
+// mock feedback module (FullScreenLoader only)
 jest.mock('../../../components/feedback', () => {
   const React = require('react');
   const RN = require('react-native');
-  const { View, Text, Pressable, ActivityIndicator } = RN;
+  const { View, ActivityIndicator } = RN;
 
   return {
     FullScreenLoader: () => React.createElement(View, { testID: 'full-screen-loader' }, React.createElement(ActivityIndicator, null)),
-    CustomNotification: (props: any) =>
-      React.createElement(View, { testID: 'custom-notif' },
-        React.createElement(Text, null, props.message),
-        props.onClose ? React.createElement(Pressable, { testID: 'notif-close', onPress: props.onClose }, React.createElement(Text, null, 'close')) : null
-      ),
   };
 });
+
+jest.mock('../../../context/NotificationContext', () => ({
+  useNotification: () => ({
+    showNotification: jest.fn(),
+    hideNotification: jest.fn(),
+  }),
+}));
 
 jest.mock('../../../components/icons', () => {
   const React = require('react');

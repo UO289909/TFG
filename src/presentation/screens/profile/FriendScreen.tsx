@@ -8,10 +8,11 @@ import { RootStackParams as HomeStackParams } from '../../navigation/HomeStackNa
 import { CustomTheme } from '../../../config/app-theme';
 import { useFriend } from '../../hooks/useFriend';
 import { CustomMenuButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { useState } from 'react';
 import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-case';
 import { FriendNumbers } from '../../components/friend/FriendNumbers';
+import { useNotification } from '../../context/NotificationContext';
 
 
 export const FriendScreen = () => {
@@ -30,7 +31,7 @@ export const FriendScreen = () => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [showNotif, setShowNotif] = useState(false);
+    const { showNotification, hideNotification } = useNotification();
 
     const handleDeleteFriend = () => {
         setIsLoading(true);
@@ -53,6 +54,17 @@ export const FriendScreen = () => {
         })
     };
 
+    const handleShowDeleteConfirmation = () => {
+        showNotification({
+            message: '¿Estás seguro de que quieres eliminar a este amigo?',
+            position: 'bottom',
+            onAccept: () => {
+                hideNotification();
+                handleDeleteFriend();
+            },
+        });
+    };
+
 
     if (isLoading) {
         return <FullScreenLoader message="Eliminando amigo..." />;
@@ -60,20 +72,6 @@ export const FriendScreen = () => {
 
     return (
         <View style={[styles.container, isLandscape && styles.containerLandscape]}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={'¿Estás seguro de que quieres eliminar a este amigo?'}
-                    onClose={() => {
-                        setShowNotif(false);
-                    }}
-                    onAccept={() => {
-                        setShowNotif(false);
-                        handleDeleteFriend();
-                    }}
-                    position="bottom"
-                />
-            }
 
             <ProfileInfoHeader
                 nickname={friend.nickname}
@@ -106,13 +104,10 @@ export const FriendScreen = () => {
                     <Text style={[styles.title, { color: colors.text }]}>Acciones</Text>
 
                     <CustomMenuButton
-                        onPress={() => {
-                            setShowNotif(true);
-                        }}
+                        onPress={handleShowDeleteConfirmation}
                         label="Eliminar amigo"
                         icon="person-remove"
                         style={styles.button}
-                        disabled={showNotif}
                     />
 
                 </View>

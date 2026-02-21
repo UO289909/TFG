@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
+import { useNotification } from '../../context/NotificationContext';
 
 export const NicknameChangeScreen = () => {
 
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
 
-    const [showNotif, setShowNotif] = useState(false);
-    const [notifMessage, setNotifMessage] = useState('');
+    const { showNotification } = useNotification();
 
     const { changeUserNickname, loading } = useAuth();
     const [nickname, setNickname] = useState('');
@@ -31,8 +31,7 @@ export const NicknameChangeScreen = () => {
                 });
             }
         } catch (error: any) {
-            setNotifMessage(error.message);
-            setShowNotif(true);
+            showNotification({ message: error.message, position: 'top' });
         }
     };
 
@@ -42,14 +41,6 @@ export const NicknameChangeScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={notifMessage}
-                    onClose={() => setShowNotif(false)}
-                    position={'top'}
-                />
-            }
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 

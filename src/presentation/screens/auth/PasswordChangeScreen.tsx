@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
+import { useNotification } from '../../context/NotificationContext';
 
 export const PasswordChangeScreen = () => {
 
@@ -16,8 +17,7 @@ export const PasswordChangeScreen = () => {
     const alreadySentCode = params?.alreadySentCode ?? false;
     const notifPosition = params?.notifPosition ?? 'top';
 
-    const [showNotif, setShowNotif] = useState(false);
-    const [notifMessage, setNotifMessage] = useState('');
+    const { showNotification } = useNotification();
 
     const { changePassword, loading } = useAuth();
     const [code, setCode] = useState('');
@@ -26,16 +26,17 @@ export const PasswordChangeScreen = () => {
 
     useEffect(() => {
         if (alreadySentCode) {
-            setNotifMessage('Utiliza el código de verificación que solicitaste hace menos de 1 minuto');
-            setShowNotif(true);
+            showNotification({
+                message: 'Utiliza el código de verificación que solicitaste hace menos de 1 minuto',
+                position: notifPosition,
+            });
         }
     }, []);
 
     const handleChangePassword = async () => {
 
         if (password !== confirmPassword) {
-            setNotifMessage('Las contraseñas no coinciden');
-            setShowNotif(true);
+            showNotification({ message: 'Las contraseñas no coinciden', position: notifPosition });
             return;
         }
 
@@ -45,8 +46,7 @@ export const PasswordChangeScreen = () => {
                 navigation.goBack();
             }
         } catch (error: any) {
-            setNotifMessage(error.message);
-            setShowNotif(true);
+            showNotification({ message: error.message, position: notifPosition });
         }
     };
 
@@ -56,14 +56,6 @@ export const PasswordChangeScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={notifMessage}
-                    onClose={() => setShowNotif(false)}
-                    position={notifPosition}
-                />
-            }
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
 

@@ -6,9 +6,10 @@ import { NavigationProp, useNavigation, useTheme } from '@react-navigation/nativ
 import { CustomTheme } from '../../../config/app-theme';
 import { CustomTextInput } from '../../components/inputs';
 import { CustomButton } from '../../components/pressables';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { RootStackParams } from '../../navigation/AuthStackNavigator';
 import { isValidEmail } from '../../../utils/isValidEmail';
+import { useNotification } from '../../context/NotificationContext';
 
 export const SignInScreen = () => {
 
@@ -16,8 +17,7 @@ export const SignInScreen = () => {
 
   const { colors } = useTheme() as CustomTheme;
 
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMessage, setNotifMessage] = useState('');
+  const { showNotification } = useNotification();
 
   const { signIn, signInWithGoogle, loading } = useAuth();
   const [email, setEmail] = useState('');
@@ -27,24 +27,21 @@ export const SignInScreen = () => {
     try {
       await signInWithGoogle();
     } catch (error) {
-      setNotifMessage('Error al iniciar sesión con Google.');
-      setShowNotif(true);
+      showNotification({ message: 'Error al iniciar sesión con Google.', position: 'top' });
     }
   };
 
   const handleSignIn = async () => {
 
     if (!isValidEmail(email)) {
-      setNotifMessage('El correo electrónico no es válido');
-      setShowNotif(true);
+      showNotification({ message: 'El correo electrónico no es válido', position: 'top' });
       return;
     }
 
     try {
       await signIn(email, password);
     } catch (error: any) {
-      setNotifMessage(error.message);
-      setShowNotif(true);
+      showNotification({ message: error.message, position: 'top' });
     }
   };
 
@@ -58,14 +55,6 @@ export const SignInScreen = () => {
 
   return (
     <View style={styles.container}>
-
-      {showNotif &&
-        <CustomNotification
-          message={notifMessage}
-          onClose={() => setShowNotif(false)}
-          position="top"
-        />
-      }
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
 

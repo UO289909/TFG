@@ -17,8 +17,8 @@ export const ReleaseNotesModal = () => {
             animationType="fade"
             onRequestClose={dismiss}
         >
-            <View style={styles.backdrop}>
-                <View style={[styles.card, { backgroundColor: colors.card }]}>
+            <Pressable style={styles.backdrop} onPress={dismiss}>
+                <Pressable style={[styles.card, { backgroundColor: colors.card }]}>
 
                     <Text style={[styles.title, { color: colors.primary }]}>
                         ¡Nueva actualización!
@@ -58,8 +58,8 @@ export const ReleaseNotesModal = () => {
                     >
                         <Text style={[styles.buttonText, { color: colors.text }]}>Entendido</Text>
                     </Pressable>
-                </View>
-            </View>
+                </Pressable>
+            </Pressable>
         </Modal>
     );
 };

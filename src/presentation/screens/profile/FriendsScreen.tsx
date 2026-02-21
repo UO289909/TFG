@@ -2,7 +2,7 @@
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { CustomTheme } from '../../../config/app-theme';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { IonIcon } from '../../components/icons';
 import { UserCard } from '../../components/profile/UserCard';
@@ -13,6 +13,7 @@ import { deleteFriend } from '../../../core/use-cases/user/delete-friend.use-cas
 import { useProfile } from '../../hooks/useProfile';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { RootStackParams } from '../../navigation/ProfileStackNavigator';
+import { useNotification } from '../../context/NotificationContext';
 
 
 export const FriendsScreen = () => {
@@ -27,8 +28,7 @@ export const FriendsScreen = () => {
 
     const [loading, setLoading] = useState(true);
 
-    const [showNotif, setShowNotif] = useState(false);
-    const [notifMsg, setNotifMsg] = useState('');
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         refetchFriendRequests();
@@ -80,8 +80,10 @@ export const FriendsScreen = () => {
         );
 
         if (filtered.length === 0) {
-            setNotifMsg('No tienes amigos que coincidan con la busqueda');
-            setShowNotif(true);
+            showNotification({
+                message: 'No tienes amigos que coincidan con la busqueda',
+                position: 'bottom',
+            });
             setFilteredFriends(friends);
             setLoading(false);
             return;
@@ -115,14 +117,6 @@ export const FriendsScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={notifMsg}
-                    position="bottom"
-                    onClose={() => setShowNotif(false)}
-                />
-            }
 
             <SearchBar
                 onSearch={handleFilterFriends}

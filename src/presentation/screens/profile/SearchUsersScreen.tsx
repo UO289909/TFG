@@ -2,7 +2,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SearchBar } from '../../components/inputs';
 import { UserCard, UserType } from '../../components/profile/UserCard';
-import { CustomNotification, FullScreenLoader } from '../../components/feedback';
+import { FullScreenLoader } from '../../components/feedback';
 import { useEffect, useState } from 'react';
 import { User } from '../../../core/entities/user.entity';
 import { searchUsersByNickname } from '../../../core/use-cases/user/search-users-by-nickname.use-case';
@@ -14,6 +14,7 @@ import { sendRequest } from '../../../core/use-cases/user/send-request.use-case'
 import { useProfile } from '../../hooks/useProfile';
 import { useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
+import { useNotification } from '../../context/NotificationContext';
 
 
 export const SearchUsersScreen = () => {
@@ -25,8 +26,7 @@ export const SearchUsersScreen = () => {
     const [users, setUsers] = useState<{ user: User, type: UserType }[]>([]);
     const [loading, setLoading] = useState(false);
 
-    const [showNotif, setShowNotif] = useState(false);
-    const [notifMsg, setNotifMsg] = useState('');
+    const { showNotification } = useNotification();
 
     useEffect(() => {
         refetchFriendRequests();
@@ -80,8 +80,10 @@ export const SearchUsersScreen = () => {
             const found = await searchUsersByNickname(normalizeText(text));
 
             if (found.length === 0) {
-                setNotifMsg('No se encontraron usuarios que coincidan con la busqueda');
-                setShowNotif(true);
+                showNotification({
+                    message: 'No se encontraron usuarios que coincidan con la busqueda',
+                    position: 'bottom',
+                });
             } else {
                 const foundWithType = found.map(user => {
 
@@ -152,14 +154,6 @@ export const SearchUsersScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={notifMsg}
-                    position="bottom"
-                    onClose={() => setShowNotif(false)}
-                />
-            }
 
             <SearchBar
                 onSearch={handleSearch}

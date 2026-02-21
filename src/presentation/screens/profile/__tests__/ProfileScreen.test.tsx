@@ -79,18 +79,14 @@ jest.mock('../../../components/pressables/CustomMenuButton', () => {
   };
 });
 
-jest.mock('../../../components/feedback', () => {
-  const React = require('react');
-  const { View, Text, Pressable } = require('react-native');
-  return {
-    CustomNotification: (props: any) =>
-      React.createElement(View, { testID: 'custom-notif' },
-        React.createElement(Text, null, props.message),
-        props.onAccept ? React.createElement(Pressable, { testID: 'notif-accept', onPress: props.onAccept }, React.createElement(Text, null, 'accept')) : null,
-        props.onClose ? React.createElement(Pressable, { testID: 'notif-close', onPress: props.onClose }, React.createElement(Text, null, 'close')) : null
-      ),
-  };
-});
+const mockShowNotification = jest.fn();
+const mockHideNotification = jest.fn();
+jest.mock('../../../context/NotificationContext', () => ({
+  useNotification: () => ({
+    showNotification: mockShowNotification,
+    hideNotification: mockHideNotification,
+  }),
+}));
 
 // mock image picker
 jest.mock('react-native-image-picker', () => ({
@@ -140,8 +136,16 @@ describe('ProfileScreen', () => {
   it('sign out flow shows notification and calls signOut on accept', () => {
     const { getByTestId } = render(<ProfileScreen />);
     fireEvent.press(getByTestId('btn-Cerrar sesión'));
-    expect(getByTestId('custom-notif')).toBeTruthy();
-    fireEvent.press(getByTestId('notif-accept'));
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: '¿Estás seguro de que quieres cerrar sesión?',
+        onAccept: expect.any(Function),
+      })
+    );
+    // simulate accepting
+    const { onAccept } = mockShowNotification.mock.calls[0][0];
+    onAccept();
+    expect(mockHideNotification).toHaveBeenCalled();
     expect(mockSignOut).toHaveBeenCalled();
   });
 });

@@ -11,9 +11,9 @@ import { getUserBookByIsbn } from '../../../core/use-cases/books/get-user-book-b
 import { FullScreenLoader } from '../../components/feedback/FullScreenLoader';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { editUserBook } from '../../../core/use-cases/books/edit-user-book.use-case';
-import { CustomNotification } from '../../components/feedback/CustomNotification';
 import { getReadingLogs } from '../../../core/use-cases/books/get-reading-logs.use-case';
 import { editReadingLog } from '../../../core/use-cases/books/edit-reading-log.use-case';
+import { useNotification } from '../../context/NotificationContext';
 
 export const EditBookScreen = () => {
     const navigation = useNavigation<NavigationProp<RootStackParams>>();
@@ -24,8 +24,7 @@ export const EditBookScreen = () => {
 
     const [editingBook, setEditingBook] = useState(false);
 
-    const [showNotif, setShowNotif] = useState(false);
-    const [notifMsg, setNotifMsg] = useState('');
+    const { showNotification } = useNotification();
 
     const [userBook, setUserBook] = useState<UserBook>();
     const [bookLogs, setBookLogs] = useState<DatabaseReadingLog[]>([]);
@@ -82,11 +81,16 @@ export const EditBookScreen = () => {
 
     useEffect(() => {
         if (fieldsEnabled.length > 0) {
-            setNotifMsg('Esta es toda la información que puedes modificar');
+            showNotification({
+                message: 'Esta es toda la información que puedes modificar',
+                position: 'bottom',
+            });
         } else {
-            setNotifMsg('No puedes modificar ninguna información de este libro');
+            showNotification({
+                message: 'No puedes modificar ninguna información de este libro',
+                position: 'bottom',
+            });
         }
-        setShowNotif(true);
     }, [fieldsEnabled]);
 
     const handleGoBack = () => {
@@ -150,14 +154,6 @@ export const EditBookScreen = () => {
 
     return (
         <View style={styles.container}>
-
-            {showNotif &&
-                <CustomNotification
-                    message={notifMsg}
-                    position="bottom"
-                    onClose={() => setShowNotif(false)}
-                />
-            }
 
             <Text style={{ ...styles.titleText, color: colors.text }}>Editar '{book.title}'</Text>
 

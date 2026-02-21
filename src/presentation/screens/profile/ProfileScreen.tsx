@@ -11,7 +11,7 @@ import { RootStackParams } from '../../navigation/ProfileStackNavigator';
 import { CustomTheme } from '../../../config/app-theme';
 import { ThemeSelectorMenu } from '../../components/profile/ThemeSelectorMenu';
 import { useAuth } from '../../context/AuthContext';
-import { CustomNotification } from '../../components/feedback';
+import { useNotification } from '../../context/NotificationContext';
 
 export const ProfileScreen = () => {
 
@@ -33,12 +33,10 @@ export const ProfileScreen = () => {
   } = useProfile();
 
   const { signOut, sendNonceCode, loading } = useAuth();
+  const { showNotification, hideNotification } = useNotification();
 
   const { width, height } = useWindowDimensions();
   const isLandscape = width > height || width >= 768;
-
-  const [showNotif, setShowNotif] = useState(false);
-  const [notifMessage, setNotifMessage] = useState('');
 
   const [changingAvatar, setChangingAvatar] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -94,8 +92,18 @@ export const ProfileScreen = () => {
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    setNotifMessage('¿Estás seguro de que quieres cerrar sesión?');
-    setShowNotif(true);
+    showNotification({
+      message: '¿Estás seguro de que quieres cerrar sesión?',
+      position: 'bottom',
+      onAccept: () => {
+        hideNotification();
+        setSigningOut(false);
+        signOut();
+      },
+      onClose: () => {
+        setSigningOut(false);
+      },
+    });
   };
 
   const handleChangeAvatar = async () => {
@@ -150,22 +158,6 @@ export const ProfileScreen = () => {
       {showThemeSelector &&
         <ThemeSelectorMenu
           onClose={() => setShowThemeSelector(false)}
-        />
-      }
-
-      {showNotif &&
-        <CustomNotification
-          message={notifMessage}
-          onClose={() => {
-            setShowNotif(false);
-            setSigningOut(false);
-          }}
-          onAccept={() => {
-            setShowNotif(false);
-            setSigningOut(false);
-            signOut();
-          }}
-          position="bottom"
         />
       }
 

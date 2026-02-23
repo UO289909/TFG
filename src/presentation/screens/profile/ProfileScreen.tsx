@@ -139,6 +139,30 @@ export const ProfileScreen = () => {
 
   };
 
+  const handleDeleteAccount = () => {
+    showNotification({
+      message: '¿Estás seguro de que quieres eliminar tu cuenta?.',
+      position: 'bottom',
+      onAccept: () => {
+        hideNotification();
+        showNotification({
+          message: 'Esta acción no se puede deshacer. ¿Estás 100% seguro?',
+          position: 'top',
+          onAccept: () => {
+            hideNotification();
+            // deleteAccount();
+          },
+          onClose: () => {
+            hideNotification();
+          },
+        })
+      },
+      onClose: () => {
+        setSigningOut(false);
+      },
+    });
+  };
+
   const refreshControl = (
     <RefreshControl
       refreshing={refreshing}
@@ -205,9 +229,9 @@ export const ProfileScreen = () => {
 
         </View>
 
-        <View style={[styles.settingsContainer, { backgroundColor: colors.card }]}>
+        <View style={[styles.socialContainer, { backgroundColor: colors.card }]}>
 
-          <Text style={[styles.title, { color: colors.text }]}>Ajustes</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Modificar perfil</Text>
 
           <CustomMenuButton
             onPress={handleChangeAvatar}
@@ -215,22 +239,6 @@ export const ProfileScreen = () => {
             icon="images"
             style={styles.button}
             disabled={loading || changingAvatar || isLoadingProfile}
-          />
-
-          <CustomMenuButton
-            onPress={() => setShowThemeSelector(true)}
-            label="Cambiar esquema de color"
-            icon="contrast"
-            style={styles.button}
-            disabled={loading || showThemeSelector}
-          />
-
-          <CustomMenuButton
-            onPress={handleChangePassword}
-            label="Cambiar contraseña"
-            icon="lock-open"
-            style={styles.button}
-            disabled={loading}
           />
 
           <CustomMenuButton
@@ -242,11 +250,41 @@ export const ProfileScreen = () => {
           />
 
           <CustomMenuButton
+            onPress={handleChangePassword}
+            label="Cambiar contraseña"
+            icon="lock-open"
+            style={styles.button}
+            disabled={loading}
+          />
+
+        </View>
+
+        <View style={[styles.settingsContainer, { backgroundColor: colors.card }]}>
+
+          <Text style={[styles.title, { color: colors.text }]}>Ajustes</Text>
+
+          <CustomMenuButton
+            onPress={() => setShowThemeSelector(true)}
+            label="Cambiar esquema de color"
+            icon="contrast"
+            style={styles.button}
+            disabled={loading || showThemeSelector}
+          />
+
+          <CustomMenuButton
             onPress={handleChangelog}
             label="Historial de versiones"
             icon="file-tray-stacked"
             style={styles.button}
             disabled={loading}
+          />
+
+          <CustomMenuButton
+            onPress={handleDeleteAccount}
+            label="Eliminar mi cuenta"
+            icon="trash"
+            style={styles.button}
+            disabled={loading || signingOut}
           />
 
           <CustomMenuButton

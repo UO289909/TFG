@@ -49,8 +49,8 @@ export const CustomNotification = () => {
     if (!visible) { return null; }
 
     const positionStyle = position === 'top'
-        ? { top: insets.top + 5 }
-        : { bottom: insets.bottom + BOTTOM_TAB_BAR_HEIGHT + 5 };
+        ? { top: insets.top + 64 }
+        : { bottom: insets.bottom + BOTTOM_TAB_BAR_HEIGHT };
 
     return (
         <>

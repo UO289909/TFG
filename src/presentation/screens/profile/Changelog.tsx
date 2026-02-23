@@ -19,7 +19,7 @@ export const Changelog = () => {
                 <Text style={[styles.version, { color: colors.text }]}>v{item.version}</Text>
                 {index === 0 && (
                     <View style={[styles.current, { backgroundColor: colors.primary }]}>
-                        <Text style={[styles.currentText, { color: colors.text }]}>Última actualización</Text>
+                        <Text style={styles.currentText}>Última actualización</Text>
                     </View>
                 )}
                 <Text style={[styles.date, { color: colors.primary }]}>{item.date}</Text>
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     currentText: {
         fontSize: 12,
         fontFamily: 'Roboto-Medium',
+        color: 'white',
     },
     header: {
         flexDirection: 'row',

@@ -41,6 +41,8 @@ export type IonIconNames =
     | 'text-outline'
     | 'file-tray-stacked'
     | 'file-tray-stacked-outline'
+    | 'trash'
+    | 'trash-outline'
     | 'search'
     | 'archive'
     | 'send'

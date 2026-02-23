@@ -17,6 +17,7 @@ interface AuthContextProps {
   changeUserNickname: (newNickname: string) => Promise<boolean>;
   sendNonceCode: () => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -30,6 +31,7 @@ const AuthContext = createContext<AuthContextProps>({
   changeUserNickname: async () => { return false; },
   sendNonceCode: async () => { },
   signOut: async () => { },
+  deleteAccount: async () => { },
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -232,6 +234,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(false);
   };
 
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      const { error } = await SupabaseClient.auth.admin.deleteUser(currentUser.id);
+      if (error) {
+        throw error;
+      }
+      setUser(null);
+    } catch (error) {
+      throw new Error('Error al eliminar la cuenta, inténtalo de nuevo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       currentUser,
@@ -244,6 +261,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       changeUserNickname,
       sendNonceCode,
       signOut,
+      deleteAccount,
     }}>
       {children}
     </AuthContext.Provider>

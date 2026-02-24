@@ -32,7 +32,7 @@ export const ProfileScreen = () => {
     changeAvatar,
   } = useProfile();
 
-  const { signOut, sendNonceCode, loading } = useAuth();
+  const { signOut, sendNonceCode, deleteAccountSignOut, loading } = useAuth();
   const { showNotification, hideNotification } = useNotification();
 
   const { width, height } = useWindowDimensions();
@@ -141,7 +141,7 @@ export const ProfileScreen = () => {
 
   const handleDeleteAccount = () => {
     showNotification({
-      message: '¿Estás seguro de que quieres eliminar tu cuenta?.',
+      message: '¿Estás seguro de que quieres eliminar tu cuenta?',
       position: 'bottom',
       onAccept: () => {
         hideNotification();
@@ -150,7 +150,7 @@ export const ProfileScreen = () => {
           position: 'top',
           onAccept: () => {
             hideNotification();
-            // deleteAccount();
+            deleteAccountSignOut();
           },
           onClose: () => {
             hideNotification();

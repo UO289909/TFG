@@ -1,4 +1,4 @@
-package com.tfg
+package com.libreria.app
 
 import android.os.Bundle
 
@@ -13,7 +13,7 @@ class MainActivity : ReactActivity() {
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
    */
-  override fun getMainComponentName(): String = "TFG"
+  override fun getMainComponentName(): String = "Libreria"
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(null)

@@ -139,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
         options: {
           data: { nickname, full_name },
-          emailRedirectTo: 'com.tfg://auth-callback/confirm',
+          emailRedirectTo: 'com.libreria.app://auth-callback/confirm',
         },
       });
       if (error) {
@@ -167,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const { error } = await SupabaseClient.auth.resetPasswordForEmail(email, {
-        redirectTo: 'com.tfg://auth-callback/reset',
+        redirectTo: 'com.libreria.app://auth-callback/reset',
       });
       if (error) {
         throw error;

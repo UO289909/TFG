@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tfg">
+    package="com.libreria.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -27,7 +27,7 @@
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data
-            android:scheme="com.tfg"
+            android:scheme="com.libreria.app"
             android:host="auth-callback"
             android:pathPattern=".*" />
         </intent-filter>

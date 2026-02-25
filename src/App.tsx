@@ -44,7 +44,7 @@ export const App = () => {
       try {
         const u = new URL(url);
 
-        if (u.protocol !== 'com.tfg:') {
+        if (u.protocol !== 'com.libreria.app:') {
           return;
         }
         if (u.hostname !== 'auth-callback') {

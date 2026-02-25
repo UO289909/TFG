@@ -1,5 +1,5 @@
 {
-  "name": "TFG",
+  "name": "libreria",
   "version": "1.4.3",
   "private": true,
   "scripts": {
@@ -20,12 +20,15 @@
     "@react-navigation/native-stack": "^7.13.0",
     "@supabase/supabase-js": "^2.97.0",
     "axios": "^1.13.5",
+    "lodash": "^4.17.23",
+    "minimatch": "^10.2.3",
     "react": "19.2.3",
     "react-native": "0.84.0",
     "react-native-blob-util": "^0.24.7",
     "react-native-image-picker": "^8.2.1",
     "react-native-pager-view": "^8.0.0",
-    "react-native-safe-area-context": "^5.6.2",
+    "react-native-rename": "^3.2.17",
+    "react-native-safe-area-context": "^5.7.0",
     "react-native-screens": "4.24.0",
     "react-native-url-polyfill": "^3.0.0"
   },

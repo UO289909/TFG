@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "TFG.app"
-               BlueprintName = "TFG"
-               ReferencedContainer = "container:TFG.xcodeproj">
+               BuildableName = "LibreriaApp.app"
+               BlueprintName = "LibreriaApp"
+               ReferencedContainer = "container:LibreriaApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "TFGTests.xctest"
-               BlueprintName = "TFGTests"
-               ReferencedContainer = "container:TFG.xcodeproj">
+               BuildableName = "LibreriaAppTests.xctest"
+               BlueprintName = "LibreriaAppTests"
+               ReferencedContainer = "container:LibreriaApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "TFG.app"
-            BlueprintName = "TFG"
-            ReferencedContainer = "container:TFG.xcodeproj">
+            BuildableName = "LibreriaApp.app"
+            BlueprintName = "LibreriaApp"
+            ReferencedContainer = "container:LibreriaApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "TFG.app"
-            BlueprintName = "TFG"
-            ReferencedContainer = "container:TFG.xcodeproj">
+            BuildableName = "LibreriaApp.app"
+            BlueprintName = "LibreriaApp"
+            ReferencedContainer = "container:LibreriaApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

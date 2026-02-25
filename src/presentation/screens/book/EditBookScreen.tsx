@@ -51,11 +51,12 @@ export const EditBookScreen = () => {
     }, []);
 
     useEffect(() => {
+
         if (userBook) {
             setAuthor(userBook.author ?? '');
             setPages(userBook.pages?.toString() ?? '');
             setYear(userBook.release_year?.toString() ?? '');
-            setCover(userBook.cover_url ?? '');
+            setCover(book.cover_url ?? userBook.cover_url ?? '');
             setRating(Number(userBook.rating) || 0);
             setReview(userBook.review ?? '');
 
@@ -68,28 +69,31 @@ export const EditBookScreen = () => {
             if (userBook.release_year) {
                 setFieldsEnabled((prev) => [...prev, 'release_year']);
             }
-            if (userBook.cover_url) {
+            if (!book.cover_url) {
                 setFieldsEnabled((prev) => [...prev, 'cover_url']);
             }
             if (userBook.rating) {
                 setFieldsEnabled((prev) => [...prev, 'rating']);
                 setFieldsEnabled((prev) => [...prev, 'review']);
             }
+
         }
 
     }, [userBook]);
 
     useEffect(() => {
-        if (fieldsEnabled.length > 0) {
-            showNotification({
-                message: 'Esta es toda la información que puedes modificar',
-                position: 'bottom',
-            });
-        } else {
-            showNotification({
-                message: 'No puedes modificar ninguna información de este libro',
-                position: 'bottom',
-            });
+        if (userBook) {
+            if (fieldsEnabled.length > 0) {
+                showNotification({
+                    message: 'Esta es toda la información que puedes modificar',
+                    position: 'bottom',
+                });
+            } else {
+                showNotification({
+                    message: 'No puedes modificar ninguna información de este libro',
+                    position: 'bottom',
+                });
+            }
         }
     }, [fieldsEnabled]);
 

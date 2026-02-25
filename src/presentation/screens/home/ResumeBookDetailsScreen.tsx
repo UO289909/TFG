@@ -49,6 +49,32 @@ export const ResumeBookDetailsScreen = () => {
           }
         </View>
 
+        {book.rating === null && book.current_page !== '0' &&
+          <View style={[
+            isLandscape ? styles.progressContainerLandscape : styles.progressContainer,
+            {
+              backgroundColor: colors.card,
+              shadowColor: colors.shadow,
+            },
+          ]}>
+
+            <View style={styles.progressBarContainer}>
+              <View style={[
+                styles.progressBarFill,
+                {
+                  width: `${Math.round((Number(book.current_page) / Number(book.pages)) * 100)}%`,
+                  backgroundColor: colors.primary,
+                }
+              ]} />
+            </View>
+
+            <Text style={[styles.progressText, { color: colors.text }]}>
+              {Math.round((Number(book.current_page) / Number(book.pages)) * 100)}%
+            </Text>
+
+          </View>
+        }
+
         {book.rating !== null &&
           <View style={[
             isLandscape ? styles.infoContainerLandscape : styles.infoContainer,
@@ -175,4 +201,45 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     marginBottom: 6,
   },
+  progressContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    alignSelf: 'center',
+    marginTop: 10,
+    padding: 12,
+    elevation: 4,
+  },
+  progressContainerLandscape: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '70%',
+    borderRadius: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    marginTop: 10,
+    padding: 12,
+    elevation: 4,
+  },
+  progressBarContainer: {
+    flex: 1,
+    height: 6,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  progressText: {
+    fontSize: 16,
+    fontFamily: 'Roboto-Regular',
+    marginLeft: 10,
+  }
 });

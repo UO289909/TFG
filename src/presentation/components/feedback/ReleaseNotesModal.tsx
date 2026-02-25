@@ -56,7 +56,7 @@ export const ReleaseNotesModal = () => {
                         onPress={dismiss}
                         style={[styles.button, { backgroundColor: colors.primary }]}
                     >
-                        <Text style={[styles.buttonText, { color: colors.text }]}>Entendido</Text>
+                        <Text style={styles.buttonText}>Entendido</Text>
                     </Pressable>
                 </Pressable>
             </Pressable>
@@ -132,5 +132,6 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
         fontFamily: 'Roboto-Bold',
+        color: 'white',
     },
 });

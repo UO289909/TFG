@@ -32,31 +32,47 @@ export const BookCard = ({ title, author, pages, current_page, rating, imageUrl,
             ]}
             onPress={onPress}
         >
-            <Image
-                style={{ ...styles.image, backgroundColor: colors.background, shadowColor: colors.shadow }}
-                source={{ uri: imageUrl || default_cover }}
-                resizeMode="cover"
-            />
-            <View style={styles.dataContainer}>
-                <View style={styles.infoContainer}>
-                    <Text style={{ ...styles.titleText, color: colors.text }}>{title}</Text>
-                    <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{author}</Text>
-                    <Text style={{ ...styles.pagesText, color: colors.text }}>{pages} páginas</Text>
-                </View>
-                <View style={styles.ratingContainer}>
-                    {rating
-                        ? <FiveStarsInput value={rating} editable={false} size="small" onPress={() => { }} />
-                        : <Text style={{ ...styles.ratingText, color: colors.text }}>Página {current_page} de {pages}</Text>
-                    }
+            <View style={styles.generalContainer}>
+                <Image
+                    style={{ ...styles.image, backgroundColor: colors.background, shadowColor: colors.shadow }}
+                    source={{ uri: imageUrl || default_cover }}
+                    resizeMode="cover"
+                />
+                <View style={styles.dataContainer}>
+                    <View style={styles.infoContainer}>
+                        <Text style={{ ...styles.titleText, color: colors.text }}>{title}</Text>
+                        <Text style={{ ...styles.authorText, color: colors.secondaryText }}>{author}</Text>
+                        <Text style={{ ...styles.pagesText, color: colors.text }}>{pages} páginas</Text>
+                    </View>
+                    <View style={styles.ratingContainer}>
+                        {rating
+                            ? <FiveStarsInput value={rating} editable={false} size="small" onPress={() => { }} />
+                            : <Text style={{ ...styles.ratingText, color: colors.text }}>Página {current_page} de {pages}</Text>
+                        }
+                    </View>
                 </View>
             </View>
+
+            {!rating && current_page !== '0' && (
+                <View style={styles.progressBarContainer}>
+                    <View style={[
+                        styles.progressBarFill,
+                        {
+                            width: `${Math.round((Number(current_page) / Number(pages)) * 100)}%`,
+                            backgroundColor: colors.primary,
+                        }
+                    ]} />
+                </View>
+            )}
+
+
         </Pressable>
     );
 };
 
 const styles = StyleSheet.create({
     cardContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'flex-start',
         width: '95%',
         minHeight: 148,
@@ -67,6 +83,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: 10,
         padding: 12,
+    },
+    generalContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
     },
     image: {
         width: 80,
@@ -106,5 +126,17 @@ const styles = StyleSheet.create({
     ratingContainer: {
         marginBottom: 0,
         alignItems: 'flex-end',
+    },
+    progressBarContainer: {
+        width: '100%',
+        height: 6,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 3,
+        marginTop: 10,
+        overflow: 'hidden',
+    },
+    progressBarFill: {
+        height: '100%',
+        borderRadius: 3,
     },
 });

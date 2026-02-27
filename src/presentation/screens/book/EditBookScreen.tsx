@@ -24,8 +24,6 @@ export const EditBookScreen = () => {
 
     const [editingBook, setEditingBook] = useState(false);
 
-    const { showNotification } = useNotification();
-
     const [userBook, setUserBook] = useState<UserBook>();
     const [bookLogs, setBookLogs] = useState<DatabaseReadingLog[]>([]);
     const today = new Date();
@@ -80,22 +78,6 @@ export const EditBookScreen = () => {
         }
 
     }, [userBook]);
-
-    useEffect(() => {
-        if (userBook) {
-            if (fieldsEnabled.length > 0) {
-                showNotification({
-                    message: 'Esta es toda la información que puedes modificar',
-                    position: 'bottom',
-                });
-            } else {
-                showNotification({
-                    message: 'No puedes modificar ninguna información de este libro',
-                    position: 'bottom',
-                });
-            }
-        }
-    }, [fieldsEnabled]);
 
     const handleGoBack = () => {
         navigation.goBack();

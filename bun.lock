@@ -8,7 +8,7 @@
         "@bam.tech/react-native-image-resizer": "^3.0.11",
         "@react-native-async-storage/async-storage": "^3.0.1",
         "@react-native-google-signin/google-signin": "^16.1.1",
-        "@react-native-vector-icons/ionicons": "^12.3.0",
+        "@react-native-vector-icons/ionicons": "^12.4.1",
         "@react-navigation/bottom-tabs": "^7.14.0",
         "@react-navigation/material-top-tabs": "^7.4.13",
         "@react-navigation/native": "^7.1.28",
@@ -443,7 +443,7 @@
 
     "@react-native-vector-icons/common": ["@react-native-vector-icons/common@12.4.0", "", { "dependencies": { "find-up": "^7.0.0", "picocolors": "^1.1.1", "plist": "^3.1.0" }, "peerDependencies": { "@react-native-vector-icons/get-image": "^12.3.0", "react": "*", "react-native": "*" }, "optionalPeers": ["@react-native-vector-icons/get-image"], "bin": { "rnvi-update-plist": "lib/commonjs/scripts/updatePlist.js" } }, "sha512-t9W0q+AW7WH1Oj5aEg7wGNXDLZJb5sIVkAWo5qtad3PcbBADqoCdikRK/ToLK+xlB0TxjcuL0T74ogudMkYGeA=="],
 
-    "@react-native-vector-icons/ionicons": ["@react-native-vector-icons/ionicons@12.3.0", "", { "dependencies": { "@react-native-vector-icons/common": "^12.3.0" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-H/rlYzUEm0hhwwca2k6VMNjy0rLcjan6iwyaYDXMhsJQl7O4+Qkm7uVd/KEreS5gXfGuntUlcSa9GSn+dYqnjA=="],
+    "@react-native-vector-icons/ionicons": ["@react-native-vector-icons/ionicons@12.4.1", "", { "dependencies": { "@react-native-vector-icons/common": "^12.4.0" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-3xvb8cnwMSssmhL2YAZUfy+H2WR73m00PM6+KXiV3u9KfpIPJ5hl7zeO30jRoFpZQkZ+lqP/KIJgPLpQrJLKzg=="],
 
     "@react-native/assets-registry": ["@react-native/assets-registry@0.84.0", "", {}, "sha512-YiU9h1IN0pvvZsHbd03MaD7mE2q+ySaKMlE9tWK+3iiwtbEaMQOsMUuSJ1er2LU6ERMWfhfvCYgWpKRGOMeN8A=="],
 

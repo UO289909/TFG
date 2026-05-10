@@ -76,3 +76,7 @@ yarn-error.log
 
 # Env variables
 .env
+
+# Gentle AI
+.gga
+AGENTS.md

@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { Modal, Pressable, StyleSheet, Animated } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { NavigationProp, useNavigation, useTheme } from '@react-navigation/native';
 import { CustomTheme } from '../../../config/app-theme';
@@ -62,62 +62,66 @@ export const ReadingLogMenu = ({ book, onClose }: Props) => {
 
 
     return (
-        <View style={styles.overlay}>
-            <TouchableOpacity style={styles.overlayBg} onPress={addingLog ? null : onClose} />
-            <Animated.View
-                style={[
-                    styles.menuContainer,
-                    {
-                        backgroundColor: colors.card,
-                        transform: [{ scale: scaleAnim }],
-                        opacity: opacityAnim,
-                    },
-                ]}
-            >
+        <Modal
+            visible={true}
+            transparent
+            animationType="fade"
+            onRequestClose={addingLog ? undefined : onClose}
+        >
+            <Pressable style={styles.backdrop} onPress={addingLog ? null : onClose}>
+                <Pressable>
+                    <Animated.View
+                        style={[
+                            styles.menuContainer,
+                            {
+                                backgroundColor: colors.card,
+                                transform: [{ scale: scaleAnim }],
+                                opacity: opacityAnim,
+                            },
+                        ]}
+                    >
 
-                {addingLog &&
-                    <FullScreenLoader message="Añadiendo registro de lectura..." />
-                }
+                        {addingLog &&
+                            <FullScreenLoader message="Añadiendo registro de lectura..." />
+                        }
 
-                {!addingLog &&
-                    <>
-                        <CustomTextInput
-                            label="Hoy has leido hasta la página..."
-                            style={styles.input}
-                            info={`Ibas por la página ${book.current_page} de ${book.pages}`}
-                            value={newPage!}
-                            onChangeText={text => setNewPage(text.replace(/[^0-9]/g, ''))}
-                            keyboardType="numeric"
-                        />
+                        {!addingLog &&
+                            <>
+                                <CustomTextInput
+                                    label="Hoy has leido hasta la página..."
+                                    style={styles.input}
+                                    info={`Ibas por la página ${book.current_page} de ${book.pages}`}
+                                    value={newPage!}
+                                    onChangeText={text => setNewPage(text.replace(/[^0-9]/g, ''))}
+                                    keyboardType="numeric"
+                                />
 
-                        <CustomButton
-                            title="Añadir registro de lectura"
-                            onPress={handleAddLog}
-                            disabled={
-                                !newPage
-                                || Number(newPage) <= Number(book.current_page)
-                                || Number(newPage) > Number(book.pages)
-                                || addingLog
-                            }
-                        />
-                    </>
-                }
+                                <CustomButton
+                                    title="Añadir registro de lectura"
+                                    onPress={handleAddLog}
+                                    disabled={
+                                        !newPage
+                                        || Number(newPage) <= Number(book.current_page)
+                                        || Number(newPage) > Number(book.pages)
+                                        || addingLog
+                                    }
+                                />
+                            </>
+                        }
 
-            </Animated.View>
-        </View>
+                    </Animated.View>
+                </Pressable>
+            </Pressable>
+        </Modal>
     );
 };
 
 const styles = StyleSheet.create({
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
-        zIndex: 100,
+    backdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    overlayBg: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.2)',
     },
     menuContainer: {
         borderRadius: 12,

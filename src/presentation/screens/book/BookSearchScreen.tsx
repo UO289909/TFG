@@ -47,7 +47,7 @@ export const BookSearchScreen = () => {
             message: 'Selecciona un resultado para añadir a tu biblioteca o vuelve atrás',
             position: 'bottom',
         });
-    }, [bookResults]);
+    }, [bookResults, showNotification]);
 
     const handleSearch = async () => {
         const results = await searchBooksByTitle(openLibrarySearchFetcher, query);
@@ -71,10 +71,13 @@ export const BookSearchScreen = () => {
             fromOpenLibrary={item.fromOpenLibrary}
             alreadyInUser={item.alreadyInUser}
             onPress={() => handleSelectBook(item)}
-            style={[
-                isLandscape ? styles.searchCardLandscape : undefined,
-                index === 0 ? { marginTop: 5 } : undefined
-            ]}
+            style={
+                isLandscape
+                    ? [styles.searchCardLandscape, index === 0 && { marginTop: 5 }]
+                    : index === 0
+                        ? { marginTop: 5 }
+                        : undefined
+            }
         />
     );
 
@@ -91,12 +94,13 @@ export const BookSearchScreen = () => {
                         No se ha encontrado nada por "{query}"
                     </Text>
                 </View>
-                <IonIcon
-                    name="book"
-                    size={200}
-                    color={colors.greyLight}
-                    style={styles.bigIcon}
-                />
+                <View style={styles.iconWrapper}>
+                    <IonIcon
+                        name="book"
+                        size={200}
+                        color={colors.greyLight}
+                    />
+                </View>
             </View>
         )
     }
@@ -112,7 +116,7 @@ export const BookSearchScreen = () => {
 
             <FlatList
                 data={bookResults}
-                key={isLandscape ? 'h' : 'v'}
+                extraData={isLandscape}
                 renderItem={renderSearchCard}
                 keyExtractor={item => item.book.isbn}
                 numColumns={isLandscape ? 2 : 1}
@@ -146,9 +150,10 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Medium',
         textAlign: 'center',
     },
-    bigIcon: {
+    iconWrapper: {
         flex: 1,
-        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginTop: 50,
     },
     scrollContainer: {

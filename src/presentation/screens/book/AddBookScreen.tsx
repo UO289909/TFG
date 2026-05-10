@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { Modal, View, ScrollView, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { openLibraryIsbnFetcher } from '../../../config/adapters/openLibrary.adapter';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import { CustomTheme } from '../../../config/app-theme';
 import { getBookByIsbn } from '../../../core/use-cases/books/get-book-by-isbn.use-case';
 import { Book } from '../../../core/entities/book.entity';
 import { postNewBook } from '../../../core/use-cases/books/post-new-book-to-user.use-case';
-import { CustomNotification } from '../../components/feedback/CustomNotification';
+import { useNotification } from '../../context/NotificationContext';
 import { SearchBar } from '../../components/inputs';
 import { normalizeDateToYear } from '../../../utils/normalizeDateToYear';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
@@ -22,6 +22,7 @@ export const AddBookScreen = () => {
 	const search = params?.search ?? null;
 
 	const { colors } = useTheme() as CustomTheme;
+	const { showNotification } = useNotification();
 
 	const today = new Date();
 
@@ -35,9 +36,6 @@ export const AddBookScreen = () => {
 	const [year, setYear] = useState('');
 	const [cover, setCover] = useState('');
 	const [fieldsEnabled, setFieldsEnabled] = useState<string[]>(['isbn']);
-
-	const [showNotif, setShowNotif] = useState(false);
-	const [notifMsg, setNotifMsg] = useState('');
 
 	const [isNewBook, setIsNewBook] = useState(false);
 
@@ -94,8 +92,7 @@ export const AddBookScreen = () => {
 		if (book.cover_url) { setCover(book.cover_url); }
 		else { setFieldsEnabled(prev => [...prev, 'cover']); }
 
-		setNotifMsg('Rellena los campos que quieras editar y guarda tu libro');
-		setShowNotif(true);
+		showNotification({ message: 'Rellena los campos que quieras editar y guarda tu libro', position: 'bottom' });
 
 		console.log(isbn, title, author, pages, year);
 	}
@@ -104,8 +101,7 @@ export const AddBookScreen = () => {
 
 		if (text.length !== 13) {
 			setFieldsEnabled(['isbn']);
-			setNotifMsg(`El ISBN debe tener 13 dígitos (actualmente ${text.length})`);
-			setShowNotif(true);
+			showNotification({ message: `El ISBN debe tener 13 dígitos (actualmente ${text.length})`, position: 'bottom' });
 			return;
 		}
 
@@ -117,8 +113,7 @@ export const AddBookScreen = () => {
 
 			if (alreadyInUser) {
 				setFieldsEnabled(['isbn']);
-				setNotifMsg('Este libro ya está en tu colección');
-				setShowNotif(true);
+				showNotification({ message: 'Este libro ya está en tu colección', position: 'bottom' });
 				return;
 			}
 
@@ -128,8 +123,7 @@ export const AddBookScreen = () => {
 
 			} else {
 				setFieldsEnabled(['isbn']);
-				setNotifMsg('No se encontró ningún libro con ese ISBN, prueba otro');
-				setShowNotif(true);
+				showNotification({ message: 'No se encontró ningún libro con ese ISBN, prueba otro', position: 'bottom' });
 			}
 		} catch (error) {
 			throw new Error(`Error searching book by ISBN: ${error}`);
@@ -173,13 +167,22 @@ export const AddBookScreen = () => {
 	return (
 		<View style={styles.container}>
 
-			{showNotif &&
-				<CustomNotification
-					message={notifMsg}
-					position="bottom"
-					onClose={() => setShowNotif(false)}
-				/>
-			}
+			<Modal
+				visible={loadingBook || addingBook}
+				transparent
+				animationType="fade"
+			>
+				<View style={styles.backdrop}>
+					<FullScreenLoader
+						message={
+							loadingBook
+								? 'Buscando información del libro...'
+								: 'Añadiendo libro a tu colección...'
+						}
+						style={{ ...styles.loader, backgroundColor: colors.card }}
+					/>
+				</View>
+			</Modal>
 
 			<SearchBar
 				placeholder="Introduce el ISBN-13 o el título..."
@@ -189,19 +192,7 @@ export const AddBookScreen = () => {
 
 			<View style={{ ...styles.separator, shadowColor: colors.shadow }} />
 
-
 			<ScrollView contentContainerStyle={styles.scrollContainer}>
-
-				{(loadingBook || addingBook) &&
-					<FullScreenLoader
-						message={
-							loadingBook
-								? 'Buscando información del libro...'
-								: 'Añadiendo libro a tu colección...'
-						}
-						style={{ ...styles.loader, backgroundColor: colors.card }}
-					/>
-				}
 
 				<CustomTextInput
 					label="Título:"
@@ -274,24 +265,23 @@ const styles = StyleSheet.create({
 		padding: 20,
 		paddingBottom: 84,
 	},
-	searchContainer: {
-		flexDirection: 'row',
+	backdrop: {
+		flex: 1,
+		backgroundColor: 'rgba(0, 0, 0, 0.55)',
+		justifyContent: 'center',
 		alignItems: 'center',
-		marginBottom: 18,
-		paddingHorizontal: 10,
-		paddingTop: 10,
 	},
 	loader: {
+		flex: 0,
 		borderRadius: 16,
-		width: '100%',
-		minHeight: 120,
+		width: '80%',
+		aspectRatio: 1.5,
 		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.15,
 		shadowRadius: 6,
 		elevation: 4,
 		alignSelf: 'center',
-		margin: 10,
-		padding: 4,
+		padding: 24,
 	},
 	button: {
 		marginLeft: 10,

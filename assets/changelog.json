@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.4.4",
+        "date": "2026-05-11",
+        "summary": "Pequeños arreglos de diseño",
+        "changes": [
+            "Los dialogos ahora son más consistentes con el diseño de la app.",
+            "Se ha corregido un pequeño error en la pantalla de búsqueda."
+        ]
+    },
+    {
         "version": "1.4.3",
         "date": "2026-02-27",
         "summary": "Mejoras de calidad de vida y diseño",

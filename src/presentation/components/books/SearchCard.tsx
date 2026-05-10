@@ -1,5 +1,4 @@
 import { View, Text, Pressable, StyleSheet, Image, StyleProp } from 'react-native';
-import { FiveStarsInput } from '../inputs/FiveStarsInput';
 import { CustomTheme } from '../../../config/app-theme';
 import { useTheme } from '@react-navigation/native';
 import { Book } from '../../../core/entities/book.entity';

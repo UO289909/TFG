@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Modal, View, Text, StyleSheet, ScrollView } from 'react-native';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { FiveStarsInput } from '../../components/inputs/FiveStarsInput';
 import { RootStackParams } from '../../navigation/MyBooksStackNavigator';
@@ -96,16 +96,22 @@ export const RateBookScreen = () => {
     return (
         <View style={styles.container}>
 
-            <Text style={{ ...styles.title, color: colors.text }}>Valorar '{book.title}'</Text>
-
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-
-                {ratingBook &&
+            <Modal
+                visible={ratingBook}
+                transparent
+                animationType="fade"
+            >
+                <View style={styles.backdrop}>
                     <FullScreenLoader
                         message="Añadiendo valoración al libro..."
                         style={{ ...styles.loader, backgroundColor: colors.card }}
                     />
-                }
+                </View>
+            </Modal>
+
+            <Text style={{ ...styles.title, color: colors.text }}>Valorar '{book.title}'</Text>
+
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
 
                 {startDate.toDateString() !== today.toDateString() &&
                     <>
@@ -202,16 +208,22 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     loader: {
+        flex: 0,
         borderRadius: 16,
-        width: '100%',
-        minHeight: 120,
+        width: '80%',
+        aspectRatio: 1.5,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
-        margin: 10,
-        padding: 4,
+        padding: 24,
+    },
+    backdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     title: {
         fontSize: 22,

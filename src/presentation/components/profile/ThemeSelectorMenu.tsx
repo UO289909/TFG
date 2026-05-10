@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { Modal, Pressable, StyleSheet, Animated } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { CustomMenuButton } from '../pressables/CustomMenuButton';
 import { useTheme } from '@react-navigation/native';
@@ -37,54 +37,58 @@ export const ThemeSelectorMenu = ({ onClose }: Props) => {
   };
 
   return (
-    <View style={styles.overlay}>
-      <TouchableOpacity style={styles.overlayBg} onPress={onClose} />
-      <Animated.View
-        style={[
-          styles.menuContainer,
-          {
-            backgroundColor: colors.card,
-            transform: [{ scale: scaleAnim }],
-            opacity: opacityAnim,
-          },
-        ]}
-      >
-        <CustomMenuButton
-          label="Tema claro"
-          icon="sunny"
-          onPress={() => handleSelect('light')}
-          style={styles.button}
-          disabled={themeMode === 'light'}
-        />
-        <CustomMenuButton
-          label="Tema oscuro"
-          icon="moon"
-          onPress={() => handleSelect('dark')}
-          style={styles.button}
-          disabled={themeMode === 'dark'}
-        />
-        <CustomMenuButton
-          label="Según sistema"
-          icon="phone-portrait"
-          onPress={() => handleSelect('system')}
-          style={styles.button}
-          disabled={themeMode === 'system'}
-        />
-      </Animated.View>
-    </View>
+    <Modal
+      visible={true}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <Pressable style={styles.backdrop} onPress={onClose}>
+        <Pressable>
+          <Animated.View
+            style={[
+              styles.menuContainer,
+              {
+                backgroundColor: colors.card,
+                transform: [{ scale: scaleAnim }],
+                opacity: opacityAnim,
+              },
+            ]}
+          >
+            <CustomMenuButton
+              label="Tema claro"
+              icon="sunny"
+              onPress={() => handleSelect('light')}
+              style={styles.button}
+              disabled={themeMode === 'light'}
+            />
+            <CustomMenuButton
+              label="Tema oscuro"
+              icon="moon"
+              onPress={() => handleSelect('dark')}
+              style={styles.button}
+              disabled={themeMode === 'dark'}
+            />
+            <CustomMenuButton
+              label="Según sistema"
+              icon="phone-portrait"
+              onPress={() => handleSelect('system')}
+              style={styles.button}
+              disabled={themeMode === 'system'}
+            />
+          </Animated.View>
+        </Pressable>
+      </Pressable>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 100,
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.55)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  overlayBg: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.2)',
   },
   menuContainer: {
     borderRadius: 12,

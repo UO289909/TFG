@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { Modal, View, ScrollView, Text, StyleSheet } from 'react-native';
 import { CustomTextInput } from '../../components/inputs/CustomTextInput';
 import { NavigationProp, RouteProp, useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import { FloatingButton } from '../../components/pressables/FloatingButton';
@@ -141,6 +141,19 @@ export const EditBookScreen = () => {
     return (
         <View style={styles.container}>
 
+            <Modal
+                visible={editingBook}
+                transparent
+                animationType="fade"
+            >
+                <View style={styles.backdrop}>
+                    <FullScreenLoader
+                        message="Guardando cambios en el libro..."
+                        style={{ ...styles.loader, backgroundColor: colors.card }}
+                    />
+                </View>
+            </Modal>
+
             <Text style={{ ...styles.titleText, color: colors.text }}>Editar '{book.title}'</Text>
 
             {fieldsEnabled.length === 0 &&
@@ -148,13 +161,6 @@ export const EditBookScreen = () => {
             }
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-
-                {editingBook &&
-                    <FullScreenLoader
-                        message={'Guardando cambios en el libro...'}
-                        style={{ ...styles.loader, backgroundColor: colors.card }}
-                    />
-                }
 
                 {fieldsEnabled.includes('author') &&
                     <CustomTextInput
@@ -263,17 +269,23 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 84,
     },
+    backdrop: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     loader: {
+        flex: 0,
         borderRadius: 16,
-        width: '100%',
-        minHeight: 120,
+        width: '80%',
+        aspectRatio: 1.5,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 6,
         elevation: 4,
         alignSelf: 'center',
-        margin: 10,
-        padding: 4,
+        padding: 24,
     },
     titleText: {
         fontSize: 24,
